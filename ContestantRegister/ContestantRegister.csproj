@@ -5,6 +5,35 @@
     <UserSecretsId>aspnet-ContestantRegister-9FCC1B8F-1B33-46AD-B0DA-1409D8B06356</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20180126151033_BasicDataSchema.cs" />
+    <Compile Remove="Data\Migrations\20180126151033_BasicDataSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126155634_BasicSchema.cs" />
+    <Compile Remove="Data\Migrations\20180126155634_BasicSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126155831_BasicSchema.cs" />
+    <Compile Remove="Data\Migrations\20180126155831_BasicSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126160009_BasicSchema.cs" />
+    <Compile Remove="Data\Migrations\20180126160009_BasicSchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126165311_test.cs" />
+    <Compile Remove="Data\Migrations\20180126165311_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126165431_test.cs" />
+    <Compile Remove="Data\Migrations\20180126165431_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126165951_test.cs" />
+    <Compile Remove="Data\Migrations\20180126165951_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126171002_test1.cs" />
+    <Compile Remove="Data\Migrations\20180126171002_test1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126171528_Referencies.cs" />
+    <Compile Remove="Data\Migrations\20180126171528_Referencies.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126171759_Schema.cs" />
+    <Compile Remove="Data\Migrations\20180126171759_Schema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126175248_Schema.cs" />
+    <Compile Remove="Data\Migrations\20180126175248_Schema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180126175927_Schema.cs" />
+    <Compile Remove="Data\Migrations\20180126175927_Schema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180127055429_InitialDomainModel.cs" />
+    <Compile Remove="Data\Migrations\20180127055429_InitialDomainModel.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
