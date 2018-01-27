@@ -1,4 +1,6 @@
-﻿namespace ContestantRegister.Models
+﻿using System.ComponentModel;
+
+namespace ContestantRegister.Models
 {
     public class IndividualContestRegistration : ContestRegistration
     {

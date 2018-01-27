@@ -1,15 +1,20 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Properties;
 
 namespace ContestantRegister.Models
 {
+    [DisplayName("Студент")]
     public class Student : ApplicationUser
     {
+        [Display(Name = "Дата начала обучения")]
         public DateTime EducationStartDate { get; set; }
 
+        [Display(Name = "Дата завершения обучения")]
         public DateTime EducationEndDate { get; set; }
 
+        [Display(Name = "Дата рождения")]
         public DateTime DateOfBirth { get; set; }
-
-
     }
 }

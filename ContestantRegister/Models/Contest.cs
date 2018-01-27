@@ -1,50 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Properties;
 
 namespace ContestantRegister.Models
 {
+    [DisplayName("Контест")]
     public class Contest : DomainObject
     {
-        [Required]
+        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(200)]
+        [Display(Name = "Название")]
         public string Name { get; set; }
 
         [MaxLength(5000)]
+        [Display(Name = "Описание")]
         public string Description { get; set; }
 
+        [Display(Name = "Начало регистрации")]
         public DateTime RegistrationStart { get; set; }
 
+        [Display(Name = "Регистрация до")]
         public DateTime RegistrationEnd { get; set; }
 
+        [Display(Name = "Продолжительность (ч)")]
         public int Duration { get; set; }
 
+        [Display(Name = "Участники")]
         public ParticipantType ParticipantType { get; set; }
 
+        [Display(Name = "Первенство")]
         public ContestType ContestType { get; set; }
 
+        [Display(Name = "Архивный")]
         public bool IsArchive { get; set; }
 
+        [Display(Name = "Статус")]
         public ContestStatus ContestStatus { get; set; }
 
+        [Display(Name = "Английский язык")]
         public bool IsEnglishLanguage { get; set; }
 
-        /// <summary>
-        /// Справшивать ли язык программирования при регистрации
-        /// </summary>
+        [Display(Name = "Указывать язык программирования при регистрации")]
         public bool IsProgrammingLanguageNeeded { get; set; }
 
         [MaxLength(100)]
+        [Display(Name = "Ссылка на контест на ЯКонтесте")]
         public string YaContestLink { get; set; }
 
-        /// <summary>
-        /// Отправлять ли email  с регистрационными данными (ссылка на яконтест, логин, пароль) на email после регистрации?
-        /// </summary>
+        [Display(Name = "Отправлять email с регистрационными данными после завершения регистрации")]
         public bool SendRegistrationEmail { get; set; }
 
-        /// <summary>
-        /// Показывать ли в системе логин и пароль сразу после регистрациии
-        /// </summary>
+        [Display(Name = "Показывать на сайте логин/пароль от ЯКонтест")]
         public bool ShowRegistrationInfo { get; set; }
 
         public string YaContestAccountsCSV { get; set; }
