@@ -7,6 +7,11 @@ dotnet: 2.1.4
 services:
 - docker
 
+addons:
+  apt:
+    packages:
+    - sshpass
+
 install:
 - dotnet restore
 
@@ -20,6 +25,10 @@ after_success:
   docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
   docker push ikitsfu/contestantregister:staging;
   docker push ikitsfu/contestantregister:$TRAVIS_BUILD_NUMBER;
+  echo redeploy $HOST_USERNAME@$HOST_ADDRESS;
+  export SSHPASS=$HOST_PASSWORD;
+  sshpass -e ssh -o stricthostkeychecking=no $HOST_USERNAME@$HOST_ADDRESS "bash restart-app-staging.sh";
+  echo redeploy completed;
   else
   echo $TRAVIS_BRANCH;
   fi
