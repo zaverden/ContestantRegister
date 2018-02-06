@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ContestantRegister.Data;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Email;
+using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +34,10 @@ namespace ContestantRegister
                 }
             }
 
+            JobManager.JobFactory = new JobFactory(host.Services);
+            JobManager.Initialize(new FluentSchedulerRegistry());
+            JobManager.JobException += info => Console.WriteLine(info.Exception);
+
             host.Run();
         }
 
@@ -39,4 +46,10 @@ namespace ContestantRegister
                 .UseStartup<Startup>()
                 .Build();
     }
+
+    
+
+    
+
+    
 }

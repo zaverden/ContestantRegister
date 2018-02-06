@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentScheduler;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ContestantRegister.Services.Email
+{
+    public class JobFactory : IJobFactory
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public JobFactory(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public IJob GetJobInstance<T>() where T : IJob
+        {
+            var scope = _serviceProvider.CreateScope();
+            var res = scope.ServiceProvider.GetService<T>();
+            return res;
+        }
+    }
+}

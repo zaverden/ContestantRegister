@@ -2,6 +2,7 @@
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
+using ContestantRegister.Services.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -36,6 +37,9 @@ namespace ContestantRegister
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
+
+            //TODO если заставить AspNet Core DI сделать Build, эту регистрацию можно убрать
+            services.AddTransient<EmailJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using ContestantRegister.Data;
 
 namespace ContestantRegister.Services
 {
@@ -9,9 +7,23 @@ namespace ContestantRegister.Services
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
     public class EmailSender : IEmailSender
     {
-        public Task SendEmailAsync(string email, string subject, string message)
+        private readonly ApplicationDbContext _context;
+
+        public EmailSender(ApplicationDbContext context)
         {
-            return Task.CompletedTask;
+            _context = context;
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string message)
+        {
+            var mail = new Models.Email
+            {
+                Address = email,
+                Subject = subject,
+                Message = message
+            };
+            _context.Emails.Add(mail);
+            await _context.SaveChangesAsync();
         }
     }
 }

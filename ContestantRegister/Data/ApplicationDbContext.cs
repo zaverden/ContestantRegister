@@ -23,6 +23,8 @@ namespace ContestantRegister.Data
 
         public DbSet<ContestRegistration> ContestRegistrations { get; set; }
 
+        public DbSet<Email> Emails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
