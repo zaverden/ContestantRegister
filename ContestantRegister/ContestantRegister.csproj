@@ -32,6 +32,12 @@
     <Compile Remove="Data\Migrations\20180126175927_Schema.Designer.cs" />
     <Compile Remove="Data\Migrations\20180127055429_InitialDomainModel.cs" />
     <Compile Remove="Data\Migrations\20180127055429_InitialDomainModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180127055733_InitialDomainModel.cs" />
+    <Compile Remove="Data\Migrations\20180127055733_InitialDomainModel.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180129041750_AddedContestRegistrationStatus.cs" />
+    <Compile Remove="Data\Migrations\20180129041750_AddedContestRegistrationStatus.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180206064959_TEsTest.cs" />
+    <Compile Remove="Data\Migrations\20180206064959_TEsTest.Designer.cs" />
   </ItemGroup>
 
 

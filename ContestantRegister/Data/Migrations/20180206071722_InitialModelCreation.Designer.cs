@@ -13,15 +13,15 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180127055733_InitialDomainModel")]
-    partial class InitialDomainModel
+    [Migration("20180206071722_InitialModelCreation")]
+    partial class InitialModelCreation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
             modelBuilder.Entity("ContestantRegister.Models.ApplicationUser", b =>
                 {
@@ -95,8 +95,7 @@ namespace ContestantRegister.Data.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.HasIndex("RegistredById");
 
@@ -188,10 +187,11 @@ namespace ContestantRegister.Data.Migrations
                     b.Property<string>("ProgrammingLanguage")
                         .HasMaxLength(100);
 
-                    b.Property<DateTime>("RegistrationDateTime");
+                    b.Property<DateTime?>("RegistrationDateTime");
 
-                    b.Property<string>("RegistredById")
-                        .IsRequired();
+                    b.Property<string>("RegistredById");
+
+                    b.Property<int>("Status");
 
                     b.Property<int>("StudyPlaceId");
 
@@ -272,8 +272,7 @@ namespace ContestantRegister.Data.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });

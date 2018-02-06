@@ -5,14 +5,10 @@ using System.Collections.Generic;
 
 namespace ContestantRegister.Data.Migrations
 {
-    public partial class InitialDomainModel : Migration
+    public partial class InitialModelCreation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers");
-
             migrationBuilder.DropIndex(
                 name: "IX_AspNetUserRoles_UserId",
                 table: "AspNetUserRoles");
@@ -97,12 +93,26 @@ namespace ContestantRegister.Data.Migrations
                 table: "AspNetUsers",
                 nullable: true);
 
+            migrationBuilder.AlterColumn<int>(
+                name: "Id",
+                table: "AspNetUserClaims",
+                nullable: false,
+                oldClrType: typeof(int))
+                .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Id",
+                table: "AspNetRoleClaims",
+                nullable: false,
+                oldClrType: typeof(int))
+                .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
             migrationBuilder.CreateTable(
                 name: "Cities",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     Name = table.Column<string>(maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -115,7 +125,7 @@ namespace ContestantRegister.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     ContestStatus = table.Column<int>(nullable: false),
                     ContestType = table.Column<int>(nullable: false),
                     Description = table.Column<string>(maxLength: 5000, nullable: true),
@@ -147,7 +157,7 @@ namespace ContestantRegister.Data.Migrations
                     ShortNameEnglish = table.Column<string>(maxLength: 50, nullable: true),
                     Email = table.Column<string>(maxLength: 50, nullable: true),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     CityId = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
                     FullName = table.Column<string>(maxLength: 200, nullable: false),
@@ -170,15 +180,16 @@ namespace ContestantRegister.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     ComputerName = table.Column<string>(maxLength: 20, nullable: true),
                     ContestId = table.Column<int>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
                     ManagerId = table.Column<string>(nullable: true),
                     Participant1Id = table.Column<string>(nullable: false),
                     ProgrammingLanguage = table.Column<string>(maxLength: 100, nullable: true),
-                    RegistrationDateTime = table.Column<DateTime>(nullable: false),
-                    RegistredById = table.Column<string>(nullable: false),
+                    RegistrationDateTime = table.Column<DateTime>(nullable: true),
+                    RegistredById = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
                     StudyPlaceId = table.Column<int>(nullable: false),
                     TrainerId = table.Column<string>(nullable: false),
                     YaContestLogin = table.Column<string>(maxLength: 20, nullable: true),
@@ -240,13 +251,6 @@ namespace ContestantRegister.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_RegistredById",
                 table: "AspNetUsers",
                 column: "RegistredById");
@@ -260,8 +264,7 @@ namespace ContestantRegister.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContestRegistrations_ContestId",
@@ -360,10 +363,6 @@ namespace ContestantRegister.Data.Migrations
                 name: "Cities");
 
             migrationBuilder.DropIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
                 name: "IX_AspNetUsers_RegistredById",
                 table: "AspNetUsers");
 
@@ -427,11 +426,19 @@ namespace ContestantRegister.Data.Migrations
                 name: "IsSchool",
                 table: "AspNetUsers");
 
-            migrationBuilder.CreateIndex(
-                name: "UserNameIndex",
-                table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true);
+            migrationBuilder.AlterColumn<int>(
+                name: "Id",
+                table: "AspNetUserClaims",
+                nullable: false,
+                oldClrType: typeof(int))
+                .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "Id",
+                table: "AspNetRoleClaims",
+                nullable: false,
+                oldClrType: typeof(int))
+                .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_UserId",
