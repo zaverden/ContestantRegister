@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ContestantRegister.Models.Institution>
+
+@{
+    ViewData["Title"] = "Вузы";
+}
+
+<h2>Вузы</h2>
+
+<p>
+    <a asp-action="Create">Создать</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ShortName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShortNameEnglish)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullNameEnglish)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BaylorLink)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Site)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShortName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.City.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShortNameEnglish)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullNameEnglish)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BaylorLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Site)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -8,7 +8,7 @@ namespace ContestantRegister.Models
     public class School : StudyPlace
     {
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         public string Email { get; set; }
     }
 }
