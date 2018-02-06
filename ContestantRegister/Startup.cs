@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ContestantRegister
 {
@@ -34,6 +31,8 @@ namespace ContestantRegister
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAutoMapper();
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -41,7 +40,7 @@ namespace ContestantRegister
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +52,8 @@ namespace ContestantRegister
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            
+            context.Database.Migrate();
 
             app.UseStaticFiles();
 

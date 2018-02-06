@@ -61,7 +61,16 @@ namespace ContestantRegister.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Поле &apos;{0}&apos; обязательное.
+        ///   Looks up a localized string similar to Длинна поля &apos;{0}&apos; не должна превышать &apos;{1}&apos; символов..
+        /// </summary>
+        internal static string MaxlenFieldErrorMessage {
+            get {
+                return ResourceManager.GetString("MaxlenFieldErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поле &apos;{0}&apos; обязательное..
         /// </summary>
         internal static string RequiredFieldErrorMessage {
             get {

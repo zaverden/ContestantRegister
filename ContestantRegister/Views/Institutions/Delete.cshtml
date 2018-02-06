@@ -1,0 +1,63 @@
+﻿@model ContestantRegister.Models.Institution
+
+@{
+    ViewData["Title"] = "Удалить вуз";
+}
+
+<h2>Удаление</h2>
+
+<h3>Вы действительно хотите удалить выбранный объект?</h3>
+<div>
+    <h4>Вуз</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShortName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShortName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.City.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ShortNameEnglish)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShortNameEnglish)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.FullNameEnglish)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FullNameEnglish)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BaylorLink)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BaylorLink)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Site)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Site)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться к списку</a>
+    </form>
+</div>

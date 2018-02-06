@@ -9,7 +9,7 @@ namespace ContestantRegister.Models
     public class City : DomainObject
     {
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [MaxLength(50)]
+        [MaxLength(50, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         [Display(Name = "Название")]
         public string Name { get; set; }
 

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ContestantRegister.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ContestantRegister.Models;
 
 namespace ContestantRegister.Data
 {
@@ -20,6 +16,10 @@ namespace ContestantRegister.Data
         public DbSet<Contest> Contests { get; set; }
 
         public DbSet<StudyPlace> StudyPlaces { get; set; }
+
+        public DbSet<School> Schools { get; set; }
+
+        public DbSet<Institution> Institutions { get; set; }
 
         public DbSet<ContestRegistration> ContestRegistrations { get; set; }
 
@@ -97,7 +97,6 @@ namespace ContestantRegister.Data
                     .WithMany(p => p.ContestRegistrationsParticipant3)
                     .OnDelete(DeleteBehavior.Restrict);
             });
-            
         }
     }
 }
