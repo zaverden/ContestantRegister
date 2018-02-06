@@ -24,8 +24,8 @@ namespace ContestantRegister
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                //options.UseNpgsql(Configuration.GetConnectionString("PostgreConnection")));
-                options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
+                options.UseNpgsql(Configuration.GetConnectionString("PostgreConnection")));
+                //options.UseSqlServer(Configuration.GetConnectionString("MsSqlConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
