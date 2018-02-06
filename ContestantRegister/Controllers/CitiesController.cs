@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContestantRegister.Controllers
 {
-    // TODO: [Authorize]
+    [Authorize]
     public class CitiesController : Controller
     {
         private readonly ApplicationDbContext _context;

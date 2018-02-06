@@ -6,7 +6,7 @@ using ContestantRegister.Properties;
 namespace ContestantRegister.Models
 {
     [DisplayName("Студент")]
-    public class Student : ApplicationUser
+    public class Student : ContestantUser
     {
         [Display(Name = "Дата начала обучения")]
         public DateTime EducationStartDate { get; set; }

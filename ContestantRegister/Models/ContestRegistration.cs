@@ -10,21 +10,21 @@ namespace ContestantRegister.Models
         public DateTime? RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]
-        public ApplicationUser RegistredBy { get; set; }
+        public ContestantUser RegistredBy { get; set; }
 
         [Display(Name = "Статус регистрации")]
         public ContestRegistrationStatus Status { get; set; }
         
         [Display(Name = "Участник")]
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        public ApplicationUser Participant1 { get; set; }
+        public ContestantUser Participant1 { get; set; }
 
         [Display(Name = "Тренер")]
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        public ApplicationUser Trainer { get; set; }
+        public ContestantUser Trainer { get; set; }
 
         [Display(Name = "Руководитель")]
-        public ApplicationUser Manager { get; set; }
+        public ContestantUser Manager { get; set; }
 
         [Display(Name = "Место учебы")]
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]

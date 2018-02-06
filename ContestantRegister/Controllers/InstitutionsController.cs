@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers
 {
-    // TODO: [Authorize]
+    [Authorize]
     public class InstitutionsController : Controller
     {
         private readonly ApplicationDbContext _context;

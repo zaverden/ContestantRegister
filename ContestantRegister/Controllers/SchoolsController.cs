@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers
 {
-    // TODO: [Authorize]
+    [Authorize]
     public class SchoolsController : Controller
     {
         private readonly ApplicationDbContext _context;

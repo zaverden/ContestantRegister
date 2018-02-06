@@ -34,9 +34,10 @@ namespace ContestantRegister.Data
             builder.Entity<Institution>().HasBaseType<StudyPlace>();
             builder.Entity<School>().HasBaseType<StudyPlace>();
 
-            builder.Entity<Pupil>().HasBaseType<ApplicationUser>();
-            builder.Entity<Student>().HasBaseType<ApplicationUser>();
-            builder.Entity<Trainer>().HasBaseType<ApplicationUser>();
+            builder.Entity<ContestantUser>().HasBaseType<ApplicationUser>();
+            builder.Entity<Pupil>().HasBaseType<ContestantUser>();
+            builder.Entity<Student>().HasBaseType<ContestantUser>();
+            builder.Entity<Trainer>().HasBaseType<ContestantUser>();
 
             builder.Entity<TeamContestRegistration>().HasBaseType<ContestRegistration>();
             builder.Entity<IndividualContestRegistration>().HasBaseType<ContestRegistration>();
@@ -49,7 +50,7 @@ namespace ContestantRegister.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            builder.Entity<ApplicationUser>(entity =>
+            builder.Entity<ContestantUser>(entity =>
             {
                 entity.HasOne(e => e.StudyPlace)
                     .WithMany(p => p.Users)

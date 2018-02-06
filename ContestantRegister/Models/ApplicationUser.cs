@@ -7,25 +7,31 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Models
 {
+    //TODO проверить, можно ли этот класс сделать абстрактным
     public class ApplicationUser : IdentityUser
+    {
+        
+    }
+
+    public abstract class ContestantUser : ApplicationUser
     {
         [Display(Name = "Дата регистрации")]
         public DateTime RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]
-        public ApplicationUser RegistredBy { get; set; }
+        public ContestantUser RegistredBy { get; set; }
 
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(50)]
         [Display(Name = "Имя")]
         public string Name { get; set; }
 
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(50)]
         [Display(Name = "Фамилия")]
         public string Surname { get; set; }
 
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(50)]
         [Display(Name = "Отчество")]
         public string Patronymic { get; set; }
@@ -47,7 +53,7 @@ namespace ContestantRegister.Models
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [Display(Name = "Место учебы")]
         public StudyPlace StudyPlace { get; set; }
-        
+
         public ICollection<ContestRegistration> ContestRegistrationsRegistredBy { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsParticipant1 { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsTrainer { get; set; }
@@ -56,7 +62,6 @@ namespace ContestantRegister.Models
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant2 { get; set; }
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant3 { get; set; }
 
-        public ICollection<ApplicationUser> RegistredByThisUser { get; set; }
-
+        public ICollection<ContestantUser> RegistredByThisUser { get; set; }
     }
 }

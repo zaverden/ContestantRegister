@@ -13,9 +13,10 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180206140214_ApplicationUser_StudyPlace_Nullable")]
+    partial class ApplicationUser_StudyPlace_Nullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,9 +41,19 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(50);
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -52,11 +63,25 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<string>("PasswordHash");
 
+                    b.Property<string>("Patronymic")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<DateTime>("RegistrationDateTime");
+
+                    b.Property<string>("RegistredById");
+
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int?>("StudyPlaceId");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -71,6 +96,10 @@ namespace ContestantRegister.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasName("UserNameIndex");
+
+                    b.HasIndex("RegistredById");
+
+                    b.HasIndex("StudyPlaceId");
 
                     b.ToTable("AspNetUsers");
 
@@ -332,41 +361,40 @@ namespace ContestantRegister.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.ContestantUser", b =>
+            modelBuilder.Entity("ContestantRegister.Models.Pupil", b =>
                 {
                     b.HasBaseType("ContestantRegister.Models.ApplicationUser");
 
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(50);
 
-                    b.Property<string>("LastName")
-                        .HasMaxLength(50);
+                    b.ToTable("Pupil");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.HasDiscriminator().HasValue("Pupil");
+                });
 
-                    b.Property<string>("Patronymic")
-                        .IsRequired()
-                        .HasMaxLength(50);
+            modelBuilder.Entity("ContestantRegister.Models.Student", b =>
+                {
+                    b.HasBaseType("ContestantRegister.Models.ApplicationUser");
 
-                    b.Property<DateTime>("RegistrationDateTime");
+                    b.Property<DateTime>("DateOfBirth");
 
-                    b.Property<string>("RegistredById");
+                    b.Property<DateTime>("EducationEndDate");
 
-                    b.Property<int>("StudyPlaceId");
+                    b.Property<DateTime>("EducationStartDate");
 
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(50);
+                    b.ToTable("Student");
 
-                    b.HasIndex("RegistredById");
+                    b.HasDiscriminator().HasValue("Student");
+                });
 
-                    b.HasIndex("StudyPlaceId");
+            modelBuilder.Entity("ContestantRegister.Models.Trainer", b =>
+                {
+                    b.HasBaseType("ContestantRegister.Models.ApplicationUser");
 
-                    b.ToTable("ContestantUser");
+                    b.Property<bool>("IsSchool");
 
-                    b.HasDiscriminator().HasValue("ContestantUser");
+                    b.ToTable("Trainer");
+
+                    b.HasDiscriminator().HasValue("Trainer");
                 });
 
             modelBuilder.Entity("ContestantRegister.Models.IndividualContestRegistration", b =>
@@ -431,40 +459,17 @@ namespace ContestantRegister.Data.Migrations
                     b.HasDiscriminator().HasValue("School");
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.Pupil", b =>
+            modelBuilder.Entity("ContestantRegister.Models.ApplicationUser", b =>
                 {
-                    b.HasBaseType("ContestantRegister.Models.ContestantUser");
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "RegistredBy")
+                        .WithMany("RegistredByThisUser")
+                        .HasForeignKey("RegistredById")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-
-                    b.ToTable("Pupil");
-
-                    b.HasDiscriminator().HasValue("Pupil");
-                });
-
-            modelBuilder.Entity("ContestantRegister.Models.Student", b =>
-                {
-                    b.HasBaseType("ContestantRegister.Models.ContestantUser");
-
-                    b.Property<DateTime>("DateOfBirth");
-
-                    b.Property<DateTime>("EducationEndDate");
-
-                    b.Property<DateTime>("EducationStartDate");
-
-                    b.ToTable("Student");
-
-                    b.HasDiscriminator().HasValue("Student");
-                });
-
-            modelBuilder.Entity("ContestantRegister.Models.Trainer", b =>
-                {
-                    b.HasBaseType("ContestantRegister.Models.ContestantUser");
-
-                    b.Property<bool>("IsSchool");
-
-                    b.ToTable("Trainer");
-
-                    b.HasDiscriminator().HasValue("Trainer");
+                    b.HasOne("ContestantRegister.Models.StudyPlace", "StudyPlace")
+                        .WithMany("Users")
+                        .HasForeignKey("StudyPlaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ContestantRegister.Models.ContestRegistration", b =>
@@ -474,17 +479,17 @@ namespace ContestantRegister.Data.Migrations
                         .HasForeignKey("ContestId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "Manager")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Manager")
                         .WithMany("ContestRegistrationsManager")
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "Participant1")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Participant1")
                         .WithMany("ContestRegistrationsParticipant1")
                         .HasForeignKey("Participant1Id")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "RegistredBy")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "RegistredBy")
                         .WithMany("ContestRegistrationsRegistredBy")
                         .HasForeignKey("RegistredById")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -494,7 +499,7 @@ namespace ContestantRegister.Data.Migrations
                         .HasForeignKey("StudyPlaceId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "Trainer")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Trainer")
                         .WithMany("ContestRegistrationsTrainer")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -553,27 +558,14 @@ namespace ContestantRegister.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.ContestantUser", b =>
-                {
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "RegistredBy")
-                        .WithMany("RegistredByThisUser")
-                        .HasForeignKey("RegistredById")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ContestantRegister.Models.StudyPlace", "StudyPlace")
-                        .WithMany("Users")
-                        .HasForeignKey("StudyPlaceId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
             modelBuilder.Entity("ContestantRegister.Models.TeamContestRegistration", b =>
                 {
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "Participant2")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Participant2")
                         .WithMany("ContestRegistrationsParticipant2")
                         .HasForeignKey("Participant2Id")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("ContestantRegister.Models.ContestantUser", "Participant3")
+                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Participant3")
                         .WithMany("ContestRegistrationsParticipant3")
                         .HasForeignKey("Participant3Id")
                         .OnDelete(DeleteBehavior.Restrict);

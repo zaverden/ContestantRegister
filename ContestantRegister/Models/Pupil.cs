@@ -3,7 +3,7 @@
 namespace ContestantRegister.Models
 {
     [DisplayName("Школьник")]
-    public class Pupil : ApplicationUser
+    public class Pupil : ContestantUser
     {
 
     }
