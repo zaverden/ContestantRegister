@@ -57,6 +57,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="EASendMail45">
+      <HintPath>..\lib\EASendMail45.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resource.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
