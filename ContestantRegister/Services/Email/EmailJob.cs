@@ -29,17 +29,24 @@ namespace ContestantRegister.Services.Email
                     SmtpClient client = new SmtpClient();
                     client.UseDefaultCredentials = false;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.Credentials = new NetworkCredential("acm@sfu-kras.ru", "67ChFylD");
-                    
-                    client.Host = "mail.sfu-kras.ru";
-                    client.Port = 465;
                     client.EnableSsl = true;
+
+                    client.Credentials = new NetworkCredential("acm@sfu-kras.ru", "67ChFylD");
+                    client.Host = "mail.sfu-kras.ru";
+                    client.Port = 587;
+
+                    //client.Credentials = new NetworkCredential("isit.open@yandex.ru", "contest");
+                    //client.Host = "smtp.yandex.ru";
+                    //client.Port = 587;
 
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress("acm@sfu-kras.ru", "Жюри");
+                    //mailMessage.From = new MailAddress("isit.open@yandex.ru", "Жюри");
                     mailMessage.To.Add(email.Address);
                     mailMessage.Body = email.Message;
+                    mailMessage.IsBodyHtml = false;
                     mailMessage.Subject = email.Subject;
+
                     try
                     {
                         client.Send(mailMessage);
