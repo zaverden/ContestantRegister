@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContestantRegister.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class CitiesController : Controller
     {
         private readonly ApplicationDbContext _context;
