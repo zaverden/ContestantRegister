@@ -3,6 +3,7 @@ using System.Linq;
 using ContestantRegister.Data;
 using FluentScheduler;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
 namespace ContestantRegister.Services.Email
@@ -10,53 +11,44 @@ namespace ContestantRegister.Services.Email
     public class EmailJob : IJob
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfigurationSection _configuration;
 
-        public EmailJob(ApplicationDbContext context)
+        public EmailJob(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration.GetSection("SendEmail");
         }
 
         public void Execute()
         {
             using (var ctx = _context)
             {
-                var emails = _context.Emails.Where(e => !e.IsSended);
-
-                foreach (var e in emails)
+                using (var client = new SmtpClient())
                 {
-                    //TODO Settings
-                    var message = new MimeMessage();
-                    message.From.Add(new MailboxAddress("Жюри", "acm@sfu-kras.ru"));
-                    message.To.Add(new MailboxAddress(e.Address));
-                    message.Subject = e.Subject;
+                    client.Connect(_configuration["Server"], _configuration.GetValue<int>("Port"), _configuration.GetValue<bool>("UseSsl"));
+                    client.Authenticate(_configuration["Email"], _configuration["Password"]);
 
-                    message.Body = new TextPart("plain")
+                    foreach (var email in _context.Emails.Where(e => !e.IsSended))
                     {
-                        Text = e.Message
-                    };
-
-                    using (var client = new SmtpClient())
-                    {
-                        // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                        //client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
-                        client.Connect("mail.sfu-kras.ru", 465, true);
-
-                        // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate("acm@sfu-kras.ru", "67ChFylD");
+                        var message = new MimeMessage();
+                        message.From.Add(new MailboxAddress(_configuration["FromName"], _configuration["Email"]));
+                        message.To.Add(new MailboxAddress(email.Address));
+                        message.Subject = email.Subject;
+                        message.Body = new TextPart("plain") { Text = email.Message };
 
                         try
                         {
                             client.Send(message);
-                            client.Disconnect(true);
-
-                            e.IsSended = true;
+                            email.IsSended = true;
+                            //TODO Коммит можно делать после каждой успешной отправки email. Но тогда список email нужно будет выбирать заранее по ToList
                         }
-                        catch (Exception exception)
+                        catch (Exception ex)
                         {
                             //TODO Log
                         }
                     }
+
+                    client.Disconnect(true);
                 }
 
                 ctx.SaveChangesAsync().Wait();
