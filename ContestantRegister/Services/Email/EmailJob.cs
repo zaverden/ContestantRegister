@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Net.Mail;
 using ContestantRegister.Data;
-using EASendMail;
 using FluentScheduler;
+using MailKit.Net.Smtp;
+using MimeKit;
 
 namespace ContestantRegister.Services.Email
 {
@@ -25,64 +24,39 @@ namespace ContestantRegister.Services.Email
 
                 foreach (var e in emails)
                 {
-                    /*
-                    SmtpClient client = new SmtpClient();
-                    client.UseDefaultCredentials = false;
-                    client.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
-                    client.EnableSsl = true;
+                    //TODO Settings
+                    var message = new MimeMessage();
+                    message.From.Add(new MailboxAddress("Жюри", "acm@sfu-kras.ru"));
+                    message.To.Add(new MailboxAddress(e.Address));
+                    message.Subject = e.Subject;
 
-                    client.Credentials = new NetworkCredential("acm@sfu-kras.ru", "67ChFylD");
-                    client.Host = "mail.sfu-kras.ru";
-                    client.Port = 465;
-
-                    //client.Credentials = new NetworkCredential("isit.open@yandex.ru", "contest");
-                    //client.Host = "smtp.yandex.ru";
-                    //client.Port = 587;
-
-                    MailMessage mailMessage = new MailMessage();
-                    mailMessage.From = new MailAddress("acm@sfu-kras.ru", "Жюри");
-                    //mailMessage.From = new MailAddress("isit.open@yandex.ru", "Жюри");
-                    mailMessage.To.Add(e.Address);
-                    mailMessage.Body = e.Message;
-                    mailMessage.IsBodyHtml = false;
-                    mailMessage.Subject = e.Subject;
-
-                    try
+                    message.Body = new TextPart("plain")
                     {
-                        client.Send(mailMessage);
-                        e.IsSended = true;
+                        Text = e.Message
+                    };
+
+                    using (var client = new SmtpClient())
+                    {
+                        // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
+                        //client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+                        client.Connect("mail.sfu-kras.ru", 465, true);
+
+                        // Note: only needed if the SMTP server requires authentication
+                        client.Authenticate("acm@sfu-kras.ru", "67ChFylD");
+
+                        try
+                        {
+                            client.Send(message);
+                            client.Disconnect(true);
+
+                            e.IsSended = true;
+                        }
+                        catch (Exception exception)
+                        {
+                            //TODO Log
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(e);
-                    }*/
-
-                    SmtpServer server = new SmtpServer("mail.sfu-kras.ru", 465);
-
-                    server.User = "acm@sfu-kras.ru";
-                    server.Password = "67ChFylD";
-                    server.ConnectType = SmtpConnectType.ConnectSSLAuto;
-                    server.AuthType = SmtpAuthType.AuthPlain;
-
-                    SmtpMail mail = new SmtpMail("TryIt");
-                    mail.Subject = e.Subject;
-                    mail.TextBody = e.Message;
-                    mail.From = new EASendMail.MailAddress("Жюри", "acm@sfu-kras.ru");
-                    mail.To.Add(new EASendMail.MailAddress(e.Address));
-
-                    EASendMail.SmtpClient client = new EASendMail.SmtpClient();
-
-                    try
-                    {
-                        client.SendMail(server, mail);
-                        e.IsSended = true;
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine(e);
-                    }
-                    
-
                 }
 
                 ctx.SaveChangesAsync().Wait();
