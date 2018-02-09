@@ -5,6 +5,7 @@ using FluentScheduler;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
+using MimeKit.Text;
 
 namespace ContestantRegister.Services.Email
 {
@@ -34,7 +35,7 @@ namespace ContestantRegister.Services.Email
                         message.From.Add(new MailboxAddress(_configuration["FromName"], _configuration["Email"]));
                         message.To.Add(new MailboxAddress(email.Address));
                         message.Subject = email.Subject;
-                        message.Body = new TextPart("plain") { Text = email.Message };
+                        message.Body = new TextPart(TextFormat.Html) { Text = email.Message };
 
                         try
                         {
