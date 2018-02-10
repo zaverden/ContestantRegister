@@ -10,7 +10,7 @@ namespace ContestantRegister.Services.Email
     {
         public FluentSchedulerRegistry()
         {
-            Schedule<EmailJob>().NonReentrant().ToRunEvery(5).Seconds();
+            Schedule<EmailJob>().NonReentrant().ToRunEvery(1).Minutes();
         }
     }
 }

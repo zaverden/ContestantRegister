@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
-using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Email;
 using FluentScheduler;
@@ -9,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace ContestantRegister
 {
@@ -36,7 +35,11 @@ namespace ContestantRegister
 
             JobManager.JobFactory = new JobFactory(host.Services);
             JobManager.Initialize(new FluentSchedulerRegistry());
-            JobManager.JobException += info => Console.WriteLine(info.Exception);
+            JobManager.JobException += info =>
+            {
+                var logger = host.Services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(info.Exception, "Unhandled exception in email job");
+            };
 
             host.Run();
         }
@@ -44,6 +47,7 @@ namespace ContestantRegister
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseNLog()
                 .Build();
     }
 

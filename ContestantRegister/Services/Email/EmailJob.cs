@@ -4,6 +4,7 @@ using ContestantRegister.Data;
 using FluentScheduler;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 using MimeKit.Text;
 
@@ -12,11 +13,13 @@ namespace ContestantRegister.Services.Email
     public class EmailJob : IJob
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<EmailJob> _logger;
         private readonly IConfigurationSection _configuration;
 
-        public EmailJob(ApplicationDbContext context, IConfiguration configuration)
+        public EmailJob(ApplicationDbContext context, IConfiguration configuration, ILogger<EmailJob> logger)
         {
             _context = context;
+            _logger = logger;
             _configuration = configuration.GetSection("SendEmail");
         }
 
@@ -45,7 +48,7 @@ namespace ContestantRegister.Services.Email
                         }
                         catch (Exception ex)
                         {
-                            //TODO Log
+                            _logger.LogError(ex, $"Unable to send email to {email.Address}");
                         }
                     }
 

@@ -23,12 +23,8 @@ namespace ContestantRegister
                     UserName = adminEmail,
                 };
 
-                //TODO Logging
-                var r1 = await userManager.CreateAsync(admin, "123qweASD!");
-                if (r1.Succeeded)
-                {
-                    var r2 = await userManager.AddToRoleAsync(admin, roleName);
-                }
+                await userManager.CreateAsync(admin, "123qweASD!");
+                await userManager.AddToRoleAsync(admin, roleName);
             }
         }
     }

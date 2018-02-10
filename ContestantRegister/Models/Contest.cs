@@ -47,6 +47,7 @@ namespace ContestantRegister.Models
 
         [MaxLength(100)]
         [Display(Name = "Ссылка на контест на ЯКонтесте")]
+        [DataType(DataType.Url)]
         public string YaContestLink { get; set; }
 
         [Display(Name = "Отправлять email с регистрационными данными после завершения регистрации")]
