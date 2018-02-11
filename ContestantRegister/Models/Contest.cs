@@ -16,15 +16,21 @@ namespace ContestantRegister.Models
 
         [MaxLength(5000)]
         [Display(Name = "Описание")]
+        [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [Display(Name = "Начало регистрации")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime RegistrationStart { get; set; }
 
         [Display(Name = "Регистрация до")]
+        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime RegistrationEnd { get; set; }
 
+        //TODO сделать ли дробным? чтобы контест был по 3,5 часа
         [Display(Name = "Продолжительность (ч)")]
+        [Range(1, int.MaxValue)]
         public int Duration { get; set; }
 
         [Display(Name = "Участники")]
@@ -56,9 +62,13 @@ namespace ContestantRegister.Models
         [Display(Name = "Показывать на сайте логин/пароль от ЯКонтест")]
         public bool ShowRegistrationInfo { get; set; }
 
+        [Display(Name = "CSV с яконтест аккаунтами")]
+        [DataType(DataType.MultilineText)]
         public string YaContestAccountsCSV { get; set; }
 
-        public int UsedAccountsCount { get; set; }
+        [Display(Name = "Использовано яконтест аккаунтов")]
+        [Range(0, int.MaxValue)]
+        public int UsedAccountsCount { get; set; } = 0;
 
         public ICollection<ContestRegistration> ContestRegistrations { get; set; }
 

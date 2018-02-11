@@ -14,6 +14,7 @@ namespace ContestantRegister.Models
 
         [Required]
         [StringLength(4000)]
+        [DataType(DataType.MultilineText)]
         public string Message { get; set; }
 
         [Required]

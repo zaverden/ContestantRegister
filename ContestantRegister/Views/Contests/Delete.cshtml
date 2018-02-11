@@ -1,0 +1,118 @@
+﻿@model ContestantRegister.Models.Contest
+
+@{
+    ViewData["Title"] = "Удалить контест";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Удаление</h2>
+
+<h3>Вы действительно хотите удалить выбранный объект?</h3>
+<div>
+    <h4>Контест</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationStart)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationStart)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationEnd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationEnd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Duration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ParticipantType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ParticipantType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContestType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContestType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsArchive)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsArchive)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContestStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContestStatus)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsEnglishLanguage)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsEnglishLanguage)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsProgrammingLanguageNeeded)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsProgrammingLanguageNeeded)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.YaContestLink)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.YaContestLink)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SendRegistrationEmail)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SendRegistrationEmail)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ShowRegistrationInfo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ShowRegistrationInfo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.YaContestAccountsCSV)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.YaContestAccountsCSV)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UsedAccountsCount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UsedAccountsCount)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться к списку</a>
+    </form>
+</div>
