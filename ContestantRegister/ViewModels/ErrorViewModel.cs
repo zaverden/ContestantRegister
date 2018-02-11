@@ -1,5 +1,3 @@
-using System;
-
 namespace ContestantRegister.Models
 {
     public class ErrorViewModel
