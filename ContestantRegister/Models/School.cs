@@ -9,7 +9,7 @@ namespace ContestantRegister.Models
     {
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(50, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
-        [EmailAddress]
+        [EmailAddress (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]
         public string Email { get; set; }
     }
 }

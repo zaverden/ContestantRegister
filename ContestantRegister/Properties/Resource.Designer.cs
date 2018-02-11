@@ -61,6 +61,24 @@ namespace ContestantRegister.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Введите корректный email.
+        /// </summary>
+        internal static string InvalidEmailErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidEmailErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Введите корректный адрес, который начитнается с http.
+        /// </summary>
+        internal static string InvalidUrlErrorMessage {
+            get {
+                return ResourceManager.GetString("InvalidUrlErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Длинна поля &apos;{0}&apos; не должна превышать &apos;{1}&apos; символов..
         /// </summary>
         internal static string MaxlenFieldErrorMessage {

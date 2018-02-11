@@ -25,7 +25,7 @@ namespace ContestantRegister.Models
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(200, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         [Display(Name = "Сайт")]
-        [DataType(DataType.Url)]
+        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
         public string Site { get; set; }
 
         public ICollection<ContestRegistration> ContestRegistrations { get; set; }
