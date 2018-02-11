@@ -4,10 +4,10 @@ namespace ContestantRegister.Models
 {
     public enum ContestType : int
     {
-        [Display(Name = "Личный")]
+        [Display(Name = "Личное")]
         Individual = 1,
 
-        [Display(Name = "Командный")]
+        [Display(Name = "Командное")]
         Collegiate = 2
     }
 }

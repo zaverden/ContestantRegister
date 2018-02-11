@@ -45,6 +45,9 @@ namespace ContestantRegister.Models
         [Display(Name = "Статус")]
         public ContestStatus ContestStatus { get; set; }
 
+        [Display(Name = "Участие")]
+        public ContestParticipationType ContestParticipationType { get; set; }
+
         [Display(Name = "Английский язык")]
         public bool IsEnglishLanguage { get; set; }
 

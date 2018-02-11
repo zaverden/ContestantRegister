@@ -24,6 +24,7 @@ namespace ContestantRegister
             return View(await _context.Contests.ToListAsync());
         }
 
+        //TODO зчем везде nullable id? Или пофиг, не править же генеренный код, который работает
         // GET: Contests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -53,7 +54,7 @@ namespace ContestantRegister
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
+        public async Task<IActionResult> Create([Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,ContestParticipationType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
         {
             if (ModelState.IsValid)
             {
@@ -85,7 +86,7 @@ namespace ContestantRegister
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,ContestParticipationType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
         {
             if (id != contest.Id)
             {

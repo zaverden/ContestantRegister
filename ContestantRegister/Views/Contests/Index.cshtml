@@ -13,30 +13,33 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>                
-                <th>
-                    @Html.DisplayNameFor(model => model.RegistrationStart)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.RegistrationEnd)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Duration)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ParticipantType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ContestType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsArchive)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ContestStatus)
-                </th>                  
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParticipantType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestParticipationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsArchive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestStatus)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -62,13 +65,16 @@
                 @Html.DisplayFor(modelItem => item.ContestType)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ContestParticipationType)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.IsArchive)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ContestStatus)
-            </td>           
+            </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |               
+                <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
             </td>
         </tr>

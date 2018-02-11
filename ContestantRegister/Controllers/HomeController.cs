@@ -7,21 +7,61 @@ using Microsoft.AspNetCore.Mvc;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Logging;
+using ContestantRegister.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var actualContests = _context.Contests.Where(c => !c.IsArchive);
+
+            return View(await actualContests.ToListAsync());
+        }
+
+        public async Task<IActionResult> Details(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
+        {
+            var contest = await _context.Contests.Include(c => c.ContestRegistrations)
+                 .SingleOrDefaultAsync(m => m.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+           
+            return View(contest);
+        }
+
+
+        [Authorize]
+        public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
+        {
+            var contest = await _context.Contests
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            if (contest.ContestType == ContestType.Collegiate) throw new NotImplementedException();
+
+            var registration = new IndividualContestRegistration
+            {
+                Contest = contest,
+            };
+
+            return View(registration);
         }
 
         public IActionResult About()
