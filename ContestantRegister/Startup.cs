@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
+using ContestantRegister.Options;
 using ContestantRegister.Services;
 using ContestantRegister.Services.Email;
 using Microsoft.AspNetCore.Builder;
@@ -31,6 +32,7 @@ namespace ContestantRegister
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            ConfigureOptions(services);
             services.AddAutoMapper();
 
             // Add application services.
@@ -40,6 +42,12 @@ namespace ContestantRegister
 
             //TODO если заставить AspNet Core DI сделать Build, эту регистрацию можно убрать
             services.AddTransient<EmailJob>();
+        }
+
+        public void ConfigureOptions(IServiceCollection services)
+        {
+            services.AddOptions();
+            services.Configure<MailOptions>(Configuration.GetSection("SendEmail"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +63,7 @@ namespace ContestantRegister
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+
             context.Database.Migrate();
 
             app.UseStaticFiles();

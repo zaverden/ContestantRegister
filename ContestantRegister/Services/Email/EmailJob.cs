@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq;
 using ContestantRegister.Data;
+using ContestantRegister.Options;
 using FluentScheduler;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 
@@ -14,13 +16,13 @@ namespace ContestantRegister.Services.Email
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<EmailJob> _logger;
-        private readonly IConfigurationSection _configuration;
+        private readonly MailOptions _options;
 
-        public EmailJob(ApplicationDbContext context, IConfiguration configuration, ILogger<EmailJob> logger)
+        public EmailJob(ApplicationDbContext context, IOptions<MailOptions> options, ILogger<EmailJob> logger)
         {
             _context = context;
             _logger = logger;
-            _configuration = configuration.GetSection("SendEmail");
+            _options = options.Value;
         }
 
         public void Execute()
@@ -29,13 +31,16 @@ namespace ContestantRegister.Services.Email
             {
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(_configuration["Server"], _configuration.GetValue<int>("Port"), _configuration.GetValue<bool>("UseSsl"));
-                    client.Authenticate(_configuration["Email"], _configuration["Password"]);
+                    client.Connect(_options.Server, _options.Port, _options.UseSsl);
+                    if (!string.IsNullOrEmpty(_options.Password))
+                    {
+                        client.Authenticate(_options.Email, _options.Password);
+                    }
 
                     foreach (var email in _context.Emails.Where(e => !e.IsSended))
                     {
                         var message = new MimeMessage();
-                        message.From.Add(new MailboxAddress(_configuration["FromName"], _configuration["Email"]));
+                        message.From.Add(new MailboxAddress(_options.FromName, _options.Email));
                         message.To.Add(new MailboxAddress(email.Address));
                         message.Subject = email.Subject;
                         message.Body = new TextPart(TextFormat.Html) { Text = email.Message };
