@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using ContestantRegister.Models;
 using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ContestantRegister.Controllers
 {

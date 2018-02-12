@@ -6,7 +6,9 @@ using Microsoft.Extensions.Logging;
 using ContestantRegister.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Remotion.Linq.Parsing.Structure.IntermediateModel;
+using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 namespace ContestantRegister.Controllers
 {
@@ -36,7 +38,7 @@ namespace ContestantRegister.Controllers
             {
                 return NotFound();
             }
-           
+
             return View(contest);
         }
 
@@ -84,7 +86,7 @@ namespace ContestantRegister.Controllers
                 {
                     registration.Trainer = trainer;
                 }
-                
+
             }
 
             if (contest.ParticipantType == ParticipantType.Student)
@@ -104,7 +106,7 @@ namespace ContestantRegister.Controllers
                     registration.Trainer = trainer;
                 }
             }
-            
+
 
             return View(registration);
         }
