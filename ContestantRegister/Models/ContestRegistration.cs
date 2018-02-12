@@ -14,24 +14,34 @@ namespace ContestantRegister.Models
 
         [Display(Name = "Статус регистрации")]
         public ContestRegistrationStatus Status { get; set; }
-        
+
         [Display(Name = "Участник")]
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int Participant1Id { get; set; }
+
         public ContestantUser Participant1 { get; set; }
 
         [Display(Name = "Тренер")]
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int TrainerId { get; set; }
+
         public ContestantUser Trainer { get; set; }
 
         [Display(Name = "Руководитель")]
+        public int ManagerId { get; set; }
+
         public ContestantUser Manager { get; set; }
 
         [Display(Name = "Место учебы")]
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int StudyPlaceId { get; set; }
+
         public StudyPlace StudyPlace { get; set; }
 
         [Display(Name = "Контест")]
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int ContestId { get; set; }
+
         public Contest Contest { get; set; }
 
         [Display(Name = "Язык программирования")]

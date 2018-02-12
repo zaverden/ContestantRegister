@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using ContestantRegister.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -24,17 +26,23 @@ namespace ContestantRegister.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ApplicationDbContext context, 
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
+            _mapper = mapper;
         }
 
         [TempData]
@@ -209,6 +217,12 @@ namespace ContestantRegister.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+
+            //TODO добавить выбор учебного заведения в зависимости от роли и города
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+
             return View();
         }
 
@@ -220,7 +234,21 @@ namespace ContestantRegister.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                ContestantUser user = null;
+
+                switch (model.UserType)
+                {
+                    case UserType.Pupil: user = new Pupil(); break;
+                    case UserType.Student: user = new Student(); break;
+                    case UserType.Trainer: user = new Trainer(); break;
+                }
+
+                user.UserName = model.Email;
+                user.RegistrationDateTime = DateTime.Now;
+                
+                _mapper.Map(model, user); 
+                
+                //TODO Отключить нафиг политику проверки паролей, оставить 6 символов и все
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -230,10 +258,16 @@ namespace ContestantRegister.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
+                    //TODO убрать вход сразу, делать его после подтверждения email
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation("User created a new account with password.");
                     return RedirectToLocal(returnUrl);
                 }
+
+                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+                //TODO добавить выбор учебного заведения в зависимости от роли и города
+                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+
                 AddErrors(result);
             }
 

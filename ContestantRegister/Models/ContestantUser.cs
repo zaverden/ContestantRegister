@@ -44,6 +44,8 @@ namespace ContestantRegister.Models
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [Display(Name = "Место учебы")]
+        public int StudyPlaceId { get; set; }
+
         public StudyPlace StudyPlace { get; set; }
 
         public ICollection<ContestRegistration> ContestRegistrationsRegistredBy { get; set; }

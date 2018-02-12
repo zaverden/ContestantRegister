@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ContestantRegister.Models;
+using ContestantRegister.Models.AccountViewModels;
 
 namespace ContestantRegister
 {
@@ -10,6 +11,10 @@ namespace ContestantRegister
             CreateMap<City, City>();
             CreateMap<School, School>();
             CreateMap<Institution, Institution>();
+
+            CreateMap<RegisterViewModel, Pupil>();
+            CreateMap<RegisterViewModel, Student>();
+            CreateMap<RegisterViewModel, Trainer>();
         }
     }
 }

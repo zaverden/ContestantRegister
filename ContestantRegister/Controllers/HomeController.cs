@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using ContestantRegister.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Remotion.Linq.Parsing.Structure.IntermediateModel;
 
 namespace ContestantRegister.Controllers
 {
@@ -58,8 +59,56 @@ namespace ContestantRegister.Controllers
 
             var registration = new IndividualContestRegistration
             {
+                ContestId = contest.Id,
                 Contest = contest,
             };
+
+            var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            var pupil = await _context.Users.OfType<Pupil>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            var student = await _context.Users.OfType<Student>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            ContestantUser user = null;
+            if (trainer != null) user = trainer;
+            if (pupil != null) user = pupil;
+            if (student != null) user = student;
+
+            if (contest.ParticipantType == ParticipantType.Pupil)
+            {
+                if (pupil != null)
+                {
+                    registration.Participant1 = pupil;
+                }
+
+                if (student != null)
+                {
+                    registration.Trainer = student;
+                }
+
+                if (trainer != null)
+                {
+                    registration.Trainer = trainer;
+                }
+                
+            }
+
+            if (contest.ParticipantType == ParticipantType.Student)
+            {
+                if (pupil != null)
+                {
+                    //TODO школота не участвуетв студ. соревнованиях. А вообще школьник не должен мочь на UI регаться на контест
+                }
+
+                if (student != null)
+                {
+                    registration.Participant1 = student;
+                }
+
+                if (trainer != null)
+                {
+                    registration.Trainer = trainer;
+                }
+            }
+            
 
             return View(registration);
         }
