@@ -18,3 +18,11 @@ cd ~/hosting
 - `./deploy-to-staging.sh 22` - deploy specific build to staging
 
 Logs are located in `/storage/production-logs/` and `/storage/staging-logs/`.
+
+### How to change config
+
+- Connect to hosting
+- Switch user to app_user
+- Go to ~/hosting
+- Edit param in production.env
+- Run `./rebuild-production.sh`
