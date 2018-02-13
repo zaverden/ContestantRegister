@@ -18,17 +18,14 @@ install:
 script:
 - dotnet --info
 - dotnet publish ContestantRegister --output ../_publish --configuration Release --runtime debian.8-x64
+- echo v$TRAVIS_BUILD_NUMBER > ./_publish/wwwroot/version.txt
 
 after_success:
 - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" != "pull_request" ]; then
-  docker build --tag ikitsfu/contestantregister:staging --tag ikitsfu/contestantregister:$TRAVIS_BUILD_NUMBER .;
-  docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-  docker push ikitsfu/contestantregister:staging;
-  docker push ikitsfu/contestantregister:$TRAVIS_BUILD_NUMBER;
-  echo redeploy $HOST_USERNAME@$HOST_ADDRESS;
-  export SSHPASS=$HOST_PASSWORD;
-  sshpass -e ssh -o stricthostkeychecking=no $HOST_USERNAME@$HOST_ADDRESS "bash restart-app-staging.sh";
-  echo redeploy completed;
+  bash ./.scripts/build-image.sh;
+  bash ./.scripts/push-image.sh;
+  bash ./.scripts/push-scripts.sh;
+  bash ./.scripts/run-deploy-to-staging.sh;
   else
-  echo $TRAVIS_BRANCH;
+  echo Skip deply for $TRAVIS_BRANCH;
   fi
