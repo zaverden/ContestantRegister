@@ -1,20 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using ContestantRegister.Models;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.Models
+namespace ContestantRegister.ViewModels
 {
-    public abstract class ContestRegistration : DomainObject
+    public class IndividualContestRegistrationViewModel
     {
-        [Display(Name = "Data регистрации")]
-        public DateTime? RegistrationDateTime { get; set; }
-
-        [Display(Name = "Кем зарегистрирован")]
-        public ContestantUser RegistredBy { get; set; }
-
-        [Display(Name = "Статус регистрации")]
-        public ContestRegistrationStatus Status { get; set; }
-
         [Display(Name = "Участник")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string Participant1Id { get; set; }
@@ -36,31 +31,17 @@ namespace ContestantRegister.Models
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int StudyPlaceId { get; set; }
 
-        public StudyPlace StudyPlace { get; set; }
-
-        [Display(Name = "Контест")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int ContestId { get; set; }
 
+        //TODO можно заменить просто названеим контеста
         public Contest Contest { get; set; }
 
         [Display(Name = "Язык программирования")]
         [MaxLength(100)]
         public string ProgrammingLanguage { get; set; }
 
-        [Display(Name = "Рабочее место")]
-        [MaxLength(20)]
-        public string ComputerName { get; set; }
-
-        [Display(Name = "Логин в ЯКонтесте")]
-        [MaxLength(20)]
-        public string YaContestLogin { get; set; }
-
-        [Display(Name = "Пароль в ЯКонтесте")]
-        [MaxLength(20)]
-        public string YaContestPassword { get; set; }
-
-        //TODO площадка
-
+        [Display(Name = "Город")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int CityId { get; set; }
     }
 }

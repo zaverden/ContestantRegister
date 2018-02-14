@@ -7,3 +7,52 @@
 <h2>Регистрация на контест</h2>
 
 <h4>@Html.DisplayFor(model => model.Name)</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Участник
+            </th>
+            <th>
+                Тренер
+            </th>
+            <th>
+                Руководитель
+            </th>
+            <th>
+                Учебное заведение
+            </th>
+            <th>
+                Город
+            </th>
+            <th>
+                Статус
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ContestRegistrations)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Participant1Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrainerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManagerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+        </tr>
+        }
+    </tbody>

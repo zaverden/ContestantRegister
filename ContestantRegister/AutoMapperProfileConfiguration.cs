@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ContestantRegister.Models;
 using ContestantRegister.Models.AccountViewModels;
+using ContestantRegister.ViewModels;
 
 namespace ContestantRegister
 {
@@ -15,6 +16,8 @@ namespace ContestantRegister
             CreateMap<RegisterViewModel, Pupil>();
             CreateMap<RegisterViewModel, Student>();
             CreateMap<RegisterViewModel, Trainer>();
+
+            CreateMap<IndividualContestRegistrationViewModel, IndividualContestRegistration>();
         }
     }
 }
