@@ -245,7 +245,6 @@ namespace ContestantRegister.Controllers
                 
                 _mapper.Map(model, user); 
                 
-                //TODO Отключить нафиг политику проверки паролей, оставить 6 символов и все
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -255,10 +254,7 @@ namespace ContestantRegister.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    //TODO убрать вход сразу, делать его после подтверждения email
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction(nameof(WaitEmailConfirmation));
                 }
 
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
@@ -358,6 +354,13 @@ namespace ContestantRegister.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             return View(nameof(ExternalLogin), model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult WaitEmailConfirmation()
+        {
+            return View();
         }
 
         [HttpGet]

@@ -75,7 +75,7 @@ namespace ContestantRegister.Models.AccountViewModels
 
         //Trainer
         [Display(Name = "Да - тренер школ, нет - тренер студентов")]
-        public bool? IsSchool { get; set; }
+        public bool IsSchool { get; set; }
 
     }
 
