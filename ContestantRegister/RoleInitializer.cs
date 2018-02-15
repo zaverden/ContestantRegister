@@ -20,6 +20,7 @@ namespace ContestantRegister
                 var admin = new ApplicationUser
                 {
                     Email = adminEmail,
+                    EmailConfirmed = true,
                     UserName = adminEmail,
                 };
 

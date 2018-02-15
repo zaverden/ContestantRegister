@@ -7,6 +7,7 @@ namespace ContestantRegister.Models.AccountViewModels
     {
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [EmailAddress]
+        [Display(Name = "Email")]
         public string Email { get; set; }
     }
 }
