@@ -11,8 +11,10 @@ using System.Linq;
 using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
+using ContestantRegister.Data.Migrations;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ContestantRegister.Services;
 
 namespace ContestantRegister.Controllers
 {
@@ -21,12 +23,17 @@ namespace ContestantRegister.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IEmailSender _emailSender;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, 
+            ApplicationDbContext context, 
+            IMapper mapper,
+            IEmailSender emailSender)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
+            _emailSender = emailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -40,6 +47,9 @@ namespace ContestantRegister.Controllers
         {
             var contest = await _context.Contests
                 .Include(c => c.ContestRegistrations)
+                .Include("ContestRegistrations.Participant1")
+                .Include("ContestRegistrations.Trainer")
+                .Include("ContestRegistrations.Manager")
                 .Include("ContestRegistrations.StudyPlace")
                 .Include("ContestRegistrations.StudyPlace.City")
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -66,7 +76,7 @@ namespace ContestantRegister.Controllers
 
             var registration = new IndividualContestRegistrationViewModel
             {
-                Contest = contest,
+                ContestName = contest.Name,
                 ContestId = contest.Id,
             };
 
@@ -80,7 +90,6 @@ namespace ContestantRegister.Controllers
                 user = trainer;
 
                 registration.TrainerId = user.Id;
-                registration.Trainer = user;
             }
 
             if (pupil != null)
@@ -90,10 +99,9 @@ namespace ContestantRegister.Controllers
                 if (contest.ParticipantType == ParticipantType.Pupil)
                 {
                     registration.Participant1Id = user.Id;
-                    registration.Participant1 = user;
                 }
                 else
-                    throw new Exception("Школота не участвуетв студ. соревнованиях");
+                    throw new Exception("Школьники не участвуют в студенческих соревнованиях");
             }
 
             if (student != null)
@@ -103,12 +111,10 @@ namespace ContestantRegister.Controllers
                 if (contest.ParticipantType == ParticipantType.Pupil)
                 {
                     registration.TrainerId = user.Id;
-                    registration.Trainer = user;
                 }
                 else
                 {
                     registration.Participant1Id = user.Id;
-                    registration.Participant1 = user;
                 }
             }
 
@@ -141,6 +147,29 @@ namespace ContestantRegister.Controllers
 
             if (ModelState.IsValid)
             {
+                var registrations = await _context.ContestRegistrations.Where(r => r.ContestId == id).ToListAsync();
+                if (registrations.Any(r => r.Participant1Id == viewModel.Participant1Id))
+                {
+                    //TODO по идее этот кейс отловится клиентской валидацией. Но на сервере лучше тоже проверить
+                    throw new Exception("Участник уже зарегистрирован в контесте");
+                }
+
+                var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
+                var trainer = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
+                var manager = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.ManagerId);
+
+                if (contest.ParticipantType == ParticipantType.Pupil)
+                {
+                    if (!(participant is Pupil)) throw new Exception("На школьный контест регистрируется не школьник в качестве участника");
+                }
+
+                if (contest.ParticipantType == ParticipantType.Student)
+                {
+                    if (!(participant is Student)) throw new Exception("На студенческий контест регистрируется не студент в качестве участника");
+                    if (trainer is Pupil) throw new Exception("Школьник не может быть тренером на студенческом контесте");
+                    if (manager is Pupil) throw new Exception("Школьник не может быть руководителем на студенческом контесте");
+                }
+
                 var registration = new IndividualContestRegistration();
 
                 _mapper.Map(viewModel, registration);
@@ -148,17 +177,45 @@ namespace ContestantRegister.Controllers
                 registration.RegistrationDateTime = DateTime.Now;
                 registration.RegistredBy = _context.Users.OfType<ContestantUser>().Single(u => u.UserName == User.Identity.Name);
                 registration.Status = ContestRegistrationStatus.Completed;
-                
-                //TODO яконтест логин и пароль
-                //TODO валидация что участник не регается два раза итд
+
+                var yacontestaccount = contest.YaContestAccountsCSV
+                    .Split(Environment.NewLine)
+                    .Skip(contest.UsedAccountsCount)
+                    .First()
+                    .Split(',');
+                contest.UsedAccountsCount++;
+
+                registration.YaContestLogin = yacontestaccount[0];
+                registration.YaContestPassword = yacontestaccount[1];
 
                 _context.ContestRegistrations.Add(registration);
                 await _context.SaveChangesAsync();
+
+                if (contest.SendRegistrationEmail)
+                {
+                    await _emailSender.SendEmailAsync(participant.Email, 
+                        "Вы зарегистрированы на контест", 
+                        $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword} ");
+                }
 
                 return RedirectToAction(nameof(Details), new {id});
             }
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> VerifyIndividualContestParticipant(string Participant1Id, int ContestId)
+        {
+            if (await _context.ContestRegistrations.AnyAsync(r =>
+                r.ContestId == ContestId && r.Participant1Id == Participant1Id))
+            {
+                return Json(data: "Выбранный пользователь уже зарегистриолван на этот контест");
+            }
+
+            //TODO добавить ещё проверку, не регистрируется ли школьник в качестве участника на студенческий контест. Или такая валидация не нужна, т.к. неподходящего участника просто нельзя выбрать на UI?
+            //TODO И нужно ли в базе навешивать констрейнты, чтобы два одинаковых польователя не могли зарегаться на контест?
+
+            return Json(data: true);
         }
 
         public IActionResult About()

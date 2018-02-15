@@ -36,13 +36,13 @@
         {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Participant1Id)
+                @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrainerId)
+                @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ManagerId)
+                @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
@@ -56,3 +56,4 @@
         </tr>
         }
     </tbody>
+</table>
