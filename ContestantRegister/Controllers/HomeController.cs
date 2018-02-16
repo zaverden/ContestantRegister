@@ -77,7 +77,6 @@ namespace ContestantRegister.Controllers
             var registration = new IndividualContestRegistrationViewModel
             {
                 ContestName = contest.Name,
-                ContestId = contest.Id,
             };
 
             var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
@@ -145,77 +144,87 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
+            ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
+            ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+
+            if (contest.IsProgrammingLanguageNeeded && string.IsNullOrEmpty(viewModel.ProgrammingLanguage))
+                ModelState.AddModelError(nameof(viewModel.ProgrammingLanguage), "Поле \"Язык программирования\" обязательное");
+
+            var studyPlace = await _context.StudyPlaces.OfType<StudyPlace>().SingleAsync(s => s.Id == viewModel.StudyPlaceId);
+            if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
+                contest.ParticipantType == ParticipantType.Student && studyPlace is School)
+                ModelState.AddModelError(nameof(viewModel.StudyPlaceId), "Тип учебного заведения не соответствует типу контеста");
+            if (viewModel.CityId != studyPlace.CityId)
+                ModelState.AddModelError(nameof(viewModel.CityId), "Выбранный город не соответствует городу учебного заведения");
+            if (!ModelState.IsValid) return View(viewModel);
+
+            var participanrRegistred = await _context.ContestRegistrations.AnyAsync(r => r.ContestId == id && r.Participant1Id == viewModel.Participant1Id);
+            if (participanrRegistred) ModelState.AddModelError(nameof(viewModel.Participant1Id), "Указанный участник уже зарегистрирован в контесте");
+
+            if (viewModel.Participant1Id == viewModel.TrainerId) ModelState.AddModelError(nameof(viewModel.TrainerId), "Участник не может быть своим тренером");
+            if (viewModel.Participant1Id == viewModel.ManagerId) ModelState.AddModelError(nameof(viewModel.ManagerId), "Участник не может быть своим руководителем");
+            
+            var currentUser = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
+            if (!User.IsInRole(Roles.Admin) && viewModel.Participant1Id != currentUser.Id && viewModel.TrainerId != currentUser.Id && viewModel.ManagerId != currentUser.Id)
+                ModelState.AddModelError(string.Empty, "Вы должны быть участником, тренером или руководителем чтобы завершить регистрацию");
+
+            if (!ModelState.IsValid) return View(viewModel);
+
+            var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
+            var trainer = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
+            var manager = await _context.Users.OfType<ContestantUser>().SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
+
+            if (contest.ParticipantType == ParticipantType.Pupil)
             {
-                var registrations = await _context.ContestRegistrations.Where(r => r.ContestId == id).ToListAsync();
-                if (registrations.Any(r => r.Participant1Id == viewModel.Participant1Id))
+                if (!(participant is Pupil))
                 {
-                    //TODO по идее этот кейс отловится клиентской валидацией. Но на сервере лучше тоже проверить
-                    throw new Exception("Участник уже зарегистрирован в контесте");
+                    ModelState.AddModelError(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста");
+                    return View(viewModel);
                 }
-
-                var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
-                var trainer = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
-                var manager = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.ManagerId);
-
-                if (contest.ParticipantType == ParticipantType.Pupil)
-                {
-                    if (!(participant is Pupil)) throw new Exception("На школьный контест регистрируется не школьник в качестве участника");
-                }
-
-                if (contest.ParticipantType == ParticipantType.Student)
-                {
-                    if (!(participant is Student)) throw new Exception("На студенческий контест регистрируется не студент в качестве участника");
-                    if (trainer is Pupil) throw new Exception("Школьник не может быть тренером на студенческом контесте");
-                    if (manager is Pupil) throw new Exception("Школьник не может быть руководителем на студенческом контесте");
-                }
-
-                var registration = new IndividualContestRegistration();
-
-                _mapper.Map(viewModel, registration);
-                registration.ContestId = contest.Id;
-                registration.RegistrationDateTime = DateTime.Now;
-                registration.RegistredBy = _context.Users.OfType<ContestantUser>().Single(u => u.UserName == User.Identity.Name);
-                registration.Status = ContestRegistrationStatus.Completed;
-
-                var yacontestaccount = contest.YaContestAccountsCSV
-                    .Split(Environment.NewLine)
-                    .Skip(contest.UsedAccountsCount)
-                    .First()
-                    .Split(',');
-                contest.UsedAccountsCount++;
-
-                registration.YaContestLogin = yacontestaccount[0];
-                registration.YaContestPassword = yacontestaccount[1];
-
-                _context.ContestRegistrations.Add(registration);
-                await _context.SaveChangesAsync();
-
-                if (contest.SendRegistrationEmail)
-                {
-                    await _emailSender.SendEmailAsync(participant.Email, 
-                        "Вы зарегистрированы на контест", 
-                        $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword} ");
-                }
-
-                return RedirectToAction(nameof(Details), new {id});
             }
 
-            return View(viewModel);
-        }
-
-        public async Task<IActionResult> VerifyIndividualContestParticipant(string Participant1Id, int ContestId)
-        {
-            if (await _context.ContestRegistrations.AnyAsync(r =>
-                r.ContestId == ContestId && r.Participant1Id == Participant1Id))
+            if (contest.ParticipantType == ParticipantType.Student)
             {
-                return Json(data: "Выбранный пользователь уже зарегистриолван на этот контест");
+                if (!(participant is Student)) ModelState.AddModelError(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста");
+                if (trainer is Pupil) ModelState.AddModelError(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте");
+                if (manager is Pupil) ModelState.AddModelError(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте");
             }
 
-            //TODO добавить ещё проверку, не регистрируется ли школьник в качестве участника на студенческий контест. Или такая валидация не нужна, т.к. неподходящего участника просто нельзя выбрать на UI?
-            //TODO И нужно ли в базе навешивать констрейнты, чтобы два одинаковых польователя не могли зарегаться на контест?
+            if (!ModelState.IsValid) return View(viewModel);
 
-            return Json(data: true);
+            var registration = new IndividualContestRegistration();
+
+            _mapper.Map(viewModel, registration);
+            registration.ContestId = contest.Id;
+            registration.RegistrationDateTime = DateTime.Now;
+            registration.RegistredBy = currentUser;
+            registration.Status = ContestRegistrationStatus.Completed;
+
+            var yacontestaccount = contest.YaContestAccountsCSV
+                .Split(Environment.NewLine)
+                .Skip(contest.UsedAccountsCount)
+                .First()
+                .Split(',');
+            contest.UsedAccountsCount++;
+
+            registration.YaContestLogin = yacontestaccount[0];
+            registration.YaContestPassword = yacontestaccount[1];
+
+            _context.ContestRegistrations.Add(registration);
+            await _context.SaveChangesAsync();
+
+            //TODO Если регистрирует админ, то email не отправляется?
+            if (contest.SendRegistrationEmail)
+            {
+                await _emailSender.SendEmailAsync(participant.Email, 
+                    "Вы зарегистрированы на контест", 
+                    $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword} ");
+            }
+            
+            return RedirectToAction(nameof(Details), new {id});
         }
 
         public IActionResult About()

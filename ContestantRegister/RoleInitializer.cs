@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister
 {
+    public class Roles
+    {
+        public const string Admin = "admin";
+    }
+
     public class RoleInitializer
     {
         public static async Task InitializeAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> rolesManager)
         {
-            var roleName = "admin";
-            if (await rolesManager.FindByNameAsync(roleName) == null)
+            if (await rolesManager.FindByNameAsync(Roles.Admin) == null)
             {
-                await rolesManager.CreateAsync(new IdentityRole(roleName));
+                await rolesManager.CreateAsync(new IdentityRole(Roles.Admin));
             }
 
             var adminEmail = "acm@sfu-kras.ru";
@@ -25,7 +29,7 @@ namespace ContestantRegister
                 };
 
                 await userManager.CreateAsync(admin, "123qweASD!");
-                await userManager.AddToRoleAsync(admin, roleName);
+                await userManager.AddToRoleAsync(admin, Roles.Admin);
             }
         }
     }

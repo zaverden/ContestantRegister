@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class ContestsController : Controller
     {
         private readonly ApplicationDbContext _context;

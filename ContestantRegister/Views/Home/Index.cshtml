@@ -1,4 +1,8 @@
-﻿@model IEnumerable<ContestantRegister.Models.Contest>
+﻿@using ContestantRegister.Services
+
+@inject IUserService UserService
+
+@model IEnumerable<Contest>
 
 @{
     ViewData["Title"] = "Контесты для регистрации";
@@ -39,35 +43,46 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationStart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RegistrationEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParticipantType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContestType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContestParticipationType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContestStatus)
-            </td>
-            <td>
-                <a asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegistrationStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParticipantType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestParticipationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestStatus)
+                </td>
+                <td>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <label>Войдите в систему для регистрации на контест</label>
+                    }
+                    else if (item.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
+                    {
+                        <label>Школьники не могут участвовать в студенческих соревнованиях</label>
+                    }
+                    else
+                    {
+                        <a asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
+                    }
+                </td>
+            </tr>
         }
     </tbody>
 </table>

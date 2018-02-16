@@ -33,7 +33,7 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    @if(User.IsInRole("admin"))
+                    @if(User.IsInRole(Roles.Admin))
                     {
                         <li><a asp-area="" asp-controller="Admin" asp-action="Index">Админка</a></li>
                     }

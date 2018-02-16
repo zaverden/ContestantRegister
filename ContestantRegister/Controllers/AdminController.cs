@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContestantRegister.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class AdminController : Controller
     {
         public IActionResult Index()

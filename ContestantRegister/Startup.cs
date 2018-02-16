@@ -37,6 +37,7 @@ namespace ContestantRegister
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddMvc();
 

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using ContestantRegister.Models;
+﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ContestantRegister.ViewModels
 {
@@ -13,10 +7,7 @@ namespace ContestantRegister.ViewModels
     {
         [Display(Name = "Участник")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [Remote(action: "VerifyIndividualContestParticipant", controller: "Home", AdditionalFields = nameof(ContestId))]
         public string Participant1Id { get; set; }
-
-        public int ContestId { get; set; }
 
         [Display(Name = "Тренер")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
