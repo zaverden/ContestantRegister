@@ -1,6 +1,7 @@
-﻿@model IndexViewModel
+﻿@using ContestantRegister.Models.ManageViewModels
+@model ContestantRegister.Models.ManageViewModels.IndexViewModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Профиль";
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
@@ -19,7 +20,7 @@
                 @if (Model.IsEmailConfirmed)
                 {
                     <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
+                        <input asp-for="Email" class="form-control" readonly="readonly" />
                         <span class="input-group-addon" aria-hidden="true"><span class="glyphicon glyphicon-ok text-success"></span></span>
                     </div>
                 }
