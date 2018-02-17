@@ -18,6 +18,7 @@ namespace ContestantRegister
             CreateMap<RegisterViewModel, Trainer>();
 
             CreateMap<IndividualContestRegistrationViewModel, IndividualContestRegistration>();
+            CreateMap<IndividualContestRegistration, IndividualContestRegistrationViewModel>();
         }
     }
 }

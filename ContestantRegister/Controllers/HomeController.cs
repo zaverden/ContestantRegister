@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections.Generic;
 using AutoMapper;
-using ContestantRegister.Data.Migrations;
 using ContestantRegister.Options;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +27,7 @@ namespace ContestantRegister.Controllers
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IContestRegistrationService _contestRegistrationService;
         private MailOptions _options;
 
         public HomeController(ILogger<HomeController> logger, 
@@ -35,13 +35,15 @@ namespace ContestantRegister.Controllers
             IMapper mapper,
             IEmailSender emailSender,
             UserManager<ApplicationUser> userManager,
-            IOptions<MailOptions> options)
+            IOptions<MailOptions> options,
+            IContestRegistrationService contestRegistrationService)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
             _emailSender = emailSender;
             _userManager = userManager;
+            _contestRegistrationService = contestRegistrationService;
             _options = options.Value;
         }
 
@@ -67,7 +69,23 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            return View(contest);
+            var user = await _userManager.GetUserAsync(User);
+            ICollection<ContestRegistration> userRegistrations = new List<ContestRegistration>();
+            if (User.Identity.IsAuthenticated)
+            {
+                userRegistrations = await _context.ContestRegistrations
+                    .Where(r => r.ContestId == id && 
+                                (r.Participant1Id == user.Id || r.TrainerId == user.Id || r.ManagerId == user.Id))
+                    .ToListAsync();
+            }
+
+            var viewModel = new IndividualContestDetailsViewModel
+            {
+                Contest = contest,
+                UseRegistrations = userRegistrations,
+            };
+
+            return View(viewModel);
         }
 
 
@@ -153,63 +171,26 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
-            ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
-            ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
-
-            if (contest.IsProgrammingLanguageNeeded && string.IsNullOrEmpty(viewModel.ProgrammingLanguage))
-                ModelState.AddModelError(nameof(viewModel.ProgrammingLanguage), "Поле \"Язык программирования\" обязательное");
-
-            var studyPlace = await _context.StudyPlaces.OfType<StudyPlace>().SingleAsync(s => s.Id == viewModel.StudyPlaceId);
-            if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
-                contest.ParticipantType == ParticipantType.Student && studyPlace is School)
-                ModelState.AddModelError(nameof(viewModel.StudyPlaceId), "Тип учебного заведения не соответствует типу контеста");
-            if (viewModel.CityId != studyPlace.CityId)
-                ModelState.AddModelError(nameof(viewModel.CityId), "Выбранный город не соответствует городу учебного заведения");
-            if (!ModelState.IsValid) return View(viewModel);
-
-            var participanrRegistred = await _context.ContestRegistrations.AnyAsync(r => r.ContestId == id && r.Participant1Id == viewModel.Participant1Id);
-            if (participanrRegistred) ModelState.AddModelError(nameof(viewModel.Participant1Id), "Указанный участник уже зарегистрирован в контесте");
-
-            if (viewModel.Participant1Id == viewModel.TrainerId) ModelState.AddModelError(nameof(viewModel.TrainerId), "Участник не может быть своим тренером");
-            if (viewModel.Participant1Id == viewModel.ManagerId) ModelState.AddModelError(nameof(viewModel.ManagerId), "Участник не может быть своим руководителем");
-            
-            var currentUser = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
-            if (!User.IsInRole(Roles.Admin) && viewModel.Participant1Id != currentUser.Id && viewModel.TrainerId != currentUser.Id && viewModel.ManagerId != currentUser.Id)
-                ModelState.AddModelError(string.Empty, "Вы должны быть участником, тренером или руководителем чтобы завершить регистрацию");
-
-            if (!ModelState.IsValid) return View(viewModel);
-
-            var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
-            var trainer = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
-            var manager = await _context.Users.OfType<ContestantUser>().SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
-
-            if (contest.ParticipantType == ParticipantType.Pupil)
+            var validationResult = await _contestRegistrationService.ValidateContestRegistrationAsync(viewModel, User, false);
+            if (validationResult.Any())
             {
-                if (!(participant is Pupil))
-                {
-                    ModelState.AddModelError(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста");
-                    return View(viewModel);
-                }
-            }
+                validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
-            if (contest.ParticipantType == ParticipantType.Student)
-            {
-                if (!(participant is Student)) ModelState.AddModelError(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста");
-                if (trainer is Pupil) ModelState.AddModelError(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте");
-                if (manager is Pupil) ModelState.AddModelError(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте");
-            }
+                ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
+                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
 
-            if (!ModelState.IsValid) return View(viewModel);
+                return View(viewModel);
+            }
 
             var registration = new IndividualContestRegistration();
 
             _mapper.Map(viewModel, registration);
             registration.ContestId = contest.Id;
             registration.RegistrationDateTime = DateTime.Now;
-            registration.RegistredBy = currentUser;
+            registration.RegistredBy = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
             registration.Status = ContestRegistrationStatus.Completed;
 
             var yacontestaccount = contest.YaContestAccountsCSV
@@ -228,6 +209,7 @@ namespace ContestantRegister.Controllers
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
             {
+                var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
                 await _emailSender.SendEmailAsync(participant.Email, 
                     "Вы зарегистрированы на контест", 
                     $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword} ");
@@ -324,6 +306,106 @@ namespace ContestantRegister.Controllers
                 $"Сайт '{viewModel.Site}'{Environment.NewLine}");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditRegistration(int id)
+        {
+            var registration = await _context.ContestRegistrations
+                .OfType<IndividualContestRegistration>()
+                .Include(r => r.Contest)
+                .SingleOrDefaultAsync(r => r.Id == id);
+
+            if (registration == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new IndividualContestRegistrationViewModel
+            {
+                ContestName = registration.Contest.Name
+            };
+            _mapper.Map(registration, viewModel);
+
+            ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
+            ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
+            ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            
+            return View(viewModel);
+        }
+
+        /// <summary>
+        /// Метод не меняет состояние регистрации. Если было ожидание подтверждения, то ожидание и остается. Или лучше сразу подтверждать после изменения статуса?
+        /// </summary>
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> EditRegistration(int id, IndividualContestRegistrationViewModel viewModel)
+        {
+            var dbRedistration = await _context.ContestRegistrations
+                .OfType<IndividualContestRegistration>()
+                .SingleOrDefaultAsync(r => r.Id == id);
+            if (dbRedistration == null)
+            {
+                return NotFound();
+            }
+
+            var validationResult = await _contestRegistrationService.ValidateContestRegistrationAsync(viewModel, User, true);
+            if (validationResult.Any())
+            {
+                validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+
+                ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
+                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+
+                return View(viewModel);
+            }
+
+            _mapper.Map(viewModel, dbRedistration);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = dbRedistration.ContestId });
+        }
+
+        [Authorize]
+        //TODO стоит ли делать POST вместо GET?
+        public async Task<IActionResult> CancelRegistration(int id)
+        {
+            //TODO На UI переспросить "Вы точно уверены, что хотите отменить регистрацию?"
+
+            var registration = await _context.ContestRegistrations.SingleOrDefaultAsync(r => r.Id == id);
+            if (registration == null)
+            {
+                return NotFound();
+            }
+
+            _context.ContestRegistrations.Remove(registration);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new {id = registration.ContestId});
+        }
+
+        [Authorize]
+        //TODO стоит ли делать POST вместо GET?
+        public async Task<IActionResult> ConfirmParticipation(int id)
+        {
+            var registration = await _context.ContestRegistrations.SingleOrDefaultAsync(r => r.Id == id);
+            if (registration == null)
+            {
+                return NotFound();
+            }
+
+            registration.Status = ContestRegistrationStatus.Completed;
+            registration.RegistrationDateTime = DateTime.Now;
+            registration.RegistredBy = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = registration.ContestId });
         }
     }
 }

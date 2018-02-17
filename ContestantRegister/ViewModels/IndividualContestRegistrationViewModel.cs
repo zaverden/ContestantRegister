@@ -29,5 +29,9 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Город")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int CityId { get; set; }
+
+        public int Id { get; set; }
+
+        public int ContestId { get; set; }
     }
 }
