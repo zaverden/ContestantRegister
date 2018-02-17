@@ -16,14 +16,19 @@ namespace ContestantRegister.Data
         public DbSet<Contest> Contests { get; set; }
 
         public DbSet<StudyPlace> StudyPlaces { get; set; }
-
         public DbSet<School> Schools { get; set; }
-
         public DbSet<Institution> Institutions { get; set; }
 
         public DbSet<ContestRegistration> ContestRegistrations { get; set; }
+        public DbSet<TeamContestRegistration> TeamContestRegistrations { get; set; }
+        public DbSet<IndividualContestRegistration> IndividualContestRegistrations { get; set; }
 
         public DbSet<Email> Emails { get; set; }
+
+        public DbSet<ContestantUser> ContestantUsers { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<Pupil> Pupils { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

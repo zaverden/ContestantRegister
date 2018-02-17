@@ -4,15 +4,14 @@ using ContestantRegister.Properties;
 
 namespace ContestantRegister.Models.AccountViewModels
 {
-    public class RegisterViewModel
+    public class RegisterViewModel : UserWithCredViewModelBase
     {
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
+    }
 
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+    public abstract class UserWithCredViewModelBase : UserViewModelBase
+    {
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [StringLength(100, ErrorMessage = "{0} должен быть не менее {2} и не более {1} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
@@ -21,6 +20,18 @@ namespace ContestantRegister.Models.AccountViewModels
         [Display(Name = "Подтверждение пароля")]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         public string ConfirmPassword { get; set; }
+
+    }
+
+    public abstract class UserViewModelBase
+    {
+        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
+        [Display(Name = "Email подтвержден")]
+        public bool EmailConfirmed { get; set; }
 
         [Display(Name = "Роль")]
         public UserType UserType { get; set; }

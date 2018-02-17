@@ -11,7 +11,7 @@ namespace ContestantRegister.Models
         public DateTime RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]
-        public ContestantUser RegistredBy { get; set; }
+        public ApplicationUser RegistredBy { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(50)]
@@ -55,7 +55,6 @@ namespace ContestantRegister.Models
 
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant2 { get; set; }
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant3 { get; set; }
-
-        public ICollection<ContestantUser> RegistredByThisUser { get; set; }
+        
     }
 }

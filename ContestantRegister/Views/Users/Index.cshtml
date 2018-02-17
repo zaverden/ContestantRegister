@@ -1,0 +1,97 @@
+﻿
+@model IEnumerable<ContestantUser>
+
+@inject ContestantRegister.Services.IUserService UserService
+
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create">Создать</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patronymic)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                Роль
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudyPlace.CityId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StudyPlaceId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Patronymic)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                   @if (UserService.IsPupil(item))
+                   {
+                       <label>Ученик</label>
+                   }
+                    @if (UserService.IsStudent(item))
+                    {
+                        <label>Студент</label>
+                    }
+                    @if (UserService.IsTrainer(item))
+                    {
+                        <label>Тренер</label>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
