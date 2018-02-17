@@ -12,9 +12,12 @@ using System;
 using System.Runtime.InteropServices.WindowsRuntime;
 using AutoMapper;
 using ContestantRegister.Data.Migrations;
+using ContestantRegister.Options;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 
 namespace ContestantRegister.Controllers
 {
@@ -24,16 +27,22 @@ namespace ContestantRegister.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private MailOptions _options;
 
         public HomeController(ILogger<HomeController> logger, 
             ApplicationDbContext context, 
             IMapper mapper,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            UserManager<ApplicationUser> userManager,
+            IOptions<MailOptions> options)
         {
             _logger = logger;
             _context = context;
             _mapper = mapper;
             _emailSender = emailSender;
+            _userManager = userManager;
+            _options = options.Value;
         }
 
         public async Task<IActionResult> Index()
@@ -252,6 +261,69 @@ namespace ContestantRegister.Controllers
             }
 
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        public async Task<IActionResult> SuggestSchool()
+        {
+            var viewModel = new SuggectSchoolViewModel();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                viewModel.Email = user.Email;
+                viewModel.IsEmailReadonly = true;
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SuggestSchool(SuggectSchoolViewModel viewModel)
+        {
+            await _emailSender.SendEmailAsync(_options.Email, "Новая школа",
+                $"Предложил {viewModel.Email}{Environment.NewLine}" +
+                $"Город '{viewModel.City}'{Environment.NewLine}" +
+                $"Краткое название '{viewModel.ShortName}'{Environment.NewLine}" +
+                $"Полное название '{viewModel.FullName}'{Environment.NewLine}" +
+                $"Сайт '{viewModel.Site}'{Environment.NewLine}" +
+                $"Официальный email '{viewModel.SchoolEmail}'{Environment.NewLine}");
+
+            return RedirectToAction(nameof(StudyPlaceSuggested));
+        }
+
+        public IActionResult StudyPlaceSuggested()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> SuggestInstitution()
+        {
+            var viewModel = new SuggectInstitutionViewModel();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                viewModel.Email = user.Email;
+                viewModel.IsEmailReadonly = true;
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SuggestInstitution(SuggectInstitutionViewModel viewModel)
+        {
+            await _emailSender.SendEmailAsync(_options.Email, "Новый вуз",
+                $"Предложил {viewModel.Email}{Environment.NewLine}" +
+                $"Город '{viewModel.City}'{Environment.NewLine}" +
+                $"Краткое название '{viewModel.ShortName}'{Environment.NewLine}" +
+                $"Полное название '{viewModel.FullName}'{Environment.NewLine}" +
+                $"Краткое название англ '{viewModel.ShortNameEn}'{Environment.NewLine}" +
+                $"Полное название англ '{viewModel.FullNameEn}'{Environment.NewLine}" +
+                $"Сайт '{viewModel.Site}'{Environment.NewLine}");
+
+            return RedirectToAction(nameof(StudyPlaceSuggested));
         }
     }
 }
