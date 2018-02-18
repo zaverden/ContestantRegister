@@ -213,7 +213,7 @@ namespace ContestantRegister.Controllers
                 var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
                 await _emailSender.SendEmailAsync(participant.Email, 
                     "Вы зарегистрированы на контест", 
-                    $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword} ");
+                    $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword}{Environment.NewLine}. Ссылка для входа: {contest.YaContestLink} ");
             }
             
             return RedirectToAction(nameof(Details), new {id});
