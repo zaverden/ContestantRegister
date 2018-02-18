@@ -104,6 +104,7 @@ namespace ContestantRegister.Controllers
             var registration = new IndividualContestRegistrationViewModel
             {
                 ContestName = contest.Name,
+                ContestId = contest.Id,
             };
 
             var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
