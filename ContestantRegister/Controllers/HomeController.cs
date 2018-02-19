@@ -28,7 +28,7 @@ namespace ContestantRegister.Controllers
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IContestRegistrationService _contestRegistrationService;
-        private MailOptions _options;
+        private readonly MailOptions _options;
 
         public HomeController(ILogger<HomeController> logger, 
             ApplicationDbContext context, 

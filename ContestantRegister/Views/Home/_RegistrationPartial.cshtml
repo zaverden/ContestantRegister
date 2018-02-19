@@ -1,0 +1,39 @@
+﻿@model ContestantRegister.ViewModels.IndividualContestRegistrationViewModel
+
+<div class="form-group">
+    <label asp-for="Participant1Id" class="control-label"></label>
+    <select asp-for="Participant1Id" class="form-control" asp-items="ViewBag.Participant1Id"></select>
+    <span asp-validation-for="Participant1Id" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="CityId" class="control-label"></label>
+    <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId"></select>
+    <span asp-validation-for="CityId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="StudyPlaceId" class="control-label"></label>
+    <select asp-for="StudyPlaceId" class="form-control" asp-items="ViewBag.StudyPlaceId"></select>
+    <span asp-validation-for="StudyPlaceId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="TrainerId" class="control-label"></label>
+    <select asp-for="TrainerId" class="form-control" asp-items="ViewBag.TrainerId"></select>
+    <span asp-validation-for="TrainerId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="ManagerId" class="control-label"></label>
+    <select asp-for="ManagerId" class="form-control" asp-items="ViewBag.ManagerId"></select>
+    <span asp-validation-for="ManagerId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="ProgrammingLanguage" class="control-label"></label>
+    <input asp-for="ProgrammingLanguage" class="form-control" />
+    <span asp-validation-for="ProgrammingLanguage" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Area" class="control-label"></label>
+    <select asp-for="Area" class="form-control" asp-items="ViewBag.Area"></select>
+    <span asp-validation-for="Area" class="text-danger"></span>
+</div>
+
+<input type="hidden" asp-for="ContestId" />

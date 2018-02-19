@@ -35,77 +35,8 @@
             <input asp-for="ConfirmPassword" class="form-control" />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>*@
-            <div class="form-group">
-                <label asp-for="UserType" class="control-label"></label>
-                <select asp-for="UserType" asp-items="Html.GetEnumSelectList<UserType>()" class="form-control"></select>
-                <span asp-validation-for="UserType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Surname" class="control-label"></label>
-                <input asp-for="Surname" class="form-control" />
-                <span asp-validation-for="Surname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Patronymic" class="control-label"></label>
-                <input asp-for="Patronymic" class="form-control" />
-                <span asp-validation-for="Patronymic" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CityId" class="control-label"></label>
-                <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId"></select>
-                <span asp-validation-for="CityId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudyPlaceId" class="control-label"></label>
-                <select asp-for="StudyPlaceId" class="form-control" asp-items="ViewBag.StudyPlaceId"></select>
-                <span asp-validation-for="StudyPlaceId" class="text-danger"></span>
-            </div>
 
-            @*Student*@
-            <div class="form-group">
-                <label asp-for="EducationStartDate"></label>
-                <input asp-for="EducationStartDate" class="form-control" />
-                <span asp-validation-for="EducationStartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EducationEndDate"></label>
-                <input asp-for="EducationEndDate" class="form-control" />
-                <span asp-validation-for="EducationEndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateOfBirth"></label>
-                <input asp-for="DateOfBirth" class="form-control" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
-
-            @*Trainer*@
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsSchool" /> @Html.DisplayNameFor(model => model.IsSchool)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
+            @await Html.PartialAsync("_UserPartial")
 
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-default" />
