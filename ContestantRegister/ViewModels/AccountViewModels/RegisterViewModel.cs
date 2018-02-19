@@ -88,6 +88,9 @@ namespace ContestantRegister.Models.AccountViewModels
         [Display(Name = "Да - тренер школ, нет - тренер студентов")]
         public bool IsSchool { get; set; }
 
+        [Display(Name = "Номер мобильного телефона")]
+        public string PhoneNumber { get; set; }
+
     }
 
     public enum UserType : int
