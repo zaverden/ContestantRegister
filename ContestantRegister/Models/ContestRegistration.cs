@@ -60,7 +60,9 @@ namespace ContestantRegister.Models
         [MaxLength(20)]
         public string YaContestPassword { get; set; }
 
-        //TODO площадка
+        [Display(Name = "Площадка")]
+        [MaxLength(30)]
+        public string Area { get; set; }
 
     }
 }

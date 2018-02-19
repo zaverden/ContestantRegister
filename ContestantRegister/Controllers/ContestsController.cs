@@ -39,7 +39,7 @@ namespace ContestantRegister
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,ContestParticipationType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
+        public async Task<IActionResult> Create(Contest contest)
         {
             if (ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace ContestantRegister
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,RegistrationStart,RegistrationEnd,Duration,ParticipantType,ContestType,ContestParticipationType,IsArchive,ContestStatus,IsEnglishLanguage,IsProgrammingLanguageNeeded,YaContestLink,SendRegistrationEmail,ShowRegistrationInfo,YaContestAccountsCSV,UsedAccountsCount,Id")] Contest contest)
+        public async Task<IActionResult> Edit(int id, Contest contest)
         {
             if (id != contest.Id)
             {

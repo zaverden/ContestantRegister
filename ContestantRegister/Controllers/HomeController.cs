@@ -158,6 +158,11 @@ namespace ContestantRegister.Controllers
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", registration.CityId);
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", registration.StudyPlaceId);
 
+            if (contest.IsAreaRequired)
+            {
+                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
+            }
+
             return View(registration);
         }
 
@@ -182,6 +187,11 @@ namespace ContestantRegister.Controllers
                 ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
                 ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+
+                if (contest.IsAreaRequired)
+                {
+                    ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
+                }
 
                 return View(viewModel);
             }
@@ -333,7 +343,13 @@ namespace ContestantRegister.Controllers
             ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
-            
+
+            var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
+            if (contest.IsAreaRequired)
+            {
+                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
+            }
+
             return View(viewModel);
         }
 
@@ -356,12 +372,18 @@ namespace ContestantRegister.Controllers
             if (validationResult.Any())
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
-
+                
                 ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
                 ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
                 ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+
+                var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
+                if (contest.IsAreaRequired)
+                {
+                    ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
+                }
 
                 return View(viewModel);
             }

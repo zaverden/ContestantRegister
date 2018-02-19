@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ContestantRegister.ViewModels
 {
@@ -29,6 +30,9 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Город")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int CityId { get; set; }
+
+        [Display(Name = "Площадка")]
+        public string Area { get; set; }
 
         public int Id { get; set; }
 

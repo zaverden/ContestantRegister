@@ -77,6 +77,9 @@ namespace ContestantRegister.Services
                 if (manager is Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
             }
 
+            if (contest.IsAreaRequired && string.IsNullOrEmpty(viewModel.Area))
+                result.Add(KeyValuePair.Create(nameof(viewModel.Area), "Поле 'Площадка' обязательное"));
+
             return result;
         }
     }

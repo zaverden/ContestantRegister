@@ -73,8 +73,16 @@ namespace ContestantRegister.Models
         [Range(0, int.MaxValue)]
         public int UsedAccountsCount { get; set; } = 0;
 
+        [Display(Name = "Площадки")]
+        [DataType(DataType.MultilineText)]
+        [MaxLength(300)]
+        public string Areas { get; set; }
+
+        [Display(Name = "Указывать ли площадку при регистрации")]
+        public bool IsAreaRequired { get; set; }
+
         public ICollection<ContestRegistration> ContestRegistrations { get; set; }
 
-        //TODO площадка - список площадок и спрашивать ли площадку
+        
     }
 }
