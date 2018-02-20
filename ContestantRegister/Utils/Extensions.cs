@@ -5,25 +5,31 @@ using System.Reflection;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ContestantRegister.Properties;
-using Microsoft.ApplicationInsights.AspNetCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ContestantRegister.Services
 {
-    public static class EmailSenderExtensions
+    public static class Extensions
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
             return emailSender.SendEmailAsync(email, "Confirm your email",
                 $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
         }
-    }
-
-    public static class ValidationExtensions
-    {
+    
         public static string GetRequredFieldErrorMessage(this Object obj, string propertyName)
         {
             var displayAttribute = (DisplayAttribute)obj.GetType().GetProperty(propertyName).GetCustomAttribute(typeof(DisplayAttribute));
             return string.Format(Resource.RequiredFieldErrorMessage, displayAttribute.Name);
+        }
+
+        public static void AddErrors(this ModelStateDictionary model, IEnumerable<IdentityError> errors)
+        {
+            foreach (var error in errors)
+            {
+                model.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }

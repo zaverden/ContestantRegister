@@ -94,7 +94,7 @@ namespace ContestantRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            AddErrors(result);
+            ModelState.AddErrors(result.Errors);
 
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
@@ -204,13 +204,6 @@ namespace ContestantRegister.Controllers
             return _context.ContestantUsers.Any(e => e.Id == id);
         }
 
-        //TODO копипаста из AccountController
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
+        
     }
 }

@@ -159,7 +159,7 @@ namespace ContestantRegister.Controllers
                     return RedirectToAction(nameof(WaitEmailConfirmation));
                 }
 
-                AddErrors(result);
+                ModelState.AddErrors(result.Errors);
             }
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
@@ -282,7 +282,7 @@ namespace ContestantRegister.Controllers
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
-            AddErrors(result);
+            ModelState.AddErrors(result.Errors);
             return View();
         }
 
@@ -301,14 +301,6 @@ namespace ContestantRegister.Controllers
         }
 
         #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
