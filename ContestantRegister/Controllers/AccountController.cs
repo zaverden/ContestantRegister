@@ -159,12 +159,11 @@ namespace ContestantRegister.Controllers
                     return RedirectToAction(nameof(WaitEmailConfirmation));
                 }
 
-                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-                //TODO добавить выбор учебного заведения в зависимости от роли и города
-                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
-
                 AddErrors(result);
             }
+
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
 
             // If we got this far, something failed, redisplay form
             return View(viewModel);
