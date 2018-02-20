@@ -60,6 +60,9 @@ namespace ContestantRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateUserViewModel viewModel)
         {
+            var validationResult = await _userService.ValidateUserAsync(viewModel);
+            validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+
             if (!ModelState.IsValid)
             {
                 ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
@@ -133,6 +136,9 @@ namespace ContestantRegister.Controllers
             {
                 return NotFound();
             }
+
+            var validationResult = await _userService.ValidateUserAsync(viewModel);
+            validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
             if (ModelState.IsValid)
             {

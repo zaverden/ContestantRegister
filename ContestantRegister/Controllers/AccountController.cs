@@ -25,6 +25,7 @@ namespace ContestantRegister.Controllers
         private readonly ILogger _logger;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -32,7 +33,8 @@ namespace ContestantRegister.Controllers
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             ApplicationDbContext context, 
-            IMapper mapper)
+            IMapper mapper,
+            IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,6 +42,7 @@ namespace ContestantRegister.Controllers
             _logger = logger;
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         [TempData]
@@ -121,33 +124,37 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterViewModel viewModel, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+
+            var validationResult = await _userService.ValidateUserAsync(viewModel);
+            validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+
             if (ModelState.IsValid)
             {
                 ContestantUser user = null;
 
-                switch (model.UserType)
+                switch (viewModel.UserType)
                 {
                     case UserType.Pupil: user = new Pupil(); break;
                     case UserType.Student: user = new Student(); break;
                     case UserType.Trainer: user = new Trainer(); break;
                 }
 
-                user.UserName = model.Email;
+                user.UserName = viewModel.Email;
                 user.RegistrationDateTime = DateTime.Now;
                 
-                _mapper.Map(model, user); 
+                _mapper.Map(viewModel, user); 
                 
-                var result = await _userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, viewModel.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    await _emailSender.SendEmailConfirmationAsync(viewModel.Email, callbackUrl);
 
                     return RedirectToAction(nameof(WaitEmailConfirmation));
                 }
@@ -160,7 +167,7 @@ namespace ContestantRegister.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View(viewModel);
         }
 
         [HttpPost]
