@@ -85,9 +85,6 @@ namespace ContestantRegister.Models.AccountViewModels
         public DateTime? DateOfBirth { get; set; }
 
         //Trainer
-        [Display(Name = "Да - тренер школ, нет - тренер студентов")]
-        public bool IsSchool { get; set; }
-
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }
 
