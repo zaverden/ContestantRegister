@@ -37,7 +37,7 @@ namespace ContestantRegister.Services.Email
                         client.Authenticate(_options.Email, _options.Password);
                     }
 
-                    foreach (var email in _context.Emails.Where(e => !e.IsSended))
+                    foreach (var email in _context.Emails.Where(e => !e.IsSended && e.SendAttempts < 2))
                     {
                         var message = new MimeMessage();
                         message.From.Add(new MailboxAddress(_options.FromName, _options.Email));
@@ -53,6 +53,7 @@ namespace ContestantRegister.Services.Email
                         }
                         catch (Exception ex)
                         {
+                            email.SendAttempts++;
                             _logger.LogError(ex, $"Unable to send email to {email.Address}");
                         }
                     }

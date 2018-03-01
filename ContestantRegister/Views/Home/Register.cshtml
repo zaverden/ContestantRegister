@@ -10,7 +10,10 @@
 
 <p>
     <a asp-action="SuggestSchool">Создать новую школу</a>
-    <a asp-action="SuggestInstitution">Создать новый вуз/ссуз</a>
+    <a asp-action="SuggestInstitution" >Создать новый вуз/ссуз</a>
+    <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">Зарегистрировать школьника</a>
+    <a asp-route-id="@Model.ContestId" asp-action="RegisterStudent" >Зарегистрировать студента</a>
+    <a asp-route-id="@Model.ContestId" asp-action="RegisterTrainer">Зарегистрировать тренера</a>
 </p>
 
 <div class="row">

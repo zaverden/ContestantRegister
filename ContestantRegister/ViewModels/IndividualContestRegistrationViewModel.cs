@@ -34,7 +34,7 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Площадка")]
         public string Area { get; set; }
 
-        public int Id { get; set; }
+        public int RegistrationId { get; set; }
 
         public int ContestId { get; set; }
     }

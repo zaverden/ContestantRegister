@@ -11,6 +11,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using AutoMapper;
+using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.Options;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -28,6 +29,7 @@ namespace ContestantRegister.Controllers
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IContestRegistrationService _contestRegistrationService;
+        private readonly IUserService _userService;
         private readonly MailOptions _options;
 
         public HomeController(ILogger<HomeController> logger, 
@@ -36,7 +38,8 @@ namespace ContestantRegister.Controllers
             IEmailSender emailSender,
             UserManager<ApplicationUser> userManager,
             IOptions<MailOptions> options,
-            IContestRegistrationService contestRegistrationService)
+            IContestRegistrationService contestRegistrationService,
+            IUserService userService)
         {
             _logger = logger;
             _context = context;
@@ -44,6 +47,7 @@ namespace ContestantRegister.Controllers
             _emailSender = emailSender;
             _userManager = userManager;
             _contestRegistrationService = contestRegistrationService;
+            _userService = userService;
             _options = options.Value;
         }
 
@@ -110,7 +114,7 @@ namespace ContestantRegister.Controllers
             var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
             var pupil = await _context.Users.OfType<Pupil>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
             var student = await _context.Users.OfType<Student>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
-
+            
             ContestantUser user = null;
             if (trainer != null)
             {
@@ -145,8 +149,8 @@ namespace ContestantRegister.Controllers
                 }
             }
 
-            if (contest.ParticipantType == ParticipantType.Pupil && user.StudyPlace is School ||
-                contest.ParticipantType == ParticipantType.Student && user.StudyPlace is Institution)
+            if (contest.ParticipantType == ParticipantType.Pupil && user?.StudyPlace is School ||
+                contest.ParticipantType == ParticipantType.Student && user?.StudyPlace is Institution)
             {
                 registration.StudyPlaceId = user.StudyPlaceId;
                 registration.CityId = user.StudyPlace.CityId;
@@ -166,12 +170,16 @@ namespace ContestantRegister.Controllers
             return View(registration);
         }
 
+        private async Task<Contest> GetContest(int contestId)
+        {
+            return await _context.Contests.SingleOrDefaultAsync(c => c.Id == contestId);
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> Register(int id, IndividualContestRegistrationViewModel viewModel)
         {
-            var contest = await _context.Contests
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var contest = await GetContest(id);
             if (contest == null)
             {
                 return NotFound();
@@ -199,7 +207,6 @@ namespace ContestantRegister.Controllers
             var registration = new IndividualContestRegistration();
 
             _mapper.Map(viewModel, registration);
-            registration.ContestId = contest.Id;
             registration.RegistrationDateTime = DateTime.Now;
             registration.RegistredBy = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
             registration.Status = ContestRegistrationStatus.Completed;
@@ -215,7 +222,17 @@ namespace ContestantRegister.Controllers
             registration.YaContestPassword = yacontestaccount[1];
 
             _context.ContestRegistrations.Add(registration);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
 
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
@@ -227,6 +244,82 @@ namespace ContestantRegister.Controllers
             }
             
             return RedirectToAction(nameof(Details), new {id});
+        }
+
+        [Authorize]
+        public IActionResult RegisterStudent(int id)
+        {
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+
+            return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Student });
+        }
+
+        [Authorize]
+        public IActionResult RegisterPupil(int id)
+        {
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+
+            return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Pupil });
+        }
+
+        [Authorize]
+        public IActionResult RegisterTrainer(int id)
+        {
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+
+            return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Trainer });
+        }
+
+        [Authorize]
+        public IActionResult RegisterContestParticipant(int contestId, UserType userType)
+        {
+            var vm = new RegisterContestParticipantViewModel
+            {
+                ContestId = contestId,
+                UserType = userType,
+                IsUserTypeDefined = true
+            };
+
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> RegisterContestParticipant(RegisterContestParticipantViewModel viewModel)
+        {
+            var validationResult = await _userService.ValidateUserAsync(viewModel);
+            validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+
+            if (ModelState.IsValid)
+            {
+                var user = _userService.CreateUser(viewModel.UserType);
+
+                user.UserName = viewModel.Email;
+                user.RegistrationDateTime = DateTime.Now;
+                user.RegistredBy = await _userService.GetCurrentUserAsync(User);
+
+                _mapper.Map(viewModel, user);
+
+                var result = await _userManager.CreateAsync(user, viewModel.Email);
+                if (result.Succeeded)
+                {
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    await _emailSender.SendEmailConfirmationAsync(viewModel.Email, callbackUrl);
+
+                    return RedirectToAction(nameof(Register), new {id = viewModel.ContestId});
+                }
+
+                ModelState.AddErrors(result.Errors);
+            }
+
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+
+            return View(viewModel);
         }
 
         public IActionResult About()
@@ -334,7 +427,8 @@ namespace ContestantRegister.Controllers
 
             var viewModel = new IndividualContestRegistrationViewModel
             {
-                ContestName = registration.Contest.Name
+                ContestName = registration.Contest.Name,
+                RegistrationId = registration.Id
             };
             _mapper.Map(registration, viewModel);
 

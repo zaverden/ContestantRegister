@@ -38,6 +38,9 @@ namespace ContestantRegister
             CreateMap<Trainer, EditUserViewModel>();
             CreateMap<EditUserViewModel, Trainer>();
 
+            CreateMap<RegisterContestParticipantViewModel, Trainer>();
+            CreateMap<RegisterContestParticipantViewModel, Student>();
+            CreateMap<RegisterContestParticipantViewModel, Pupil>();
         }
     }
 }

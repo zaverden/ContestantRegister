@@ -88,6 +88,8 @@ namespace ContestantRegister.Models.AccountViewModels
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }
 
+        public bool IsUserTypeDefined { get; set; }
+
     }
 
     public enum UserType : int

@@ -41,7 +41,7 @@ namespace ContestantRegister.Services
 
             if (editRegistration)
             {
-                var dbRegistration = await _context.ContestRegistrations.SingleAsync(r => r.Id == viewModel.Id);
+                var dbRegistration = await _context.ContestRegistrations.SingleAsync(r => r.Id == viewModel.RegistrationId);
                 if (dbRegistration.Participant1Id != viewModel.Participant1Id)
                     result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Нельзя менять пользователя при изменении регистрации"));
             }

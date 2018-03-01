@@ -19,5 +19,7 @@ namespace ContestantRegister.Models
 
         [Required]
         public bool IsSended { get; set; }
+
+        public int SendAttempts { get; set; }
     }
 }

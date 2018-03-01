@@ -70,16 +70,8 @@ namespace ContestantRegister.Controllers
 
                 return View(viewModel);
             }
-            
-            //TODO копипаста с регистрацией, вынести в какой-то сервис
-            ContestantUser user = null;
 
-            switch (viewModel.UserType)
-            {
-                case UserType.Pupil: user = new Pupil(); break;
-                case UserType.Student: user = new Student(); break;
-                case UserType.Trainer: user = new Trainer(); break;
-            }
+            var user = _userService.CreateUser(viewModel.UserType);
 
             user.UserName = viewModel.Email;
             user.RegistrationDateTime = DateTime.Now;
@@ -115,7 +107,11 @@ namespace ContestantRegister.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new EditUserViewModel();
+
+            var viewModel = new EditUserViewModel
+            {
+                UserType = _userService.GetUserType(contestantUser),
+            };
             _mapper.Map(contestantUser, viewModel);
 
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
@@ -144,6 +140,7 @@ namespace ContestantRegister.Controllers
             {
                 try
                 {
+                    //TODO как поменять тип сущности с ученика на студента?
                     _mapper.Map(viewModel, dbUser);
 
                     _context.Update(dbUser);

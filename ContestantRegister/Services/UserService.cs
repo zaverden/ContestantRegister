@@ -20,9 +20,12 @@ namespace ContestantRegister.Services
         bool IsStudent(ContestantUser user);
         bool IsTrainer(ContestantUser user);
 
+        ContestantUser CreateUser(UserType userType);
+
         Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user);
 
         Task<List<KeyValuePair<string, string>>> ValidateUserAsync(UserViewModelBase viewModel);
+        UserType GetUserType(ContestantUser contestantUser);
     }
 
     public class UserService : IUserService
@@ -68,6 +71,15 @@ namespace ContestantRegister.Services
         public bool IsTrainer(ContestantUser user)
         {
             return user is Trainer;
+        }
+
+        public ContestantUser CreateUser(UserType userType)
+        {
+            if (userType == UserType.Pupil) return new Pupil();
+            if (userType == UserType.Student) return new Student();
+            if (userType == UserType.Trainer) return new Trainer();
+
+            throw new Exception("Неизвестный тип пользователя");
         }
 
         public async Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user)
@@ -117,6 +129,15 @@ namespace ContestantRegister.Services
             }
 
             return result;
+        }
+
+        public UserType GetUserType(ContestantUser contestantUser)
+        {
+            if (contestantUser is Pupil) return UserType.Pupil;
+            if (contestantUser is Student) return UserType.Student;
+            if (contestantUser is Trainer) return UserType.Trainer;
+
+            throw new Exception("Неизвестный UserType");
         }
     }
 }

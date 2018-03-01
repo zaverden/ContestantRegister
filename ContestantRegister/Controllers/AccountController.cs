@@ -133,14 +133,7 @@ namespace ContestantRegister.Controllers
 
             if (ModelState.IsValid)
             {
-                ContestantUser user = null;
-
-                switch (viewModel.UserType)
-                {
-                    case UserType.Pupil: user = new Pupil(); break;
-                    case UserType.Student: user = new Student(); break;
-                    case UserType.Trainer: user = new Trainer(); break;
-                }
+                var user = _userService.CreateUser(viewModel.UserType);
 
                 user.UserName = viewModel.Email;
                 user.RegistrationDateTime = DateTime.Now;
