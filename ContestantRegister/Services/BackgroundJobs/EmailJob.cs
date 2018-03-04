@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ContestantRegister.Data;
-using ContestantRegister.Options;
+using ContestantRegister.Utils;
 using FluentScheduler;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;

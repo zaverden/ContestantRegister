@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Options;
 using ContestantRegister.Services;
 using ContestantRegister.Services.BackgroundJobs;
+using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

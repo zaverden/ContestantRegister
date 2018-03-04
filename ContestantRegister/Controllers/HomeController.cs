@@ -11,10 +11,10 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using ContestantRegister.Options;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Services;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -107,7 +107,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var contestantUser = await _context.ContestantUsers
+            var contestantUser = await _context.Users
                 .Include(u => u.StudyPlace)
                 .Include(u => u.StudyPlace.City)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -138,44 +138,34 @@ namespace ContestantRegister.Controllers
                 ParticipantType = contest.ParticipantType
             };
 
-            var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            var pupil = await _context.Users.OfType<Pupil>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            var student = await _context.Users.OfType<Student>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            
-            ContestantUser user = null;
-            if (trainer != null)
+            var user = await _userManager.GetUserAsync(User);
+            switch (user.UserType)
             {
-                user = trainer;
-
-                registration.TrainerId = user.Id;
-            }
-
-            if (pupil != null)
-            {
-                user = pupil;
-
-                if (contest.ParticipantType == ParticipantType.Pupil)
-                {
-                    registration.Participant1Id = user.Id;
-                }
-                else
-                    throw new Exception("Школьники не участвуют в студенческих соревнованиях");
-            }
-
-            if (student != null)
-            {
-                user = student;
-
-                if (contest.ParticipantType == ParticipantType.Pupil)
-                {
+                case UserType.Trainer:
                     registration.TrainerId = user.Id;
-                }
-                else
-                {
-                    registration.Participant1Id = user.Id;
-                }
-            }
+                    break;
 
+                case UserType.Pupil:
+                    if (contest.ParticipantType == ParticipantType.Pupil)
+                    {
+                        registration.Participant1Id = user.Id;
+                    }
+                    else
+                        throw new Exception("Школьники не участвуют в студенческих соревнованиях");
+                    break;
+
+                case UserType.Student:
+                    if (contest.ParticipantType == ParticipantType.Pupil)
+                    {
+                        registration.TrainerId = user.Id;
+                    }
+                    else
+                    {
+                        registration.Participant1Id = user.Id;
+                    }
+                    break;
+            }
+            
             if (contest.ParticipantType == ParticipantType.Pupil && user?.StudyPlace is School ||
                 contest.ParticipantType == ParticipantType.Student && user?.StudyPlace is Institution)
             {
@@ -235,7 +225,7 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, registration);
             registration.RegistrationDateTime = DateTime.Now;
-            registration.RegistredBy = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
+            registration.RegistredBy = await _userManager.GetUserAsync(User);
             registration.Status = ContestRegistrationStatus.Completed;
 
             var yacontestaccount = contest.YaContestAccountsCSV
@@ -264,7 +254,7 @@ namespace ContestantRegister.Controllers
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
             {
-                var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
+                var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
                 await _emailSender.SendEmailAsync(participant.Email, 
                     "Вы зарегистрированы на контест", 
                     $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword}{Environment.NewLine}. Ссылка для входа: {contest.YaContestLink} ");
@@ -322,11 +312,12 @@ namespace ContestantRegister.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = _userService.CreateUser(viewModel.UserType);
-
-                user.UserName = viewModel.Email;
-                user.RegistrationDateTime = DateTime.Now;
-                user.RegistredBy = await _userService.GetCurrentUserAsync(User);
+                var user = new ApplicationUser
+                {
+                    UserName = viewModel.Email,
+                    RegistrationDateTime = DateTime.Now,
+                    RegistredBy = await _userManager.GetUserAsync(User)
+                };
 
                 _mapper.Map(viewModel, user);
 
@@ -538,7 +529,7 @@ namespace ContestantRegister.Controllers
 
             registration.Status = ContestRegistrationStatus.Completed;
             registration.RegistrationDateTime = DateTime.Now;
-            registration.RegistredBy = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == User.Identity.Name);
+            registration.RegistredBy = await _userManager.GetUserAsync(User);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = registration.ContestId });

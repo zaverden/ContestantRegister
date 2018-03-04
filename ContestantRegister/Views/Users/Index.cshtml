@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<ContestantUser>
+@model IEnumerable<ApplicationUser>
 
 @inject ContestantRegister.Services.IUserService UserService
 
@@ -68,18 +68,7 @@
                     @Html.DisplayFor(modelItem => item.LastName)
                 </td>
                 <td>
-                   @if (UserService.IsPupil(item))
-                   {
-                       <label>Ученик</label>
-                   }
-                    @if (UserService.IsStudent(item))
-                    {
-                        <label>Студент</label>
-                    }
-                    @if (UserService.IsTrainer(item))
-                    {
-                        <label>Тренер</label>
-                    }
+                    @item.UserType.GetDisplayName()
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)

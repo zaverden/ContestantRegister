@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Models;
 using ContestantRegister.Properties;
 
 namespace ContestantRegister.ViewModels

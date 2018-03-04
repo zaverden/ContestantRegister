@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.ManageViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -62,11 +63,6 @@ namespace ContestantRegister.Controllers
                 StatusMessage = StatusMessage
             };
 
-            if (user is ContestantUser contestantUser)
-            {
-                viewModel.UserType = _userService.GetUserType(contestantUser);
-            }
-
             _mapper.Map(user, viewModel);
 
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
@@ -90,7 +86,7 @@ namespace ContestantRegister.Controllers
                 return View(viewModel);
             }
 
-            var user = await _userService.GetCurrentUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -98,7 +94,8 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, user);
 
-            await _userService.UpdateUserAsync(user, viewModel.UserType);
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
             
             StatusMessage = "Профиль был успешно обновлен.";
             return RedirectToAction(nameof(Index));

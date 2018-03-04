@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AutoMapper;
+using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers

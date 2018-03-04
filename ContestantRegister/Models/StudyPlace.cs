@@ -30,6 +30,6 @@ namespace ContestantRegister.Models
 
         public ICollection<ContestRegistration> ContestRegistrations { get; set; }
 
-        public ICollection<ContestantUser> Users { get; set; }
+        public ICollection<ApplicationUser> Users { get; set; }
     }
 }

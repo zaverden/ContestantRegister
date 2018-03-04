@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.Models
 {
     public enum UserType : int
     {
@@ -21,7 +21,7 @@ namespace ContestantRegister.ViewModels
         public static string GetDisplayName(this UserType userType)
         {
             var fieldInfo = userType.GetType().GetField(userType.ToString());
-            var displayAttribute = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute)).First() as DisplayAttribute;
+            var displayAttribute = (DisplayAttribute)fieldInfo.GetCustomAttributes(typeof(DisplayAttribute)).First();
             return displayAttribute.Name;
         }
     }

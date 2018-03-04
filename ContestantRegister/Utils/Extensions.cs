@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -7,10 +7,11 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
+using ContestantRegister.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ContestantRegister.Services
+namespace ContestantRegister.Utils
 {
     public static class Extensions
     {
@@ -18,6 +19,16 @@ namespace ContestantRegister.Services
         {
             return emailSender.SendEmailAsync(email, "Confirm your email",
                 $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
+        }
+
+        /// <summary>
+        /// Синхронный метод нужен для использования во вьюхах
+        /// </summary>
+        public static ApplicationUser GetUser(this UserManager<ApplicationUser> userManager, ClaimsPrincipal principal)
+        {
+            var task = userManager.GetUserAsync(principal);
+            task.Wait();
+            return task.Result;
         }
 
         public static async Task<bool> IsUserAdminAsync(this UserManager<ApplicationUser> userManager, ClaimsPrincipal principal)

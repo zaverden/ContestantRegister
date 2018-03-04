@@ -1,6 +1,7 @@
 using ContestantRegister.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Microsoft.AspNetCore.Mvc
+namespace ContestantRegister.Utils
 {
     public static class UrlHelperExtensions
     {

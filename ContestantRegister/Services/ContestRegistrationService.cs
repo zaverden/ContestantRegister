@@ -4,8 +4,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.HomeViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Services
@@ -18,10 +19,12 @@ namespace ContestantRegister.Services
     public class ContestRegistrationService : IContestRegistrationService
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ContestRegistrationService(ApplicationDbContext context)
+        public ContestRegistrationService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<List<KeyValuePair<string, string>>> ValidateContestRegistrationAsync(IndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user, bool editRegistration)
@@ -33,7 +36,7 @@ namespace ContestantRegister.Services
             if (contest.IsProgrammingLanguageNeeded && string.IsNullOrEmpty(viewModel.ProgrammingLanguage))
                 result.Add(KeyValuePair.Create(nameof(viewModel.ProgrammingLanguage), "Поле \"Язык программирования\" обязательное"));
 
-            var studyPlace = await _context.StudyPlaces.OfType<StudyPlace>().SingleAsync(s => s.Id == viewModel.StudyPlaceId);
+            var studyPlace = await _context.StudyPlaces.SingleAsync(s => s.Id == viewModel.StudyPlaceId);
             if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
                 contest.ParticipantType == ParticipantType.Student && studyPlace is School)
                 result.Add(KeyValuePair.Create(nameof(viewModel.StudyPlaceId), "Тип учебного заведения не соответствует типу контеста"));
@@ -55,17 +58,17 @@ namespace ContestantRegister.Services
             if (viewModel.Participant1Id == viewModel.TrainerId) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Участник не может быть своим тренером"));
             if (viewModel.Participant1Id == viewModel.ManagerId) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть своим руководителем"));
 
-            var currentUser = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.UserName == user.Identity.Name);
+            var currentUser = await _userManager.GetUserAsync(user);
             if (!user.IsInRole(Roles.Admin) && viewModel.Participant1Id != currentUser.Id && viewModel.TrainerId != currentUser.Id && viewModel.ManagerId != currentUser.Id)
                 result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем чтобы завершить регистрацию"));
 
-            var participant = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.Participant1Id);
-            var trainer = await _context.Users.OfType<ContestantUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
-            var manager = await _context.Users.OfType<ContestantUser>().SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
+            var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
+            var trainer = await _context.Users.SingleAsync(u => u.Id == viewModel.TrainerId);
+            var manager = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
 
             if (contest.ParticipantType == ParticipantType.Pupil)
             {
-                if (!(participant is Pupil))
+                if (participant.UserType != UserType.Pupil)
                 {
                     result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста"));
                 }
@@ -73,9 +76,9 @@ namespace ContestantRegister.Services
 
             if (contest.ParticipantType == ParticipantType.Student)
             {
-                if (!(participant is Student)) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста"));
-                if (trainer is Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
-                if (manager is Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
+                if (participant.UserType == UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста"));
+                if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
+                if (manager.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
             }
 
             if (contest.IsAreaRequired && string.IsNullOrEmpty(viewModel.Area))

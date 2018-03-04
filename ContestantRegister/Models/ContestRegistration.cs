@@ -10,7 +10,7 @@ namespace ContestantRegister.Models
         public DateTime? RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]
-        public ContestantUser RegistredBy { get; set; }
+        public ApplicationUser RegistredBy { get; set; }
 
         [Display(Name = "Статус регистрации")]
         public ContestRegistrationStatus Status { get; set; }
@@ -19,18 +19,18 @@ namespace ContestantRegister.Models
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string Participant1Id { get; set; }
 
-        public ContestantUser Participant1 { get; set; }
+        public ApplicationUser Participant1 { get; set; }
 
         [Display(Name = "Тренер")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string TrainerId { get; set; }
 
-        public ContestantUser Trainer { get; set; }
+        public ApplicationUser Trainer { get; set; }
 
         [Display(Name = "Руководитель")]
         public string ManagerId { get; set; }
 
-        public ContestantUser Manager { get; set; }
+        public ApplicationUser Manager { get; set; }
 
         [Display(Name = "Учебное заведение")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]

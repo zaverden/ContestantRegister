@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -137,11 +138,12 @@ namespace ContestantRegister.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = _userService.CreateUser(viewModel.UserType);
+                var user = new ApplicationUser
+                {
+                    UserName = viewModel.Email,
+                    RegistrationDateTime = DateTime.Now
+                };
 
-                user.UserName = viewModel.Email;
-                user.RegistrationDateTime = DateTime.Now;
-                
                 _mapper.Map(viewModel, user); 
                 
                 var result = await _userManager.CreateAsync(user, viewModel.Password);

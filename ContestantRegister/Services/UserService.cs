@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,23 +11,7 @@ namespace ContestantRegister.Services
 {
     public interface IUserService
     {
-        bool IsPupil(ClaimsPrincipal user);
-        bool IsStudent(ClaimsPrincipal user);
-        bool IsTrainer(ClaimsPrincipal user);
-
-        bool IsPupil(ContestantUser user);
-        bool IsStudent(ContestantUser user);
-        bool IsTrainer(ContestantUser user);
-
-        ContestantUser CreateUser(UserType userType);
-
-        Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user);
-
         Task<List<KeyValuePair<string, string>>> ValidateUserAsync(UserViewModelBase viewModel);
-
-        UserType GetUserType(ContestantUser contestantUser);
-
-        Task UpdateUserAsync(ApplicationUser user, UserType newUserType);
     }
 
     public class UserService : IUserService
@@ -38,56 +21,6 @@ namespace ContestantRegister.Services
         public UserService(ApplicationDbContext context)
         {
             _context = context;
-        }
-
-        public bool IsPupil(ClaimsPrincipal user)
-        {
-            if (!user.Identity.IsAuthenticated) throw new InvalidOperationException("User not authentificated");
-
-            return _context.Users.OfType<Pupil>().Any(u => u.UserName == user.Identity.Name);
-        }
-
-        public bool IsStudent(ClaimsPrincipal user)
-        {
-            if (!user.Identity.IsAuthenticated) throw new InvalidOperationException("User not authentificated");
-
-            return _context.Users.OfType<Student>().Any(u => u.UserName == user.Identity.Name);
-        }
-
-        public bool IsTrainer(ClaimsPrincipal user)
-        {
-            if (!user.Identity.IsAuthenticated) throw new InvalidOperationException("User not authentificated");
-
-            return _context.Users.OfType<Trainer>().Any(u => u.UserName == user.Identity.Name);
-        }
-
-        public bool IsPupil(ContestantUser user)
-        {
-            return user is Pupil;
-        }
-
-        public bool IsStudent(ContestantUser user)
-        {
-            return user is Student;
-        }
-
-        public bool IsTrainer(ContestantUser user)
-        {
-            return user is Trainer;
-        }
-
-        public ContestantUser CreateUser(UserType userType)
-        {
-            if (userType == UserType.Pupil) return new Pupil();
-            if (userType == UserType.Student) return new Student();
-            if (userType == UserType.Trainer) return new Trainer();
-
-            throw new Exception("Неизвестный тип пользователя");
-        }
-
-        public async Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user)
-        {
-            return await _context.Users.SingleAsync(u => u.UserName == user.Identity.Name);
         }
 
         public async Task<List<KeyValuePair<string, string>>> ValidateUserAsync(UserViewModelBase viewModel)
@@ -132,33 +65,6 @@ namespace ContestantRegister.Services
             }
 
             return result;
-        }
-
-        public UserType GetUserType(ContestantUser contestantUser)
-        {
-            if (contestantUser is Pupil) return UserType.Pupil;
-            if (contestantUser is Student) return UserType.Student;
-            if (contestantUser is Trainer) return UserType.Trainer;
-
-            throw new Exception("Неизвестный UserType");
-        }
-
-        public async Task UpdateUserAsync(ApplicationUser user, UserType newUserType)
-        {
-            using (var trx = _context.Database.BeginTransaction())
-            {
-                _context.Update(user);
-                await _context.SaveChangesAsync();
-
-                if (user is ContestantUser contestantUser && newUserType != GetUserType(contestantUser))
-                {
-                    await _context.Database.ExecuteSqlCommandAsync(
-                        "UPDATE public.\"AspNetUsers\" SET \"Discriminator\"={0} WHERE \"Id\"={1};",
-                        newUserType.ToString(), user.Id);
-                }
-
-                trx.Commit();
-            }
         }
     }
 }

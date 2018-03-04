@@ -1,6 +1,8 @@
 ﻿using System;
+using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services.BackgroundJobs;
+using ContestantRegister.Utils;
 using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -24,7 +26,8 @@ namespace ContestantRegister
                 {
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    RoleInitializer.InitializeAsync(userManager, rolesManager).Wait();
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    RoleInitializer.InitializeAsync(userManager, rolesManager, context).Wait();
                 }
                 catch (Exception ex)
                 {

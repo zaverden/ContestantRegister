@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.Options
+﻿namespace ContestantRegister.Utils
 {
     public class MailOptions
     {

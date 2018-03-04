@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.ContestViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -58,7 +59,7 @@ namespace ContestantRegister
             {
                 return NotFound();
             }
-            //TODO Нужен ли Automapper?
+            
             var contest = await _context.Contests.SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -83,6 +84,7 @@ namespace ContestantRegister
             {
                 try
                 {
+                    //TODO Нужен ли Automapper?
                     _context.Update(contest);
                     await _context.SaveChangesAsync();
                 }

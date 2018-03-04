@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
+using ContestantRegister.Utils;
 using ContestantRegister.ViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -38,7 +39,7 @@ namespace ContestantRegister.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ContestantUsers
+            var applicationDbContext = _context.Users
                 .Include(c => c.StudyPlace)
                 .Include(c => c.StudyPlace.City);
             return View(await applicationDbContext.ToListAsync());
@@ -50,12 +51,11 @@ namespace ContestantRegister.Controllers
             var admins = await _userManager.GetUsersInRoleAsync(Roles.Admin);
 
             var adminIds = admins.Select(u => u.Id).ToList();
-            var notAdmins = await _context.ContestantUsers.Where(u => !adminIds.Contains(u.Id)).ToListAsync();
+            var notAdmins = await _context.Users.Where(u => !adminIds.Contains(u.Id)).ToListAsync();
 
             var defaultAdmin = admins.First(a => a.Email == "acm@sfu-kras.ru");
             admins.Remove(defaultAdmin);
-            var viewModels = admins.Cast<ContestantUser>()
-                .Select(u => new UserAdminViewModel {IsAdmin = true, User = u}).ToList();
+            var viewModels = admins.Select(u => new UserAdminViewModel {IsAdmin = true, User = u}).ToList();
             var notAdminViewModels = notAdmins.Select(u => new UserAdminViewModel {User = u}).ToList();
 
             viewModels.AddRange(notAdminViewModels);
@@ -108,12 +108,12 @@ namespace ContestantRegister.Controllers
                 return View(viewModel);
             }
 
-            var user = _userService.CreateUser(viewModel.UserType);
-
-            user.UserName = viewModel.Email;
-            user.RegistrationDateTime = DateTime.Now;
-            //Хотя пользователя регистрирует админ, все равно проставляем кто зарегал, иначе не отличить от тех, кто зарегался сам
-            user.RegistredBy = await _userService.GetCurrentUserAsync(User);
+            var user = new ApplicationUser
+            {
+                UserName = viewModel.Email,
+                RegistrationDateTime = DateTime.Now,
+                RegistredBy = await _userManager.GetUserAsync(User) //Хотя пользователя регистрирует админ, все равно проставляем кто зарегал, иначе не отличить от тех, кто зарегался сам
+            };
 
             _mapper.Map(viewModel, user);
 
@@ -139,17 +139,14 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var contestantUser = await _context.ContestantUsers.SingleOrDefaultAsync(m => m.Id == id);
-            if (contestantUser == null)
+            var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            var viewModel = new EditUserViewModel
-            {
-                UserType = _userService.GetUserType(contestantUser),
-            };
-            _mapper.Map(contestantUser, viewModel);
+            var viewModel = new EditUserViewModel();
+            _mapper.Map(user, viewModel);
 
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
@@ -164,7 +161,7 @@ namespace ContestantRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, EditUserViewModel viewModel)
         {
-            var dbUser = await _context.ContestantUsers.SingleOrDefaultAsync(u => u.Id == id);
+            var dbUser = await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
             if (dbUser == null)
             {
                 return NotFound();
@@ -179,7 +176,8 @@ namespace ContestantRegister.Controllers
                 {
                     _mapper.Map(viewModel, dbUser);
 
-                    await _userService.UpdateUserAsync(dbUser, viewModel.UserType);
+                    _context.Update(dbUser);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -210,7 +208,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var contestantUser = await _context.ContestantUsers
+            var contestantUser = await _context.Users
                 .Include(u => u.StudyPlace)
                 .Include(u => u.StudyPlace.City)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -263,15 +261,15 @@ namespace ContestantRegister.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var contestantUser = await _context.ContestantUsers.SingleOrDefaultAsync(m => m.Id == id);
-            _context.ContestantUsers.Remove(contestantUser);
+            var contestantUser = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Users.Remove(contestantUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ContestantUserExists(string id)
         {
-            return _context.ContestantUsers.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
         
     }

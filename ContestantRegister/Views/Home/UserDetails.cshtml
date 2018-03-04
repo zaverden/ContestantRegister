@@ -1,4 +1,4 @@
-﻿@model ContestantRegister.Models.ContestantUser
+﻿@model ContestantRegister.Models.ApplicationUser
 
 @using ContestantRegister.Services
 @using ContestantRegister.ViewModels
@@ -23,7 +23,7 @@
             Роль
         </dt>
         <dd>  
-            @UserService.GetUserType(Model).GetDisplayName()
+            @Model.UserType.GetDisplayName()
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Surname)
@@ -43,7 +43,7 @@
         <dd>
             @Html.DisplayFor(model => model.Patronymic)
         </dd>
-        @if (UserService.GetUserType(Model) != UserType.Pupil)
+        @if (Model.UserType != UserType.Pupil)
         {
             <dt>
                 @Html.DisplayNameFor(model => model.FirstName)

@@ -1,6 +1,7 @@
 ﻿@using ContestantRegister.Services
+@using ContestantRegister.Utils
 
-@inject IUserService UserService
+@inject UserManager<ApplicationUser> UserManager
 
 @model IEnumerable<Contest>
 
@@ -69,7 +70,7 @@
                     @Html.DisplayFor(modelItem => item.ContestStatus)
                 </td>
                 <td>
-                    @if (User.Identity.IsAuthenticated && item.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
+                    @if (User.Identity.IsAuthenticated && item.ParticipantType == ParticipantType.Student && UserManager.GetUser(User).UserType == UserType.Pupil)
                     {
                         <label>Школьники не могут участвовать в студенческих соревнованиях</label>
                     }

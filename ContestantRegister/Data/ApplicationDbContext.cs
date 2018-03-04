@@ -25,11 +25,6 @@ namespace ContestantRegister.Data
 
         public DbSet<Email> Emails { get; set; }
 
-        public DbSet<ContestantUser> ContestantUsers { get; set; }
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Trainer> Trainers { get; set; }
-        public DbSet<Pupil> Pupils { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -40,11 +35,6 @@ namespace ContestantRegister.Data
 
             builder.Entity<Institution>().HasBaseType<StudyPlace>();
             builder.Entity<School>().HasBaseType<StudyPlace>();
-
-            builder.Entity<ContestantUser>().HasBaseType<ApplicationUser>();
-            builder.Entity<Pupil>().HasBaseType<ContestantUser>();
-            builder.Entity<Student>().HasBaseType<ContestantUser>();
-            builder.Entity<Trainer>().HasBaseType<ContestantUser>();
 
             builder.Entity<TeamContestRegistration>().HasBaseType<ContestRegistration>();
             builder.Entity<IndividualContestRegistration>().HasBaseType<ContestRegistration>();
@@ -57,7 +47,7 @@ namespace ContestantRegister.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            builder.Entity<ContestantUser>(entity =>
+            builder.Entity<ApplicationUser>(entity =>
             {
                 entity.HasOne(e => e.StudyPlace)
                     .WithMany(p => p.Users)
