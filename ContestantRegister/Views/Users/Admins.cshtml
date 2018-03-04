@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ContestantRegister.ViewModels.UserViewModels.UserAdminViewModel>
+
+@{
+    ViewData["Title"] = "Администраторы";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsAdmin)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Surname) @Html.DisplayFor(modelItem => item.User.Name) @Html.DisplayFor(modelItem => item.User.Patronymic)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAdmin)
+                </td>
+                <td>
+                    @if (item.IsAdmin)
+                    {
+                        <a asp-action="MakeNotAdmin" asp-route-id="@item.User.Id">Отобрать админа</a>
+                    }
+                    else
+                    {
+                        <a asp-action="MakeAdmin" asp-route-id="@item.User.Id">Дать админа</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

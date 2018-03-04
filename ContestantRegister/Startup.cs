@@ -3,7 +3,7 @@ using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Options;
 using ContestantRegister.Services;
-using ContestantRegister.Services.Email;
+using ContestantRegister.Services.BackgroundJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +44,7 @@ namespace ContestantRegister
 
             //TODO если заставить AspNet Core DI сделать Build, эту регистрацию можно убрать
             services.AddTransient<EmailJob>();
+            services.AddTransient<ContestStatusJob>();
         }
 
         public void ConfigureOptions(IServiceCollection services)

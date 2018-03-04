@@ -3,14 +3,17 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AutoMapper;
+using ContestantRegister.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ContestantRegister.Models;
-using ContestantRegister.Models.ManageViewModels;
 using ContestantRegister.Services;
+using ContestantRegister.ViewModels.ManageViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ContestantRegister.Controllers
 {
@@ -21,15 +24,24 @@ namespace ContestantRegister.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
+        private readonly ApplicationDbContext _context;
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
           SignInManager<ApplicationUser> signInManager,
-          ILogger<ManageController> logger)
+          ILogger<ManageController> logger,
+          IMapper mapper,
+          IUserService userService,
+          ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _mapper = mapper;
+            _userService = userService;
+            _context = context;
         }
 
         [TempData]
@@ -44,43 +56,50 @@ namespace ContestantRegister.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
+            var viewModel = new IndexViewModel
             {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
+                CanSuggestStudyPlace = true,
                 StatusMessage = StatusMessage
             };
 
-            return View(model);
+            if (user is ContestantUser contestantUser)
+            {
+                viewModel.UserType = _userService.GetUserType(contestantUser);
+            }
+
+            _mapper.Map(user, viewModel);
+
+            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IndexViewModel model)
+        public async Task<IActionResult> Index(IndexViewModel viewModel)
         {
+            var validationResult = await _userService.ValidateUserAsync(viewModel);
+            validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+
+                return View(viewModel);
             }
 
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userService.GetCurrentUserAsync(User);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var phoneNumber = user.PhoneNumber;
-            if (model.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
-                }
-            }
+            _mapper.Map(viewModel, user);
 
+            await _userService.UpdateUserAsync(user, viewModel.UserType);
+            
             StatusMessage = "Профиль был успешно обновлен.";
             return RedirectToAction(nameof(Index));
         }
@@ -116,7 +135,7 @@ namespace ContestantRegister.Controllers
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
-                AddErrors(changePasswordResult);
+                ModelState.AddErrors(changePasswordResult.Errors);
                 return View(model);
             }
 
@@ -126,13 +145,6 @@ namespace ContestantRegister.Controllers
 
             return RedirectToAction(nameof(ChangePassword));
         }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
+        
     }
 }

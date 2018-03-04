@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ContestantRegister.Models;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class IndividualContestDetailsViewModel
     {

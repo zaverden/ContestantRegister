@@ -19,17 +19,15 @@ namespace ContestantRegister.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Display(Name = "Начало регистрации")]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy}", ApplyFormatInEditMode = true)]
-        [DataType(DataType.Date)]
-        public DateTime RegistrationStart { get; set; }
-
         [Display(Name = "Регистрация до")]
-        [DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime RegistrationEnd { get; set; }
 
+        [Display(Name = "Старт")]
+        public DateTime Start { get; set; }
+
         //TODO сделать ли дробным? чтобы контест был по 3,5 часа
-        [Display(Name = "Продолжительность (ч)")]
+        [Display(Name = "Часов")]
         [Range(1, int.MaxValue)]
         public int Duration { get; set; }
 

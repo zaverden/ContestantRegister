@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Models;
 using ContestantRegister.Properties;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class IndividualContestRegistrationViewModel
     {
@@ -17,7 +17,7 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Руководитель")]
         public string ManagerId { get; set; }
 
-        [Display(Name = "Место учебы")]
+        [Display(Name = "Учебное заведение")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int StudyPlaceId { get; set; }
 
@@ -33,6 +33,8 @@ namespace ContestantRegister.ViewModels
 
         [Display(Name = "Площадка")]
         public string Area { get; set; }
+
+        public ParticipantType ParticipantType { get; set; }
 
         public int RegistrationId { get; set; }
 

@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class SuggectSchoolViewModel : SuggectStudyPlaceViewModel
     {
         [Display(Name = "Официальный email")]
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]
         public string SchoolEmail { get; set; }
-
         
     }
 }

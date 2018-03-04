@@ -1,4 +1,5 @@
-﻿@model ContestantRegister.ViewModels.IndividualContestRegistrationViewModel
+﻿@using ContestantRegister.ViewModels.HomeViewModels
+@model ContestantRegister.ViewModels.HomeViewModels.IndividualContestRegistrationViewModel
 
 @{
     ViewData["Title"] = "Изменить регистрационные данные";
@@ -10,8 +11,17 @@
 <h4>@Html.DisplayFor(model => model.ContestName)</h4>
 
 <p>
-    <a asp-action="SuggestSchool">Создать новую школу</a>
-    <a asp-action="SuggestInstitution">Создать новый вуз/ссуз</a>
+    @if (Model.ParticipantType == ParticipantType.Pupil)
+    {
+        <p>Если вашей школы нет в списке учебных заведений, вы можете предложить администраторам сайта <a asp-action="SuggestSchool">создать новую школу</a>. </p>
+        <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">Зарегистрировать нового участника</a>
+    }
+    else
+    { 
+        <p>Если вашего учебного заведения нет в списке, вы можете предложить администраторам сайта <a asp-action="SuggestInstitution">создать его</a>. </p>
+        <a asp-route-id="@Model.ContestId" asp-action="RegisterStudent">Зарегистрировать нового участника</a>
+    }
+    <p><a asp-route-id="@Model.ContestId" asp-action="RegisterTrainer">Зарегистрировать тренера</a></p>
 </p>
 
 <div class="row">

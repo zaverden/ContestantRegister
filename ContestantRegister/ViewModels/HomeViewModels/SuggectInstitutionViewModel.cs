@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class SuggectInstitutionViewModel : SuggectStudyPlaceViewModel
     {

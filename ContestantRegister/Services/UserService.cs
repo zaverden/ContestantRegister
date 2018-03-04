@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Models.AccountViewModels;
+using ContestantRegister.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Services
@@ -25,7 +25,10 @@ namespace ContestantRegister.Services
         Task<ApplicationUser> GetCurrentUserAsync(ClaimsPrincipal user);
 
         Task<List<KeyValuePair<string, string>>> ValidateUserAsync(UserViewModelBase viewModel);
+
         UserType GetUserType(ContestantUser contestantUser);
+
+        Task UpdateUserAsync(ApplicationUser user, UserType newUserType);
     }
 
     public class UserService : IUserService
@@ -138,6 +141,24 @@ namespace ContestantRegister.Services
             if (contestantUser is Trainer) return UserType.Trainer;
 
             throw new Exception("Неизвестный UserType");
+        }
+
+        public async Task UpdateUserAsync(ApplicationUser user, UserType newUserType)
+        {
+            using (var trx = _context.Database.BeginTransaction())
+            {
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+
+                if (user is ContestantUser contestantUser && newUserType != GetUserType(contestantUser))
+                {
+                    await _context.Database.ExecuteSqlCommandAsync(
+                        "UPDATE public.\"AspNetUsers\" SET \"Discriminator\"={0} WHERE \"Id\"={1};",
+                        newUserType.ToString(), user.Id);
+                }
+
+                trx.Commit();
+            }
         }
     }
 }

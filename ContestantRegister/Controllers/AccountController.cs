@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ContestantRegister.Models;
-using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.Services;
+using ContestantRegister.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ContestantRegister.Controllers
@@ -114,11 +114,15 @@ namespace ContestantRegister.Controllers
             ViewData["ReturnUrl"] = returnUrl;
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-
             //TODO добавить выбор учебного заведения в зависимости от роли и города
             ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
 
-            return View();
+            var vm = new RegisterViewModel
+            {
+                CanSuggestStudyPlace = true,
+            };
+
+            return View(vm);
         }
 
         [HttpPost]

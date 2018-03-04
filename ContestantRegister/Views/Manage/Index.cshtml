@@ -1,5 +1,5 @@
-﻿@using ContestantRegister.Models.ManageViewModels
-@model ContestantRegister.Models.ManageViewModels.IndexViewModel
+﻿@model ContestantRegister.ViewModels.ManageViewModels.IndexViewModel
+
 @{
     ViewData["Title"] = "Профиль";
     ViewData.AddActivePage(ManageNavPages.Index);
@@ -12,12 +12,8 @@
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
-            </div>
-            <div class="form-group">
                 <label asp-for="Email"></label>
-                @if (Model.IsEmailConfirmed)
+                @if (Model.EmailConfirmed)
                 {
                     <div class="input-group">
                         <input asp-for="Email" class="form-control" readonly="readonly" />
@@ -27,16 +23,17 @@
                 else
                 {
                     <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    <button asp-action="SendVerificationEmail" class="btn btn-link">Подтвердить email</button>
                 }
+                
+                <input type="hidden" asp-for="EmailConfirmed" />
+
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-default">Save</button>
+            
+            @await Html.PartialAsync("../Users/_UserPartial")
+
+            <button type="submit" class="btn btn-default">Сохранить</button>
         </form>
     </div>
 </div>

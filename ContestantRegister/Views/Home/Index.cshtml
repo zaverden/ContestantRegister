@@ -5,10 +5,10 @@
 @model IEnumerable<Contest>
 
 @{
-    ViewData["Title"] = "Контесты для регистрации";
+    ViewData["Title"] = "Соревнования";
 }
 
-<h2>Контесты для регистрации</h2>
+<h2>@ViewData["Title"]</h2>
 
 <table class="table">
     <thead>
@@ -17,10 +17,10 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationStart)
+                @Html.DisplayNameFor(model => model.RegistrationEnd)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationEnd)
+                @Html.DisplayNameFor(model => model.Start)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Duration)
@@ -48,10 +48,10 @@
                     <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RegistrationStart)
+                    @Html.DisplayFor(modelItem => item.RegistrationEnd)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                    @Html.DisplayFor(modelItem => item.Start)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Duration)
@@ -69,17 +69,17 @@
                     @Html.DisplayFor(modelItem => item.ContestStatus)
                 </td>
                 <td>
-                    @if (!User.Identity.IsAuthenticated)
-                    {
-                        <label>Войдите в систему для регистрации на контест</label>
-                    }
-                    else if (item.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
+                    @if (User.Identity.IsAuthenticated && item.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
                     {
                         <label>Школьники не могут участвовать в студенческих соревнованиях</label>
                     }
-                    else
+                    else if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
                         <a asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
+                    }
+                    else if (item.ContestStatus == ContestStatus.ConfirmParticipation)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.Id">Подтвердить участие</a>
                     }
                 </td>
             </tr>

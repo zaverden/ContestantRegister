@@ -1,16 +1,90 @@
-﻿@model ContestantRegister.ViewModels.IndividualContestDetailsViewModel
+﻿@model ContestantRegister.ViewModels.HomeViewModels.IndividualContestDetailsViewModel
+
+@using ContestantRegister.Services
+
+@inject IUserService UserService
+@inject UserManager<ApplicationUser> UserManager
 
 @{
-    ViewData["Title"] = "Контест";
+    ViewData["Title"] = Html.DisplayFor(model => model.Contest.Name);
 }
 
-<h2>Регистрация на контест</h2>
+<h2>@Html.DisplayFor(model => model.Contest.Name)</h2>
 
-<h4>@Html.DisplayFor(model => model.Contest.Name)</h4>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.RegistrationEnd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.RegistrationEnd)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.Start)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Start)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.Duration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.ParticipantType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.ParticipantType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.ContestType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.ContestType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.ContestParticipationType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.ContestParticipationType)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Contest.ContestStatus)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Contest.ContestStatus)
+        </dd>
+
+    </dl>
+</div>
+
+<p>
+    @if (User.Identity.IsAuthenticated && Model.Contest.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
+    {
+        <label>Школьники не могут участвовать в студенческих соревнованиях</label>
+    }
+    else if (Model.Contest.ContestStatus == ContestStatus.RegistrationOpened || Model.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
+    {
+        <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрироваться</a>
+    }
+
+    @if (await UserManager.IsUserAdminAsync(User))
+    {
+        <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрировать</a>
+    }
+</p>
 
 @if (User.Identity.IsAuthenticated && Model.UseRegistrations.Any())
 {
-    <h6>Мои регистрации</h6>
+    <h4>Мои регистрации</h4>
     <table class="table">
         <thead>
             <tr>
@@ -37,59 +111,56 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.Contest.ContestRegistrations)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened)
-                    {
-                        <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                        <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
-                    }
-                    else if (item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
-                             item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
-                    {
-                        if (item.Status == ContestRegistrationStatus.ConfirmParticipation)
+            @foreach (var item in Model.UseRegistrations)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened)
                         {
-                            <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
                             <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
                             <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
                         }
-                        else // ContestRegistrationStatus.Completed
+                        else if (item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
+                                 item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                         {
-                            <a asp-action="EditRegistration" asp-route-id="@item.Id" asp- >Изменить</a>
-                            <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                            if (item.Status == ContestRegistrationStatus.ConfirmParticipation)
+                            {
+                                <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
+                                <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
+                                <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                            }
+                            else // ContestRegistrationStatus.Completed
+                            {
+                                <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
+                                <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                            }
                         }
-                    }
-                </td>
-            </tr>
-        }
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }
 
-
-
-
-<h6>Все участники</h6>
+<h4>Участники</h4>
 <table class="table">
     <thead>
         <tr>
@@ -111,6 +182,7 @@
             <th>
                 Статус
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -118,13 +190,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
@@ -135,7 +207,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
+                <td>
+                    @if (await UserManager.IsUserAdminAsync(User))
+                    {
+                        <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
+                        <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
+                        <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                    }
+                </td>
             </tr>
         }
+        
     </tbody>
 </table>

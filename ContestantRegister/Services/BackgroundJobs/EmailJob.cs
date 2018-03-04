@@ -4,13 +4,12 @@ using ContestantRegister.Data;
 using ContestantRegister.Options;
 using FluentScheduler;
 using MailKit.Net.Smtp;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 
-namespace ContestantRegister.Services.Email
+namespace ContestantRegister.Services.BackgroundJobs
 {
     public class EmailJob : IJob
     {
@@ -61,7 +60,7 @@ namespace ContestantRegister.Services.Email
                     client.Disconnect(true);
                 }
 
-                ctx.SaveChangesAsync().Wait();
+                ctx.SaveChanges();
             }
         }
     }

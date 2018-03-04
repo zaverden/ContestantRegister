@@ -1,0 +1,75 @@
+﻿@using ContestantRegister.Services
+
+@inject IUserService UserService
+
+@model IEnumerable<Contest>
+
+@{
+    ViewData["Title"] = "Прошедшие оревнования";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Duration)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParticipantType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestParticipationType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContestStatus)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RegistrationEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Start)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParticipantType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestParticipationType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContestStatus)
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

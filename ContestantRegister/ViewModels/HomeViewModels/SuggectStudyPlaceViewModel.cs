@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class SuggectStudyPlaceViewModel
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [EmailAddress]
-        [Display(Name = "Email для уведомления о создании учебного заведения")]
+        [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Display(Name = "Краткое название")]
@@ -24,7 +24,7 @@ namespace ContestantRegister.ViewModels
 
         [Display(Name = "Сайт")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [DataType(DataType.Url)]
+        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
         public string Site { get; set; }
 
         public bool IsEmailReadonly { get; set; }

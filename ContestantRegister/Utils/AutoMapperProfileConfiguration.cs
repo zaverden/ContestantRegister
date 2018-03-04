@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using ContestantRegister.Models;
-using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.ViewModels;
+using ContestantRegister.ViewModels.AccountViewModels;
+using ContestantRegister.ViewModels.HomeViewModels;
+using ContestantRegister.ViewModels.ManageViewModels;
+using ContestantRegister.ViewModels.UserViewModels;
 
 namespace ContestantRegister
 {
@@ -41,6 +44,16 @@ namespace ContestantRegister
             CreateMap<RegisterContestParticipantViewModel, Trainer>();
             CreateMap<RegisterContestParticipantViewModel, Student>();
             CreateMap<RegisterContestParticipantViewModel, Pupil>();
+
+            CreateMap<IndexViewModel, ApplicationUser>();
+            CreateMap<IndexViewModel, Pupil>();
+            CreateMap<IndexViewModel, Student>();
+            CreateMap<IndexViewModel, Trainer>();
+            CreateMap<Pupil, IndexViewModel>();
+            CreateMap<Student, IndexViewModel>();
+            CreateMap<Trainer, IndexViewModel>();
+            CreateMap<ApplicationUser, IndexViewModel>();
+
         }
     }
 }

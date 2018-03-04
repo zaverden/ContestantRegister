@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.Services;
 using ContestantRegister.ViewModels;
+using ContestantRegister.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
@@ -42,6 +42,43 @@ namespace ContestantRegister.Controllers
                 .Include(c => c.StudyPlace)
                 .Include(c => c.StudyPlace.City);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        // GET: Admins
+        public async Task<IActionResult> Admins()
+        {
+            var admins = await _userManager.GetUsersInRoleAsync(Roles.Admin);
+
+            var adminIds = admins.Select(u => u.Id).ToList();
+            var notAdmins = await _context.ContestantUsers.Where(u => !adminIds.Contains(u.Id)).ToListAsync();
+
+            var defaultAdmin = admins.First(a => a.Email == "acm@sfu-kras.ru");
+            admins.Remove(defaultAdmin);
+            var viewModels = admins.Cast<ContestantUser>()
+                .Select(u => new UserAdminViewModel {IsAdmin = true, User = u}).ToList();
+            var notAdminViewModels = notAdmins.Select(u => new UserAdminViewModel {User = u}).ToList();
+
+            viewModels.AddRange(notAdminViewModels);
+
+            return View(viewModels);
+        }
+
+        public async Task<IActionResult> MakeAdmin(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            await _userManager.AddToRoleAsync(user, Roles.Admin);
+
+            return RedirectToAction(nameof(Admins));
+        }
+
+        public async Task<IActionResult> MakeNotAdmin(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            await _userManager.RemoveFromRoleAsync(user, Roles.Admin);
+
+            return RedirectToAction(nameof(Admins));
         }
 
         // GET: Users/Create
@@ -140,11 +177,9 @@ namespace ContestantRegister.Controllers
             {
                 try
                 {
-                    //TODO как поменять тип сущности с ученика на студента?
                     _mapper.Map(viewModel, dbUser);
 
-                    _context.Update(dbUser);
-                    await _context.SaveChangesAsync();
+                    await _userService.UpdateUserAsync(dbUser, viewModel.UserType);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -164,6 +199,8 @@ namespace ContestantRegister.Controllers
 
             return View(viewModel);
         }
+
+        
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -185,6 +222,42 @@ namespace ContestantRegister.Controllers
             return View(contestantUser);
         }
 
+        public async Task<IActionResult> ChangePassword(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);            
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(string id, PasswordViewModel viewModel)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            await _userManager.RemovePasswordAsync(user);
+            await _userManager.AddPasswordAsync(user, viewModel.Password);
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -200,7 +273,6 @@ namespace ContestantRegister.Controllers
         {
             return _context.ContestantUsers.Any(e => e.Id == id);
         }
-
         
     }
 }

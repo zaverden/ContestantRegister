@@ -43,7 +43,7 @@ namespace ContestantRegister.Models
         public string LastName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [Display(Name = "Место учебы")]
+        [Display(Name = "Учебное заведение")]
         public int StudyPlaceId { get; set; }
 
         public StudyPlace StudyPlace { get; set; }

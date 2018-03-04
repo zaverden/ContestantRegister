@@ -1,4 +1,5 @@
-﻿@model ContestantRegister.ViewModels.SuggectInstitutionViewModel
+﻿@using ContestantRegister.ViewModels.HomeViewModels
+@model ContestantRegister.ViewModels.HomeViewModels.SuggectInstitutionViewModel
 
 @{
     ViewData["Title"] = "Новый вуз/ссуз";
@@ -14,17 +15,27 @@
             <div asp-validation-summary="All" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <label asp-for="Email" class="control-label" style="margin: 0"></label>
+                <h5 @*class="control-sublabel"*@ style="margin: 0">Для отправки уведомления, когда новое учебное заведение будет создано</h5>
+                @if (Model.IsEmailReadonly)
+                {
+                    <input asp-for="Email" class="form-control" disabled />
+                }
+                else
+                {
+                    <input asp-for="Email" class="form-control" />
+                }
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ShortName" class="control-label"></label>
+                <label asp-for="ShortName" class="control-label" style="margin: 0"></label>
+                <h5 style="margin: 0">Для отображения в таблице результатов</h5>
                 <input asp-for="ShortName" class="form-control" />
                 <span asp-validation-for="ShortName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
+                <label asp-for="FullName" class="control-label" style="margin: 0"></label>
+                <h5 style="margin: 0">Для печати на сертификатах участников</h5>
                 <input asp-for="FullName" class="form-control" />
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>

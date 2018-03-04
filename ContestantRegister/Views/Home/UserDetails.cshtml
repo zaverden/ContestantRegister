@@ -1,0 +1,74 @@
+﻿@model ContestantRegister.Models.ContestantUser
+
+@using ContestantRegister.Services
+@using ContestantRegister.ViewModels
+@inject IUserService UserService
+
+@{
+    ViewData["Title"] = "Пользователь";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            Роль
+        </dt>
+        <dd>  
+            @UserService.GetUserType(Model).GetDisplayName()
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Surname)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Patronymic)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Patronymic)
+        </dd>
+        @if (UserService.GetUserType(Model) != UserType.Pupil)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FirstName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.LastName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.LastName)
+            </dd>
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.StudyPlace.CityId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StudyPlace.City.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StudyPlaceId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.StudyPlace.ShortName)
+        </dd>
+    </dl>
+</div>

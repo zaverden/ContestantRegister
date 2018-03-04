@@ -126,6 +126,9 @@
   <data name="MaxlenFieldErrorMessage" xml:space="preserve">
     <value>Длинна поля '{0}' не должна превышать '{1}' символов.</value>
   </data>
+  <data name="PasswordLengthErrorMessage" xml:space="preserve">
+    <value>{0} должен быть не менее {2} и не более {1} символов.</value>
+  </data>
   <data name="RequiredFieldErrorMessage" xml:space="preserve">
     <value>Поле '{0}' обязательное.</value>
   </data>

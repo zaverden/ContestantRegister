@@ -126,11 +126,11 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<DateTime>("RegistrationEnd");
 
-                    b.Property<DateTime>("RegistrationStart");
-
                     b.Property<bool>("SendRegistrationEmail");
 
                     b.Property<bool>("ShowRegistrationInfo");
+
+                    b.Property<DateTime>("Start");
 
                     b.Property<int>("UsedAccountsCount");
 

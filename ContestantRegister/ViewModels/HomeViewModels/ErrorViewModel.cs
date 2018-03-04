@@ -1,4 +1,4 @@
-namespace ContestantRegister.Models
+namespace ContestantRegister.ViewModels.HomeViewModels
 {
     public class ErrorViewModel
     {

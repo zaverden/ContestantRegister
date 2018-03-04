@@ -11,11 +11,11 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using AutoMapper;
-using ContestantRegister.Models.AccountViewModels;
 using ContestantRegister.Options;
 using ContestantRegister.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Services;
+using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
@@ -58,6 +58,13 @@ namespace ContestantRegister.Controllers
             return View(await actualContests.ToListAsync());
         }
 
+        public async Task<IActionResult> Archive()
+        {
+            var archiveContests = _context.Contests.Where(c => c.IsArchive);
+
+            return View(await archiveContests.ToListAsync());
+        }
+
         public async Task<IActionResult> Details(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
             var contest = await _context.Contests
@@ -92,6 +99,25 @@ namespace ContestantRegister.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
+        public async Task<IActionResult> UserDetails(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var contestantUser = await _context.ContestantUsers
+                .Include(u => u.StudyPlace)
+                .Include(u => u.StudyPlace.City)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (contestantUser == null)
+            {
+                return NotFound();
+            }
+
+            return View(contestantUser);
+        }
 
         [Authorize]
         public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
@@ -109,6 +135,7 @@ namespace ContestantRegister.Controllers
             {
                 ContestName = contest.Name,
                 ContestId = contest.Id,
+                ParticipantType = contest.ParticipantType
             };
 
             var trainer = await _context.Users.OfType<Trainer>().Include(u => u.StudyPlace).SingleOrDefaultAsync(u => u.UserName == User.Identity.Name);
@@ -277,7 +304,7 @@ namespace ContestantRegister.Controllers
             {
                 ContestId = contestId,
                 UserType = userType,
-                IsUserTypeDefined = true
+                IsUserTypeDisabled = true
             };
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
@@ -322,17 +349,8 @@ namespace ContestantRegister.Controllers
             return View(viewModel);
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
@@ -428,7 +446,8 @@ namespace ContestantRegister.Controllers
             var viewModel = new IndividualContestRegistrationViewModel
             {
                 ContestName = registration.Contest.Name,
-                RegistrationId = registration.Id
+                RegistrationId = registration.Id,
+                ParticipantType = registration.Contest.ParticipantType,
             };
             _mapper.Map(registration, viewModel);
 

@@ -88,6 +88,15 @@ namespace ContestantRegister.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} должен быть не менее {2} и не более {1} символов..
+        /// </summary>
+        internal static string PasswordLengthErrorMessage {
+            get {
+                return ResourceManager.GetString("PasswordLengthErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле &apos;{0}&apos; обязательное..
         /// </summary>
         internal static string RequiredFieldErrorMessage {

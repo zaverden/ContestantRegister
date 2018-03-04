@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.Models.ManageViewModels
+namespace ContestantRegister.ViewModels.ManageViewModels
 {
     public class ChangePasswordViewModel
     {
@@ -11,14 +11,14 @@ namespace ContestantRegister.Models.ManageViewModels
         public string OldPassword { get; set; }
 
         [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, MinimumLength = 6, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "PasswordLengthErrorMessage")]
         [DataType(DataType.Password)]
         [Display(Name = "Новый пароль")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение нового пароля")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessage = "Новый пароль и его подтверждение не совпадают.")]
         public string ConfirmPassword { get; set; }
 
         public string StatusMessage { get; set; }

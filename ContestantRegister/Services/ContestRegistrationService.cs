@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.ViewModels;
+using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Services

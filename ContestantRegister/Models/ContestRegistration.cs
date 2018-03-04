@@ -32,7 +32,7 @@ namespace ContestantRegister.Models
 
         public ContestantUser Manager { get; set; }
 
-        [Display(Name = "Место учебы")]
+        [Display(Name = "Учебное заведение")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int StudyPlaceId { get; set; }
 

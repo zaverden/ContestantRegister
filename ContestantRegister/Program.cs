@@ -1,6 +1,6 @@
 ﻿using System;
 using ContestantRegister.Models;
-using ContestantRegister.Services.Email;
+using ContestantRegister.Services.BackgroundJobs;
 using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -33,13 +33,13 @@ namespace ContestantRegister
                 }
             }
 
-            JobManager.JobFactory = new JobFactory(host.Services);
-            JobManager.Initialize(new FluentSchedulerRegistry());
-            JobManager.JobException += info =>
-            {
-                var logger = host.Services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(info.Exception, "Unhandled exception in email job");
-            };
+            //JobManager.JobFactory = new JobFactory(host.Services);
+            //JobManager.Initialize(new FluentSchedulerRegistry());
+            //JobManager.JobException += info =>
+            //{
+            //    var logger = host.Services.GetRequiredService<ILogger<Program>>();
+            //    logger.LogError(info.Exception, "Unhandled exception in email job");
+            //};
 
             host.Run();
         }
