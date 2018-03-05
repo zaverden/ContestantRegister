@@ -18,9 +18,9 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            
+
             @await Html.PartialAsync("../Users/_UserPartial")
-            
+
             <input type="hidden" asp-for="ContestId" />
 
             <div class="form-group">

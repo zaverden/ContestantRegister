@@ -1,23 +1,22 @@
 ﻿@model UserViewModelBase
 
 @using ContestantRegister.ViewModels
+@{
+    bool isUserTypeDisabled = Model?.IsUserTypeDisabled ?? false;
+}
 
-@if (Model != null && Model.IsUserTypeDisabled) //TODO через js не получается
-{
-    <div class="form-group">
-        <label asp-for="UserType" class="control-label"></label>
-        <select id="userType" onchange="checkUserType()" asp-for="UserType" asp-items="Html.GetEnumSelectList<UserType>()" class="form-control" disabled></select>
-        <span asp-validation-for="UserType" class="text-danger"></span>
-    </div>
-}
-else
-{
-    <div class="form-group">
-        <label asp-for="UserType" class="control-label"></label>
-        <select id="userType" onchange="checkUserType()" asp-for="UserType" asp-items="Html.GetEnumSelectList<UserType>()" class="form-control"></select>
-        <span asp-validation-for="UserType" class="text-danger"></span>
-    </div>
-}
+<div class="form-group">
+    <label asp-for="UserType" class="control-label"></label>
+    <select id="userType"
+            onchange="checkUserType()"
+            asp-for="UserType"
+            asp-items="Html.GetEnumSelectList<UserType>()"
+            class="form-control"
+            disabled="@(isUserTypeDisabled ? "disabled" : null)">
+
+    </select>
+    <span asp-validation-for="UserType" class="text-danger"></span>
+</div>
 <div class="form-group">
     <label asp-for="Name" class="control-label"></label>
     <input asp-for="Name" class="form-control" />
@@ -88,60 +87,62 @@ else
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />
 
-<script type="text/javascript">
-    function checkUserType() {
-        var text = $("#userType option:selected").text();
-        if (text == 'Школьник') {
-            //$("educationStartDateSection").hide();
-            //$("educationEndDateSection").hide();
-            //$("dateOfBirthSection").hide();
-            //$("firstNameSection").hide();
-            //$("lastNameSection").hide();
-            document.getElementById('educationStartDateSection').style.display = "none";
-            document.getElementById('educationEndDateSection').style.display = "none";
-            document.getElementById('dateOfBirthSection').style.display = "none";
-            document.getElementById('firstNameSection').style.display = "none";
-            document.getElementById('lastNameSection').style.display = "none";
-            document.getElementById('suggestSchool').style.display = "block";
-            document.getElementById('suggestInstitution').style.display = "none";
+<partial-script>
+    <script type="text/javascript">
+        function checkUserType() {
+            var text = $("#userType option:selected").text();
+            if (text == 'Школьник') {
+                //$("educationStartDateSection").hide();
+                //$("educationEndDateSection").hide();
+                //$("dateOfBirthSection").hide();
+                //$("firstNameSection").hide();
+                //$("lastNameSection").hide();
+                document.getElementById('educationStartDateSection').style.display = "none";
+                document.getElementById('educationEndDateSection').style.display = "none";
+                document.getElementById('dateOfBirthSection').style.display = "none";
+                document.getElementById('firstNameSection').style.display = "none";
+                document.getElementById('lastNameSection').style.display = "none";
+                document.getElementById('suggestSchool').style.display = "block";
+                document.getElementById('suggestInstitution').style.display = "none";
+            }
+            if (text == 'Студент') {
+                //$("educationStartDateSection").show();
+                //$("educationEndDateSection").show();
+                //$("dateOfBirthSection").show();
+                //$("firstNameSection").show();
+                //$("lastNameSection").show();
+                document.getElementById('educationStartDateSection').style.display = "block";
+                document.getElementById('educationEndDateSection').style.display = "block";
+                document.getElementById('dateOfBirthSection').style.display = "block";
+                document.getElementById('firstNameSection').style.display = "block";
+                document.getElementById('lastNameSection').style.display = "block";
+                document.getElementById('suggestSchool').style.display = "none";
+                document.getElementById('suggestInstitution').style.display = "block";
+            }
+            if (text == 'Тренер') {
+                document.getElementById('educationStartDateSection').style.display = "none";
+                document.getElementById('educationEndDateSection').style.display = "none";
+                document.getElementById('dateOfBirthSection').style.display = "none";
+                document.getElementById('firstNameSection').style.display = "block";
+                document.getElementById('lastNameSection').style.display = "block";
+                document.getElementById('suggestSchool').style.display = "block";
+                document.getElementById('suggestInstitution').style.display = "block";
+                //$("educationStartDateSection").hide();
+                //$("educationEndDateSection").hide();
+                //$("dateOfBirthSection").hide();
+                //$("firstNameSection").show();
+                //$("lastNameSection").show();
+            }
         }
-        if (text == 'Студент') {
-            //$("educationStartDateSection").show();
-            //$("educationEndDateSection").show();
-            //$("dateOfBirthSection").show();
-            //$("firstNameSection").show();
-            //$("lastNameSection").show();
-            document.getElementById('educationStartDateSection').style.display = "block";
-            document.getElementById('educationEndDateSection').style.display = "block";
-            document.getElementById('dateOfBirthSection').style.display = "block";
-            document.getElementById('firstNameSection').style.display = "block";
-            document.getElementById('lastNameSection').style.display = "block";
-            document.getElementById('suggestSchool').style.display = "none";
-            document.getElementById('suggestInstitution').style.display = "block";
-        }
-        if (text == 'Тренер') {
-            document.getElementById('educationStartDateSection').style.display = "none";
-            document.getElementById('educationEndDateSection').style.display = "none";
-            document.getElementById('dateOfBirthSection').style.display = "none";
-            document.getElementById('firstNameSection').style.display = "block";
-            document.getElementById('lastNameSection').style.display = "block";
-            document.getElementById('suggestSchool').style.display = "block";
-            document.getElementById('suggestInstitution').style.display = "block";
-            //$("educationStartDateSection").hide();
-            //$("educationEndDateSection").hide();
-            //$("dateOfBirthSection").hide();
-            //$("firstNameSection").show();
-            //$("lastNameSection").show();
-        }
-    }
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        //alert($("IsUserTypeDefined").checked());
-        //if ($("IsUserTypeDefined").val() == "True") {
-        //    $("UserType").disable();
-        //}
-        checkUserType();
-    });
+            //alert($("IsUserTypeDefined").checked());
+            //if ($("IsUserTypeDefined").val() == "True") {
+            //    $("UserType").disable();
+            //}
+            checkUserType();
+        });
 
-</script>
+    </script>
+</partial-script>
