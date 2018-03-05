@@ -80,4 +80,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\select2\" />
+  </ItemGroup>
+
 </Project>

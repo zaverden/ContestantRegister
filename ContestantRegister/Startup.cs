@@ -33,7 +33,10 @@ namespace ContestantRegister
                 .AddDefaultTokenProviders();
 
             ConfigureOptions(services);
-            services.AddAutoMapper();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.CreateMissingTypeMaps = true;
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
