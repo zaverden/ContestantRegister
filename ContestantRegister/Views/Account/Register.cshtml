@@ -21,14 +21,14 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <label asp-for="PasswordViewModel.Password"></label>
+                <input asp-for="PasswordViewModel.Password" class="form-control" />
+                <span asp-validation-for="PasswordViewModel.Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <label asp-for="PasswordViewModel.ConfirmPassword"></label>
+                <input asp-for="PasswordViewModel.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="PasswordViewModel.ConfirmPassword" class="text-danger"></span>
             </div>
 
             @await Html.PartialAsync("../Users/_UserPartial")

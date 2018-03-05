@@ -117,7 +117,7 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, user);
 
-            var result = await _userManager.CreateAsync(user, viewModel.Password);
+            var result = await _userManager.CreateAsync(user, viewModel.PasswordViewModel.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(Index));
