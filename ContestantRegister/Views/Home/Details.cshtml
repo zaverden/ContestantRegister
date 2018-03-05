@@ -68,7 +68,7 @@
 </div>
 
 <p>
-    @if (User.Identity.IsAuthenticated && Model.Contest.ParticipantType == ParticipantType.Student && UserService.IsPupil(User))
+    @if (User.Identity.IsAuthenticated && Model.Contest.ParticipantType == ParticipantType.Student && UserManager.GetUser(User).UserType == UserType.Pupil)
     {
         <label>Школьники не могут участвовать в студенческих соревнованиях</label>
     }
@@ -218,6 +218,6 @@
                 </td>
             </tr>
         }
-        
+
     </tbody>
 </table>

@@ -10,6 +10,7 @@ using ContestantRegister.Properties;
 using ContestantRegister.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 
 namespace ContestantRegister.Utils
 {
@@ -51,6 +52,11 @@ namespace ContestantRegister.Utils
             {
                 model.AddModelError(string.Empty, error.Description);
             }
+        }
+
+        public static string ToJson<T>(this T value)
+        {
+            return JsonConvert.SerializeObject(value);
         }
     }
 }

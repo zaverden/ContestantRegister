@@ -18,10 +18,11 @@ using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using ContestantRegister.ViewModels.ListItemViewModels;
 
 namespace ContestantRegister.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
@@ -32,8 +33,8 @@ namespace ContestantRegister.Controllers
         private readonly IUserService _userService;
         private readonly MailOptions _options;
 
-        public HomeController(ILogger<HomeController> logger, 
-            ApplicationDbContext context, 
+        public HomeController(ILogger<HomeController> logger,
+            ApplicationDbContext context,
             IMapper mapper,
             IEmailSender emailSender,
             UserManager<ApplicationUser> userManager,
@@ -85,7 +86,7 @@ namespace ContestantRegister.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 userRegistrations = await _context.ContestRegistrations
-                    .Where(r => r.ContestId == id && 
+                    .Where(r => r.ContestId == id &&
                                 (r.Participant1Id == user.Id || r.TrainerId == user.Id || r.ManagerId == user.Id))
                     .ToListAsync();
             }
@@ -165,7 +166,7 @@ namespace ContestantRegister.Controllers
                     }
                     break;
             }
-            
+
             if (contest.ParticipantType == ParticipantType.Pupil && user?.StudyPlace is School ||
                 contest.ParticipantType == ParticipantType.Student && user?.StudyPlace is Institution)
             {
@@ -249,24 +250,24 @@ namespace ContestantRegister.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-            
+
 
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
             {
                 var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
-                await _emailSender.SendEmailAsync(participant.Email, 
-                    "Вы зарегистрированы на контест", 
+                await _emailSender.SendEmailAsync(participant.Email,
+                    "Вы зарегистрированы на контест",
                     $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword}{Environment.NewLine}. Ссылка для входа: {contest.YaContestLink} ");
             }
-            
-            return RedirectToAction(nameof(Details), new {id});
+
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         [Authorize]
         public IActionResult RegisterStudent(int id)
         {
-            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен
 
             return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Student });
         }
@@ -274,7 +275,7 @@ namespace ContestantRegister.Controllers
         [Authorize]
         public IActionResult RegisterPupil(int id)
         {
-            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен
 
             return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Pupil });
         }
@@ -282,13 +283,13 @@ namespace ContestantRegister.Controllers
         [Authorize]
         public IActionResult RegisterTrainer(int id)
         {
-            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен 
+            //TODO как передать несколько параметров с клиента? тогда лишний метод для навигации не нужен
 
             return RedirectToAction(nameof(RegisterContestParticipant), new { contestId = id, userType = UserType.Trainer });
         }
 
         [Authorize]
-        public IActionResult RegisterContestParticipant(int contestId, UserType userType)
+        public async Task<IActionResult> RegisterContestParticipant(int contestId, UserType userType)
         {
             var vm = new RegisterContestParticipantViewModel
             {
@@ -297,8 +298,9 @@ namespace ContestantRegister.Controllers
                 IsUserTypeDisabled = true
             };
 
+
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             return View(vm);
         }
@@ -328,14 +330,14 @@ namespace ContestantRegister.Controllers
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(viewModel.Email, callbackUrl);
 
-                    return RedirectToAction(nameof(Register), new {id = viewModel.ContestId});
+                    return RedirectToAction(nameof(Register), new { id = viewModel.ContestId });
                 }
 
                 ModelState.AddErrors(result.Errors);
             }
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             return View(viewModel);
         }
@@ -476,7 +478,7 @@ namespace ContestantRegister.Controllers
             if (validationResult.Any())
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
-                
+
                 ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
                 ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
@@ -514,7 +516,7 @@ namespace ContestantRegister.Controllers
             _context.ContestRegistrations.Remove(registration);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new {id = registration.ContestId});
+            return RedirectToAction(nameof(Details), new { id = registration.ContestId });
         }
 
         [Authorize]

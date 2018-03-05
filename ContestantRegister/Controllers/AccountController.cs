@@ -13,12 +13,13 @@ using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.AccountViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ContestantRegister.ViewModels.ListItemViewModels;
 
 namespace ContestantRegister.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -33,7 +34,7 @@ namespace ContestantRegister.Controllers
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            ApplicationDbContext context, 
+            ApplicationDbContext context,
             IMapper mapper,
             IUserService userService)
         {
@@ -99,8 +100,8 @@ namespace ContestantRegister.Controllers
             return View(model);
         }
 
-        
-        
+
+
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -110,13 +111,12 @@ namespace ContestantRegister.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
+        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            //TODO добавить выбор учебного заведения в зависимости от роли и города
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             var vm = new RegisterViewModel
             {
@@ -144,8 +144,8 @@ namespace ContestantRegister.Controllers
                     RegistrationDateTime = DateTime.Now
                 };
 
-                _mapper.Map(viewModel, user); 
-                
+                _mapper.Map(viewModel, user);
+
                 var result = await _userManager.CreateAsync(user, viewModel.PasswordViewModel.Password);
                 if (result.Succeeded)
                 {
@@ -162,7 +162,7 @@ namespace ContestantRegister.Controllers
             }
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             // If we got this far, something failed, redisplay form
             return View(viewModel);

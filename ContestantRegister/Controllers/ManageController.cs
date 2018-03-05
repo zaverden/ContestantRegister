@@ -15,12 +15,13 @@ using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.ManageViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ContestantRegister.ViewModels.ListItemViewModels;
 
 namespace ContestantRegister.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -65,9 +66,9 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(user, viewModel);
 
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            
+
             return View(viewModel);
         }
 
@@ -80,7 +81,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
                 return View(viewModel);
@@ -96,7 +97,7 @@ namespace ContestantRegister.Controllers
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-            
+
             StatusMessage = "Профиль был успешно обновлен.";
             return RedirectToAction(nameof(Index));
         }
@@ -142,6 +143,6 @@ namespace ContestantRegister.Controllers
 
             return RedirectToAction(nameof(ChangePassword));
         }
-        
+
     }
 }

@@ -19,7 +19,7 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
-            @await Html.PartialAsync("../Users/_UserPartial")
+            @await Html.PartialAsync("_UserPartial")
 
             <input type="hidden" asp-for="ContestId" />
 

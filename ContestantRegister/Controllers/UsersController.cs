@@ -13,11 +13,12 @@ using ContestantRegister.ViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using ContestantRegister.ViewModels.ListItemViewModels;
 
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -82,16 +83,16 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Users/Create
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName");
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
 
             return View();
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,7 +103,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
                 return View(viewModel);
@@ -125,7 +126,7 @@ namespace ContestantRegister.Controllers
 
             ModelState.AddErrors(result.Errors);
 
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
@@ -148,14 +149,14 @@ namespace ContestantRegister.Controllers
             var viewModel = new EditUserViewModel();
             _mapper.Map(user, viewModel);
 
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -192,13 +193,13 @@ namespace ContestantRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
+            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
         }
 
-        
+
 
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(string id)
@@ -227,7 +228,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);            
+            var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -271,6 +272,6 @@ namespace ContestantRegister.Controllers
         {
             return _context.Users.Any(e => e.Id == id);
         }
-        
+
     }
 }
