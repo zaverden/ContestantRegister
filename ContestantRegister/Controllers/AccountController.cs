@@ -111,7 +111,7 @@ namespace ContestantRegister.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> RegisterAsync(string returnUrl = null)
+        public async Task<IActionResult> Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
 
