@@ -32,14 +32,6 @@ namespace ContestantRegister.Utils
             return task.Result;
         }
 
-        public static async Task<bool> IsUserAdminAsync(this UserManager<ApplicationUser> userManager, ClaimsPrincipal principal)
-        {
-            if (!principal.Identity.IsAuthenticated) return false;
-
-            var user = await userManager.GetUserAsync(principal);
-            return await userManager.IsInRoleAsync(user, Roles.Admin);
-        }
-
         public static string GetRequredFieldErrorMessage(this Object obj, string propertyName)
         {
             var displayAttribute = (DisplayAttribute)obj.GetType().GetProperty(propertyName).GetCustomAttribute(typeof(DisplayAttribute));

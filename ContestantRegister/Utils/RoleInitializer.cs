@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
+using ContestantRegister.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,20 +45,18 @@ namespace ContestantRegister.Utils
                 await rolesManager.CreateAsync(new IdentityRole(Roles.Admin));
             }
 
-            var adminEmail = "acm@sfu-kras.ru";
-            if (await userManager.FindByNameAsync(adminEmail) == null)
+            if (await userManager.FindByNameAsync(UserService.DefaultAdminEmail) == null)
             {
                 var admin = new ApplicationUser
                 {
-                    Email = adminEmail,
+                    Email = UserService.DefaultAdminEmail,
                     EmailConfirmed = true,
-                    UserName = adminEmail,
+                    UserName = UserService.DefaultAdminEmail,
                     StudyPlace = isit,
-                    Name = "Админ",
-                    Surname = "Админ",
-                    Patronymic = "Админ",
+                    Name = "Сергей",
+                    Surname = "Виденин",
+                    Patronymic = "Александрович",
                     UserType = UserType.Trainer
-
                 };
 
                 await userManager.CreateAsync(admin, "123qweASD!");

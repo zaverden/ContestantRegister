@@ -54,7 +54,7 @@ namespace ContestantRegister.Controllers
             var adminIds = admins.Select(u => u.Id).ToList();
             var notAdmins = await _context.Users.Where(u => !adminIds.Contains(u.Id)).ToListAsync();
 
-            var defaultAdmin = admins.First(a => a.Email == "acm@sfu-kras.ru");
+            var defaultAdmin = admins.First(a => a.Email == UserService.DefaultAdminEmail);
             admins.Remove(defaultAdmin);
             var viewModels = admins.Select(u => new UserAdminViewModel {IsAdmin = true, User = u}).ToList();
             var notAdminViewModels = notAdmins.Select(u => new UserAdminViewModel {User = u}).ToList();
@@ -140,7 +140,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == id);
+            var user = await _context.Users.Include(u => u.StudyPlace).SingleOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -148,6 +148,7 @@ namespace ContestantRegister.Controllers
 
             var viewModel = new EditUserViewModel();
             _mapper.Map(user, viewModel);
+            viewModel.CityId = user.StudyPlace.CityId;
 
             ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);

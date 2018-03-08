@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
@@ -16,6 +17,8 @@ namespace ContestantRegister.Services
 
     public class UserService : IUserService
     {
+        public const string DefaultAdminEmail = "acm@sfu-kras.ru";
+
         private readonly ApplicationDbContext _context;
 
         public UserService(ApplicationDbContext context)

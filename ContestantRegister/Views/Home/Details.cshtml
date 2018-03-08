@@ -77,7 +77,7 @@
         <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрироваться</a>
     }
 
-    @if (await UserManager.IsUserAdminAsync(User))
+    @if (User.IsInRole(Roles.Admin))
     {
         <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрировать</a>
     }
@@ -209,7 +209,7 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @if (await UserManager.IsUserAdminAsync(User))
+                    @if (User.IsInRole(Roles.Admin))
                     {
                         <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
                         <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>

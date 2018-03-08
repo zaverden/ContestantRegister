@@ -2,6 +2,7 @@
 using ContestantRegister.Models;
 using ContestantRegister.ViewModels.AccountViewModels;
 using ContestantRegister.ViewModels.HomeViewModels;
+using ContestantRegister.ViewModels.ListItemViewModels;
 using ContestantRegister.ViewModels.ManageViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
 
@@ -31,6 +32,9 @@ namespace ContestantRegister.Utils
             
             CreateMap<IndexViewModel, ApplicationUser>();
             CreateMap<ApplicationUser, IndexViewModel>();
+
+            CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
+                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name));
 
         }
     }

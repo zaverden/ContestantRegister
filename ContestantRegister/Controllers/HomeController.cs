@@ -132,7 +132,7 @@ namespace ContestantRegister.Controllers
 
             if (contest.ContestType == ContestType.Collegiate) throw new NotImplementedException();
 
-            var registration = new IndividualContestRegistrationViewModel
+            var viewModel = new IndividualContestRegistrationViewModel
             {
                 ContestName = contest.Name,
                 ContestId = contest.Id,
@@ -143,13 +143,13 @@ namespace ContestantRegister.Controllers
             switch (user.UserType)
             {
                 case UserType.Trainer:
-                    registration.TrainerId = user.Id;
+                    viewModel.TrainerId = user.Id;
                     break;
 
                 case UserType.Pupil:
                     if (contest.ParticipantType == ParticipantType.Pupil)
                     {
-                        registration.Participant1Id = user.Id;
+                        viewModel.Participant1Id = user.Id;
                     }
                     else
                         throw new Exception("Школьники не участвуют в студенческих соревнованиях");
@@ -158,11 +158,11 @@ namespace ContestantRegister.Controllers
                 case UserType.Student:
                     if (contest.ParticipantType == ParticipantType.Pupil)
                     {
-                        registration.TrainerId = user.Id;
+                        viewModel.TrainerId = user.Id;
                     }
                     else
                     {
-                        registration.Participant1Id = user.Id;
+                        viewModel.Participant1Id = user.Id;
                     }
                     break;
             }
@@ -170,27 +170,42 @@ namespace ContestantRegister.Controllers
             if (contest.ParticipantType == ParticipantType.Pupil && user?.StudyPlace is School ||
                 contest.ParticipantType == ParticipantType.Student && user?.StudyPlace is Institution)
             {
-                registration.StudyPlaceId = user.StudyPlaceId;
-                registration.CityId = user.StudyPlace.CityId;
+                viewModel.StudyPlaceId = user.StudyPlaceId;
+                viewModel.CityId = user.StudyPlace.CityId;
             }
 
-            ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", registration.Participant1Id);
-            ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", registration.TrainerId);
-            ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", registration.ManagerId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", registration.CityId);
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", registration.StudyPlaceId);
-
-            if (contest.IsAreaRequired)
-            {
-                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
-            }
-
-            return View(registration);
+            await FillViewDataForIndividualContestRegistration(viewModel, contest);
+            
+            return View(viewModel);
         }
 
         private async Task<Contest> GetContest(int contestId)
         {
             return await _context.Contests.SingleOrDefaultAsync(c => c.Id == contestId);
+        }
+
+        private async Task FillViewDataForIndividualContestRegistration(IndividualContestRegistrationViewModel viewModel, Contest contest)
+        {
+            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            if (viewModel.ParticipantType == ParticipantType.Pupil)
+            {
+                ViewData["Participant1Id"] = new SelectList(_context.Users.Where(u => u.UserType == UserType.Pupil), "Id", "UserName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
+                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
+            }
+            else
+            {
+                ViewData["Participant1Id"] = new SelectList(_context.Users.Where(u => u.UserType == UserType.Student), "Id", "UserName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(_context.Users.Where(u => u.UserType != UserType.Pupil), "Id", "UserName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(_context.Users.Where(u => u.UserType != UserType.Pupil), "Id", "UserName", viewModel.TrainerId);
+                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
+            }
+
+            if (contest.IsAreaRequired)
+            {
+                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
+            }
         }
 
         [Authorize]
@@ -208,16 +223,7 @@ namespace ContestantRegister.Controllers
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
-                ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
-                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
-                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
-
-                if (contest.IsAreaRequired)
-                {
-                    ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
-                }
+                await FillViewDataForIndividualContestRegistration(viewModel, contest);
 
                 return View(viewModel);
             }
@@ -443,18 +449,9 @@ namespace ContestantRegister.Controllers
                 ParticipantType = registration.Contest.ParticipantType,
             };
             _mapper.Map(registration, viewModel);
-
-            ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
-            ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
-            ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
-
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
-            if (contest.IsAreaRequired)
-            {
-                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
-            }
+
+            await FillViewDataForIndividualContestRegistration(viewModel, contest);
 
             return View(viewModel);
         }
@@ -479,17 +476,9 @@ namespace ContestantRegister.Controllers
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
-                ViewData["Participant1Id"] = new SelectList(_context.Users, "Id", "UserName", viewModel.Participant1Id);
-                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
-                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-                ViewData["StudyPlaceId"] = new SelectList(_context.StudyPlaces, "Id", "ShortName", viewModel.StudyPlaceId);
-
                 var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
-                if (contest.IsAreaRequired)
-                {
-                    ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries), viewModel.Area);
-                }
+
+                await FillViewDataForIndividualContestRegistration(viewModel, contest);
 
                 return View(viewModel);
             }

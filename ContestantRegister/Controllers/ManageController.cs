@@ -16,6 +16,7 @@ using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.ManageViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.ViewModels.ListItemViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Controllers
 {
@@ -58,10 +59,13 @@ namespace ContestantRegister.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            var studyPlace = await _context.StudyPlaces.SingleAsync(sp => sp.Id == user.StudyPlaceId);
+
             var viewModel = new IndexViewModel
             {
                 CanSuggestStudyPlace = true,
-                StatusMessage = StatusMessage
+                StatusMessage = StatusMessage,
+                CityId = studyPlace.CityId,
             };
 
             _mapper.Map(user, viewModel);

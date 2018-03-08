@@ -21,7 +21,7 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int StudyPlaceId { get; set; }
 
-        public string ContestName { get; set; }
+        public bool IsProgrammingLanguageNeeded { get; set; }
 
         [Display(Name = "Язык программирования")]
         [MaxLength(100)]
@@ -31,12 +31,16 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public int CityId { get; set; }
 
+        public bool IsAreaRequired { get; set; }
+
         [Display(Name = "Площадка")]
         public string Area { get; set; }
 
         public ParticipantType ParticipantType { get; set; }
 
         public int RegistrationId { get; set; }
+
+        public string ContestName { get; set; }
 
         public int ContestId { get; set; }
     }
