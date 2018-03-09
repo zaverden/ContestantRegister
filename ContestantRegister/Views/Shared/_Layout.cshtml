@@ -8,6 +8,7 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/select2/select2.css" />
+        <link rel="stylesheet" href="~/lib/select2/themes/select2-bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -17,6 +18,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css"
               asp-fallback-href="~/lib/select2/select2.min.css"
               asp-fallback-test-class="select2-container" asp-fallback-test-property="position" asp-fallback-test-value="relative" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
+              asp-fallback-href="~/lib/select2/themes/select2-bootstrap.min.css"
+              asp-fallback-test-class="select2-container--bootstrap" asp-fallback-test-property="display" asp-fallback-test-value="block" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
@@ -38,7 +42,19 @@
                     <li><a asp-controller="Home" asp-action="Contact">Контакты</a></li>
                     @if (User.IsInRole(Roles.Admin))
                     {
-                        <li><a asp-controller="Admin" asp-action="Index">Админка</a></li>
+                        <li>
+                            <a asp-controller="Admin" asp-action="Index" data-toggle="dropdown" class="dropdown-toggle">
+                                Админка <span class="caret">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Cities" asp-action="Index">Города</a></li>
+                                <li><a asp-controller="Schools" asp-action="Index">Школы</a></li>
+                                <li><a asp-controller="Institutions" asp-action="Index">Вузы</a></li>
+                                <li><a asp-controller="Contests" asp-action="Index">Контесты</a></li>
+                                <li><a asp-controller="Users" asp-action="Index">Пользователи</a></li>
+                                <li><a asp-controller="Users" asp-action="Admins">Админы</a></li>
+                            </ul>
+                        </li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
@@ -85,6 +101,8 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+    <script src="~/js/select2.init.js" asp-append-version="true"></script>
+
 
     @RenderSection("Scripts", required: false)
     <partial-script mode="Render" />
