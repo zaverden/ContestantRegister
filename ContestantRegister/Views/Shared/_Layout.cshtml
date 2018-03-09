@@ -42,7 +42,19 @@
                     <li><a asp-controller="Home" asp-action="Contact">Контакты</a></li>
                     @if (User.IsInRole(Roles.Admin))
                     {
-                        <li><a asp-controller="Admin" asp-action="Index">Админка</a></li>
+                        <li>
+                            <a asp-controller="Admin" asp-action="Index" data-toggle="dropdown" class="dropdown-toggle">
+                                Админка <span class="caret">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Cities" asp-action="Index">Города</a></li>
+                                <li><a asp-controller="Schools" asp-action="Index">Школы</a></li>
+                                <li><a asp-controller="Institutions" asp-action="Index">Вузы</a></li>
+                                <li><a asp-controller="Contests" asp-action="Index">Контесты</a></li>
+                                <li><a asp-controller="Users" asp-action="Index">Пользователи</a></li>
+                                <li><a asp-controller="Users" asp-action="Admins">Админы</a></li>
+                            </ul>
+                        </li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
