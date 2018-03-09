@@ -87,12 +87,9 @@
 <partial-script>
     <script type="text/javascript">
         const serverData = {};
-        serverData.studyPlaces = @Html.Raw(ViewData["StudyPlaces"].ToJson());
-        serverData.userTypeMapping = new Map([
-            [@((int)UserType.Pupil), '@UserType.Pupil'],
-            [@((int)UserType.Student), '@UserType.Student'],
-            [@((int)UserType.Trainer), '@UserType.Trainer']
-        ]);
+        serverData.studyPlaces = @Html.RawJson(ViewData["StudyPlaces"]);
+        serverData.userTypeMapping = @(Html.EnumAsJsMap<UserType>());
+
 
         function checkUserType() {
             const userType = parseInt($("#userType").val());
@@ -115,13 +112,16 @@
                     studyPlaces = studyPlaces.filter(sp => sp.Type === '@nameof(Institution)');
                     break;
             }
-            $("#StudyPlaceId").empty();
-            $("#StudyPlaceId").select2({
+            const studyPlaceIdSelect = $("#StudyPlaceId");
+            const studyPlaceId = parseInt(studyPlaceIdSelect.val() || '@Model.StudyPlaceId');
+            studyPlaceIdSelect.empty();
+            studyPlaceIdSelect.select2({
                 data: studyPlaces
                     .filter(sp => sp.CityId === cityId)
                     .map(sp => ({
                         id: sp.Id,
                         text: sp.ShortName,
+                        selected: sp.Id === studyPlaceId,
                         studyPlace: sp
                     }))
             });
