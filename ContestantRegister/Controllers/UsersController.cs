@@ -85,7 +85,7 @@ namespace ContestantRegister.Controllers
         // GET: Users/Create
         public async Task<IActionResult> Create()
         {
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
 
             return View();
@@ -103,7 +103,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
                 return View(viewModel);
@@ -126,7 +126,7 @@ namespace ContestantRegister.Controllers
 
             ModelState.AddErrors(result.Errors);
 
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
@@ -150,7 +150,7 @@ namespace ContestantRegister.Controllers
             _mapper.Map(user, viewModel);
             viewModel.CityId = user.StudyPlace.CityId;
 
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
@@ -194,7 +194,7 @@ namespace ContestantRegister.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
