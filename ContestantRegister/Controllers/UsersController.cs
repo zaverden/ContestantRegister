@@ -131,7 +131,7 @@ namespace ContestantRegister.Controllers
 
         private async Task FillViewData(UserViewModelBase viewModel = null)
         {
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel?.CityId);
         }
 
