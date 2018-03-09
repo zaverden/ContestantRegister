@@ -1,24 +1,23 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using ContestantRegister.Models;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.Extensions.Logging;
-using ContestantRegister.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
-using ContestantRegister.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using ContestantRegister.Data;
+using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.HomeViewModels;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using ContestantRegister.ViewModels.ListItemViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ContestantRegister.Controllers
 {
@@ -175,7 +174,7 @@ namespace ContestantRegister.Controllers
             }
 
             await FillViewDataForIndividualContestRegistration(viewModel, contest);
-            
+
             return View(viewModel);
         }
 
@@ -187,19 +186,21 @@ namespace ContestantRegister.Controllers
         private async Task FillViewDataForIndividualContestRegistration(IndividualContestRegistrationViewModel viewModel, Contest contest)
         {
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
+
             if (viewModel.ParticipantType == ParticipantType.Pupil)
             {
-                ViewData["Participant1Id"] = new SelectList(_context.Users.Where(u => u.UserType == UserType.Pupil), "Id", "UserName", viewModel.Participant1Id);
-                ViewData["TrainerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(_context.Users, "Id", "UserName", viewModel.ManagerId);
-                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(users, "Id", "DisplayName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(users, "Id", "DisplayName", viewModel.ManagerId);
+                ViewData["StudyPlaces"] = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
             }
             else
             {
-                ViewData["Participant1Id"] = new SelectList(_context.Users.Where(u => u.UserType == UserType.Student), "Id", "UserName", viewModel.Participant1Id);
-                ViewData["TrainerId"] = new SelectList(_context.Users.Where(u => u.UserType != UserType.Pupil), "Id", "UserName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(_context.Users.Where(u => u.UserType != UserType.Pupil), "Id", "UserName", viewModel.TrainerId);
-                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", viewModel.Participant1Id);
+                ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+                ViewData["StudyPlaces"] = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
             }
 
             if (contest.IsAreaRequired)
@@ -306,7 +307,7 @@ namespace ContestantRegister.Controllers
 
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             return View(vm);
         }
@@ -343,7 +344,7 @@ namespace ContestantRegister.Controllers
             }
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             return View(viewModel);
         }

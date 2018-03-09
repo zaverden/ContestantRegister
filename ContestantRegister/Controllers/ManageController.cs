@@ -70,7 +70,7 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(user, viewModel);
 
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
             return View(viewModel);
@@ -85,7 +85,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
                 ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
 
                 return View(viewModel);

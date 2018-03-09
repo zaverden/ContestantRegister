@@ -87,7 +87,7 @@
 <partial-script>
     <script type="text/javascript">
         const serverData = {};
-        serverData.studyPlaces = @Html.Raw(ViewData["StudyPlaces"]);
+        serverData.studyPlaces = @Html.Raw(ViewData["StudyPlaces"].ToJson());
         serverData.userTypeMapping = new Map([
             [@((int)UserType.Pupil), '@UserType.Pupil'],
             [@((int)UserType.Student), '@UserType.Student'],
@@ -96,7 +96,7 @@
 
         function checkUserType() {
             const userType = parseInt($("#userType").val());
-            const userTypeName = serverData.userTypeMapping[userType];
+            const userTypeName = serverData.userTypeMapping.get(userType);
             $('.conditional').hide();
             $(`.conditional.${userTypeName}`).show();
             filterStudyPlaces();
