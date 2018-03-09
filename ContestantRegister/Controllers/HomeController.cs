@@ -139,6 +139,7 @@ namespace ContestantRegister.Controllers
             };
 
             var user = await _userManager.GetUserAsync(User);
+            user.StudyPlace = _context.StudyPlaces.Find(user.StudyPlaceId);
             switch (user.UserType)
             {
                 case UserType.Trainer:
@@ -166,8 +167,8 @@ namespace ContestantRegister.Controllers
                     break;
             }
 
-            if (contest.ParticipantType == ParticipantType.Pupil && user?.StudyPlace is School ||
-                contest.ParticipantType == ParticipantType.Student && user?.StudyPlace is Institution)
+            if (contest.ParticipantType == ParticipantType.Pupil && user.StudyPlace is School ||
+                contest.ParticipantType == ParticipantType.Student && user.StudyPlace is Institution)
             {
                 viewModel.StudyPlaceId = user.StudyPlaceId;
                 viewModel.CityId = user.StudyPlace.CityId;
@@ -436,6 +437,7 @@ namespace ContestantRegister.Controllers
             var registration = await _context.ContestRegistrations
                 .OfType<IndividualContestRegistration>()
                 .Include(r => r.Contest)
+                .Include(r => r.StudyPlace)
                 .SingleOrDefaultAsync(r => r.Id == id);
 
             if (registration == null)
@@ -448,6 +450,7 @@ namespace ContestantRegister.Controllers
                 ContestName = registration.Contest.Name,
                 RegistrationId = registration.Id,
                 ParticipantType = registration.Contest.ParticipantType,
+                CityId = registration.StudyPlace.CityId,
             };
             _mapper.Map(registration, viewModel);
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);

@@ -36,6 +36,9 @@ namespace ContestantRegister.Utils
             CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name));
 
+            CreateMap<ApplicationUser, UserListItemViewModel>()
+                .ForMember(ulivm => ulivm.DisplayName, opt => opt.MapFrom(au => $"{au.Name} {au.Surname} ({au.Email})"));
+
         }
     }
 }
