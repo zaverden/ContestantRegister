@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services.BackgroundJobs;
@@ -8,6 +9,7 @@ using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
@@ -30,7 +32,7 @@ namespace ContestantRegister
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     RoleInitializer.InitializeAsync(userManager, rolesManager, context).Wait();
 
-                    //PopulateTestData(userManager, context);
+                    PopulateTestData(userManager, context);
                 }
                 catch (Exception ex)
                 {
@@ -52,6 +54,9 @@ namespace ContestantRegister
 
         private static void PopulateTestData(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            var city1 = context.Cities.FirstOrDefault(c => c.Name == "Город1");
+            if (city1 != null) return;
+
             var cities = new List<City>();
             int cityCount = 2;
             for (int i = 1; i <= cityCount; i++)
