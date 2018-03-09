@@ -116,7 +116,7 @@ namespace ContestantRegister.Controllers
             ViewData["ReturnUrl"] = returnUrl;
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             var vm = new RegisterViewModel
             {
@@ -162,7 +162,7 @@ namespace ContestantRegister.Controllers
             }
 
             ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaces"] = await GetListItemsJsonAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             // If we got this far, something failed, redisplay form
             return View(viewModel);
