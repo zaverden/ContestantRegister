@@ -151,8 +151,10 @@ namespace ContestantRegister.Controllers
                     {
                         viewModel.Participant1Id = user.Id;
                     }
-                    else
-                        throw new Exception("Школьники не участвуют в студенческих соревнованиях");
+                    else //Школьник пытается зарегаться на студенческое соревнование, этого делать нельзя 
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
                     break;
 
                 case UserType.Student:
