@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
@@ -67,6 +68,15 @@ namespace ContestantRegister
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context)
         {
+            var ruCultureInfo = new CultureInfo("ru-RU");
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ruCultureInfo),
+                SupportedCultures = new[] { ruCultureInfo },
+                SupportedUICultures = new[] { ruCultureInfo }
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
