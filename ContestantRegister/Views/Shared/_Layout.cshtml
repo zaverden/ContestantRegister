@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/select2/select2.css" />
         <link rel="stylesheet" href="~/lib/select2/themes/select2-bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -21,6 +22,9 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
               asp-fallback-href="~/lib/select2/themes/select2-bootstrap.min.css"
               asp-fallback-test-class="select2-container--bootstrap" asp-fallback-test-property="display" asp-fallback-test-value="block" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"
+              asp-fallback-href="~/lib/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css"
+              asp-fallback-test-class="bootstrap-datetimepicker-widget" asp-fallback-test-property="list-style" asp-fallback-test-value="none" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
@@ -70,13 +74,27 @@
     </div>
 
     <environment include="Development">
+        <script src="~/lib/moment/moment.js"></script>
+        <script src="~/lib/moment/i18n/ru.js"></script>
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/select2/select2.js"></script>
         <script src="~/lib/select2/i18n/ru.js"></script>
+        <script src="~/lib/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"
+                asp-fallback-src="~/lib/moment/moment.min.js"
+                asp-fallback-test="window.moment && window.moment.fn"
+                crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/locale/ru.js"
+                asp-fallback-src="~/lib/moment/i18n/ru.js"
+                asp-fallback-test="window.moment && window.moment.locales && window.moment.locales().includes('ru')"
+                crossorigin="anonymous">
+        </script>
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -99,9 +117,15 @@
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.select2"
                 crossorigin="anonymous">
         </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"
+                asp-fallback-src="~/lib/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.datetimepicker"
+                crossorigin="anonymous">
+        </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
     <script src="~/js/select2.init.js" asp-append-version="true"></script>
+    <script src="~/js/datetimepicker.init.js" asp-append-version="true"></script>
 
 
     @RenderSection("Scripts", required: false)
