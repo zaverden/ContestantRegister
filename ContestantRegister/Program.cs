@@ -32,7 +32,7 @@ namespace ContestantRegister
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     RoleInitializer.InitializeAsync(userManager, rolesManager, context).Wait();
 
-                    PopulateTestData(userManager, context);
+                    //PopulateTestData(userManager, context);
                 }
                 catch (Exception ex)
                 {
