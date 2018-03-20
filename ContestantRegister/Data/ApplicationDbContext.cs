@@ -15,6 +15,8 @@ namespace ContestantRegister.Data
 
         public DbSet<Contest> Contests { get; set; }
 
+        public DbSet<Region> Regions { get; set; }
+
         public DbSet<StudyPlace> StudyPlaces { get; set; }
         public DbSet<School> Schools { get; set; }
         public DbSet<Institution> Institutions { get; set; }
@@ -44,6 +46,13 @@ namespace ContestantRegister.Data
             {
                 entity.HasOne(e => e.City)
                     .WithMany(p => p.StudyPlaces)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            builder.Entity<City>(entity =>
+            {
+                entity.HasOne(e => e.Region)
+                    .WithMany(p => p.Cities)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

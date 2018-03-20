@@ -13,6 +13,12 @@ namespace ContestantRegister.Models
         [Display(Name = "Название")]
         public string Name { get; set; }
 
+        [Display(Name = "Регион")]
+        //[Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int? RegionId { get; set; }
+
+        public Region Region { get; set; }
+
         public ICollection<StudyPlace> StudyPlaces { get; set; }
     }
 }

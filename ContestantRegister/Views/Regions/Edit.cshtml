@@ -1,12 +1,12 @@
-﻿@model ContestantRegister.Models.City
+﻿@model ContestantRegister.Models.Region
 
 @{
-    ViewData["Title"] = "Редактировать город";
+    ViewData["Title"] = "Редактировать регион";
 }
 
-<h2>Редактировать</h2>
+<h2>Изменить</h2>
 
-<h4>Город</h4>
+<h4>Регион</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,11 +17,6 @@
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="RegionId" class="control-label"></label>
-                <select asp-for="RegionId" class="form-control" asp-items="ViewBag.RegionId"></select>
-                <span asp-validation-for="RegionId" class="text-danger"></span>
-            </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="submit" value="Сохранить" class="btn btn-default" />
@@ -31,9 +26,6 @@
 </div>
 
 <div>
-    <a asp-action="Index">Вернуться к списку</a>
+    <a asp-action="Index">Назад к списку</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

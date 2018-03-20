@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20180320161126_Region_for_school.cs" />
+    <Compile Remove="Data\Migrations\20180320161126_Region_for_school.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180320162540_Add_Region_For_School.cs" />
+    <Compile Remove="Data\Migrations\20180320162540_Add_Region_For_School.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180320170459_add-regions.cs" />
+    <Compile Remove="Data\Migrations\20180320170459_add-regions.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="CommonMark.NET" Version="0.15.1" />
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
