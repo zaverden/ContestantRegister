@@ -33,6 +33,7 @@ namespace ContestantRegister
                     RoleInitializer.InitializeAsync(userManager, rolesManager, context).Wait();
 
                     //PopulateTestData(userManager, context);
+                    RemoveTestData(context);
                 }
                 catch (Exception ex)
                 {
@@ -50,6 +51,90 @@ namespace ContestantRegister
             };
 
             host.Run();
+        }
+
+        private static void RemoveTestData(ApplicationDbContext context)
+        {
+            RemoveUser(context, "pupil1@school2.city2");
+            RemoveUser(context, "pupil2@school1.city2");
+            RemoveUser(context, "trainer@inst1.city2");
+            RemoveUser(context, "trainer@inst2.city2");
+
+            RemoveUser(context, "student2@inst2.city1");
+            RemoveUser(context, "pupil2@school2.city2");
+            RemoveUser(context, "trainer@school2.city2");
+            RemoveUser(context, "trainer@inst2.city1");
+
+            RemoveUser(context, "pupil1@school1.city2");
+            RemoveUser(context, "trainer@school1.city1");
+            RemoveUser(context, "pupil2@school2.city1");
+            RemoveUser(context, "trainer@school1.city2");
+
+            RemoveUser(context, "student1@inst1.city2");
+            RemoveUser(context, "student2@inst1.city2");
+            RemoveUser(context, "student2@inst2.city2");
+            RemoveUser(context, "student1@inst2.city2");
+
+            RemoveUser(context, "trainer@school2.city1");
+            RemoveUser(context, "student1@inst1.city1");
+            RemoveUser(context, "pupil1@school1.city1");
+            RemoveUser(context, "pupil1@school2.city1");
+
+            RemoveUser(context, "student2@inst1.city1");
+            RemoveUser(context, "student1@inst2.city1");
+            RemoveUser(context, "pupil2@school1.city1");
+            RemoveUser(context, "trainer@inst1.city1");
+            
+            RemoveInstitution(context, "Вуз1 Город1");
+            RemoveInstitution(context, "Вуз2 Город1");
+            RemoveInstitution(context, "Вуз1 Город2");
+            RemoveInstitution(context, "Вуз2 Город2");
+            
+            RemoveSchool(context, "Школа1 Город1");
+            RemoveSchool(context, "Школа2 Город1");
+            RemoveSchool(context, "Школа1 Город2");
+            RemoveSchool(context, "Школа2 Город2");
+            
+            RemoveCity(context, "Город1");
+            RemoveCity(context, "Город2");
+
+            context.SaveChanges();
+        }
+
+        private static void RemoveCity(ApplicationDbContext context, string name)
+        {
+            var city = context.Cities.SingleOrDefault(item => item.Name == name);
+            if (city != null)
+            {
+                context.Cities.Remove(city);
+            }
+        }
+
+        private static void RemoveSchool(ApplicationDbContext context, string name)
+        {
+            var school = context.Schools.SingleOrDefault(item => item.ShortName == name);
+            if (school != null)
+            {
+                context.Schools.Remove(school);
+            }
+        }
+
+        private static void RemoveInstitution(ApplicationDbContext context, string name)
+        {
+            var inst = context.Institutions.SingleOrDefault(item => item.ShortName == name);
+            if (inst != null)
+            {
+                context.Institutions.Remove(inst);
+            }
+        }
+
+        private static void RemoveUser(ApplicationDbContext context, string email)
+        {
+            var user = context.Users.SingleOrDefault(u => u.Email == email);
+            if (user != null)
+            {
+                context.Users.Remove(user);
+            }
         }
 
         private static void PopulateTestData(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
