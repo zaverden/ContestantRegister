@@ -33,7 +33,7 @@ namespace ContestantRegister
                     RoleInitializer.InitializeAsync(userManager, rolesManager, context).Wait();
 
                     //PopulateTestData(userManager, context);
-                    RemoveTestData(context);
+                    //RemoveTestData(context);
                 }
                 catch (Exception ex)
                 {
