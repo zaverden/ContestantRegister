@@ -18,8 +18,8 @@ namespace ContestantRegister.Utils
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
-            return emailSender.SendEmailAsync(email, "Подтвердите ваш email на сайте olimp.ikit.sfu-kras.ru",
-                $"Подтвердите ваш email на сайте olimp.ikit.sfu-kras.ru, кликнув по ссылке: <a href='{HtmlEncoder.Default.Encode(link)}'>ссылка</a>");
+            return emailSender.SendEmailAsync(email, "Подтвердите email на сайте олимпиад ИКИТ СФУ",
+                $"Подтвердите ваш email на сайте олимпиад ИКИТ СФУ olimp.ikit.sfu-kras.ru, кликнув по ссылке: <a href='{HtmlEncoder.Default.Encode(link)}'>ссылка</a>");
         }
 
         /// <summary>

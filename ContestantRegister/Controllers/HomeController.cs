@@ -268,7 +268,11 @@ namespace ContestantRegister.Controllers
                 var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
                 await _emailSender.SendEmailAsync(participant.Email,
                     "Вы зарегистрированы на контест",
-                    $"Вы успешно зарегистрированы на контест {contest.Name}. Ваши учетные данные для входа в систему: логин {registration.YaContestLogin} пароль {registration.YaContestPassword}{Environment.NewLine}. Ссылка для входа: {contest.YaContestLink} ");
+                    $"Вы успешно зарегистрированы на контест: {contest.Name}<br>" +
+                    $"Ваши учетные данные для входа в систему:<br>" +
+                    $"логин {registration.YaContestLogin}<br>" +
+                    $"пароль {registration.YaContestPassword}<br>" +
+                    $"cсылка для входа: {contest.YaContestLink} ");
             }
 
             return RedirectToAction(nameof(Details), new { id });
@@ -389,12 +393,12 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> SuggestSchool(SuggectSchoolViewModel viewModel)
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новая школа",
-                $"Предложил {viewModel.Email}{Environment.NewLine}" +
-                $"Город {viewModel.City}{Environment.NewLine}" +
-                $"Краткое название {viewModel.ShortName}{Environment.NewLine}" +
-                $"Полное название {viewModel.FullName}{Environment.NewLine}" +
-                $"Сайт {viewModel.Site}{Environment.NewLine}" +
-                $"Официальный email {viewModel.SchoolEmail}{Environment.NewLine}");
+                $"Предложил {viewModel.Email}<br>" +
+                $"Город {viewModel.City}<br>" +
+                $"Краткое название {viewModel.ShortName}<br>" +
+                $"Полное название {viewModel.FullName}<br>" +
+                $"Сайт {viewModel.Site}<br>" +
+                $"Официальный email {viewModel.SchoolEmail}<br>");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
@@ -422,13 +426,13 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> SuggestInstitution(SuggectInstitutionViewModel viewModel)
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новый вуз",
-                $"Предложил {viewModel.Email}{Environment.NewLine}" +
-                $"Город {viewModel.City}{Environment.NewLine}" +
-                $"Краткое название {viewModel.ShortName}{Environment.NewLine}" +
-                $"Полное название {viewModel.FullName}{Environment.NewLine}" +
-                $"Краткое название англ {viewModel.ShortNameEn}{Environment.NewLine}" +
-                $"Полное название англ {viewModel.FullNameEn}{Environment.NewLine}" +
-                $"Сайт {viewModel.Site}{Environment.NewLine}");
+                $"Предложил {viewModel.Email}<br>" +
+                $"Город {viewModel.City}<br>" +
+                $"Краткое название {viewModel.ShortName}<br>" +
+                $"Полное название {viewModel.FullName}<br>" +
+                $"Краткое название англ {viewModel.ShortNameEn}<br>" +
+                $"Полное название англ {viewModel.FullNameEn}<br>" +
+                $"Сайт {viewModel.Site}<br>");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
