@@ -390,11 +390,11 @@ namespace ContestantRegister.Controllers
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новая школа",
                 $"Предложил {viewModel.Email}{Environment.NewLine}" +
-                $"Город '{viewModel.City}'{Environment.NewLine}" +
-                $"Краткое название '{viewModel.ShortName}'{Environment.NewLine}" +
-                $"Полное название '{viewModel.FullName}'{Environment.NewLine}" +
-                $"Сайт '{viewModel.Site}'{Environment.NewLine}" +
-                $"Официальный email '{viewModel.SchoolEmail}'{Environment.NewLine}");
+                $"Город {viewModel.City}{Environment.NewLine}" +
+                $"Краткое название {viewModel.ShortName}{Environment.NewLine}" +
+                $"Полное название {viewModel.FullName}{Environment.NewLine}" +
+                $"Сайт {viewModel.Site}{Environment.NewLine}" +
+                $"Официальный email {viewModel.SchoolEmail}{Environment.NewLine}");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
@@ -423,12 +423,12 @@ namespace ContestantRegister.Controllers
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новый вуз",
                 $"Предложил {viewModel.Email}{Environment.NewLine}" +
-                $"Город '{viewModel.City}'{Environment.NewLine}" +
-                $"Краткое название '{viewModel.ShortName}'{Environment.NewLine}" +
-                $"Полное название '{viewModel.FullName}'{Environment.NewLine}" +
-                $"Краткое название англ '{viewModel.ShortNameEn}'{Environment.NewLine}" +
-                $"Полное название англ '{viewModel.FullNameEn}'{Environment.NewLine}" +
-                $"Сайт '{viewModel.Site}'{Environment.NewLine}");
+                $"Город {viewModel.City}{Environment.NewLine}" +
+                $"Краткое название {viewModel.ShortName}{Environment.NewLine}" +
+                $"Полное название {viewModel.FullName}{Environment.NewLine}" +
+                $"Краткое название англ {viewModel.ShortNameEn}{Environment.NewLine}" +
+                $"Полное название англ {viewModel.FullNameEn}{Environment.NewLine}" +
+                $"Сайт {viewModel.Site}{Environment.NewLine}");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
