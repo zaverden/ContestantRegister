@@ -1,7 +1,7 @@
 ﻿@model ContestantRegister.ViewModels.UserViewModelBase
 
 @{
-    bool isUserTypeDisabled = Model?.IsUserTypeDisabled ?? false;
+    bool isUserTypeDisabled = Model.IsUserTypeDisabled;
 }
 
 <div class="form-group">
@@ -49,7 +49,7 @@
     <select asp-for="StudyPlaceId" class="form-control"></select>
     <span asp-validation-for="StudyPlaceId" class="text-danger"></span>
 </div>
-@if (Model?.CanSuggestStudyPlace ?? false)
+@if (Model.CanSuggestStudyPlace)
 {
     <div class="form-group">
         <p>Если вашего учебного заведения нет в списке, вы можете предложить администраторам сайта его добавить.</p>
@@ -113,7 +113,7 @@
                     break;
             }
             const studyPlaceIdSelect = $("#StudyPlaceId");
-            const studyPlaceId = parseInt(studyPlaceIdSelect.val() || '@Model?.StudyPlaceId');
+            const studyPlaceId = parseInt(studyPlaceIdSelect.val() || '@Model.StudyPlaceId');
             studyPlaceIdSelect.empty();
             studyPlaceIdSelect.select2({
                 data: studyPlaces
@@ -128,6 +128,7 @@
         }
 
         $(document).ready(function () {
+
             checkUserType();
         });
 

@@ -87,7 +87,7 @@ namespace ContestantRegister.Controllers
         {
             await FillViewData();
 
-            return View();
+            return View(new CreateUserViewModel());
         }
 
         // POST: Users/Create
