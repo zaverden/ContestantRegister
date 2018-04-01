@@ -18,7 +18,7 @@ namespace ContestantRegister.TagHelpers
 
         public PartialScriptMode Mode { get; set; } = PartialScriptMode.Store;
 
-        public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             switch (Mode)
             {
