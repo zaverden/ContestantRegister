@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -115,7 +116,7 @@ namespace ContestantRegister.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name");
             ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             var vm = new RegisterViewModel
@@ -161,7 +162,7 @@ namespace ContestantRegister.Controllers
                 ModelState.AddErrors(result.Errors);
             }
 
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
             ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
 
             // If we got this far, something failed, redisplay form

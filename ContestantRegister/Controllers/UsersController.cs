@@ -132,7 +132,7 @@ namespace ContestantRegister.Controllers
         private async Task FillViewData(UserViewModelBase viewModel = null)
         {
             ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel?.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel?.CityId);
         }
 
         // GET: Users/Edit/5

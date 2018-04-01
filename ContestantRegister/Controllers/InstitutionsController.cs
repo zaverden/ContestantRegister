@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace ContestantRegister.Controllers
         // GET: Institutions/Create
         public IActionResult Create()
         {
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name");
             return View();
         }
 
@@ -50,7 +51,7 @@ namespace ContestantRegister.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", institution.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", institution.CityId);
             return View(institution);
         }
 
@@ -67,7 +68,7 @@ namespace ContestantRegister.Controllers
             {
                 return NotFound();
             }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", institution.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", institution.CityId);
             return View(institution);
         }
 
@@ -97,7 +98,7 @@ namespace ContestantRegister.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", institution.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", institution.CityId);
             return View(institution);
         }
 

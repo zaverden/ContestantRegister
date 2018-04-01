@@ -188,7 +188,7 @@ namespace ContestantRegister.Controllers
 
         private async Task FillViewDataForIndividualContestRegistration(IndividualContestRegistrationViewModel viewModel, Contest contest)
         {
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
             var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
 
             if (viewModel.ParticipantType == ParticipantType.Pupil)
