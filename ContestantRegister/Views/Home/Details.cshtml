@@ -116,13 +116,13 @@
             {
                 <tr>
                     <td>
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
                     </td>
                     <td>
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
                     </td>
                     <td>
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
