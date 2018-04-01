@@ -49,19 +49,19 @@ namespace ContestantRegister.Models
         public string ProgrammingLanguage { get; set; }
 
         [Display(Name = "Рабочее место")]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string ComputerName { get; set; }
 
         [Display(Name = "Логин в ЯКонтесте")]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string YaContestLogin { get; set; }
 
         [Display(Name = "Пароль в ЯКонтесте")]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public string YaContestPassword { get; set; }
 
         [Display(Name = "Площадка")]
-        [MaxLength(30)]
+        [MaxLength(50)]
         public string Area { get; set; }
 
     }
