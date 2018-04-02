@@ -397,8 +397,8 @@ namespace ContestantRegister.Controllers
                 $"Город {viewModel.City}<br>" +
                 $"Краткое название {viewModel.ShortName}<br>" +
                 $"Полное название {viewModel.FullName}<br>" +
-                $"Сайт {viewModel.Site}<br>" +
-                $"Официальный email {viewModel.SchoolEmail}<br>");
+                $"Официальный email {viewModel.SchoolEmail}<br>" +
+                $"Сайт {viewModel.Site}<br>");
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
@@ -427,9 +427,9 @@ namespace ContestantRegister.Controllers
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новый вуз",
                 $"Предложил {viewModel.Email}<br>" +
-                $"Город {viewModel.City}<br>" +
                 $"Краткое название {viewModel.ShortName}<br>" +
                 $"Полное название {viewModel.FullName}<br>" +
+                $"Город {viewModel.City}<br>" +
                 $"Краткое название англ {viewModel.ShortNameEn}<br>" +
                 $"Полное название англ {viewModel.FullNameEn}<br>" +
                 $"Сайт {viewModel.Site}<br>");
