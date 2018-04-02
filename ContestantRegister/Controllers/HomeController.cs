@@ -394,9 +394,9 @@ namespace ContestantRegister.Controllers
         {
             await _emailSender.SendEmailAsync(_options.Email, "Новая школа",
                 $"Предложил {viewModel.Email}<br>" +
-                $"Город {viewModel.City}<br>" +
                 $"Краткое название {viewModel.ShortName}<br>" +
                 $"Полное название {viewModel.FullName}<br>" +
+                $"Город {viewModel.City}<br>" +
                 $"Официальный email {viewModel.SchoolEmail}<br>" +
                 $"Сайт {viewModel.Site}<br>");
 
