@@ -151,7 +151,7 @@ namespace ContestantRegister.Controllers
                     {
                         viewModel.Participant1Id = user.Id;
                     }
-                    else //Школьник пытается зарегаться на студенческое соревнование, этого делать нельзя 
+                    else //Школьник пытается зарегаться на студенческое соревнование, этого делать нельзя
                     {
                         return RedirectToAction(nameof(Index));
                     }
@@ -202,7 +202,7 @@ namespace ContestantRegister.Controllers
             {
                 ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", viewModel.Participant1Id);
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
                 ViewData["StudyPlaces"] = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
             }
 
