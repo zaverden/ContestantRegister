@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ContestantRegister.Models.Email>
+
+@{
+    ViewData["Title"] = "Emails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Emails</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Subject)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Message)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsSended)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ChangeDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SendAttempts)
+                </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.Raw(item.Message)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsSended)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SendAttempts)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
