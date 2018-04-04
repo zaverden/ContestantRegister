@@ -70,10 +70,17 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(user, viewModel);
 
-            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+            await FillViewData(viewModel);
 
             return View(viewModel);
+        }
+
+        private async Task FillViewData(IndexViewModel viewModel)
+        {
+            var studyPlaces = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = studyPlaces.OrderBy(s => s.ShortName);
+
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
         }
 
         [HttpPost]
@@ -85,8 +92,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
-                ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
+                await FillViewData(viewModel);
 
                 return View(viewModel);
             }
