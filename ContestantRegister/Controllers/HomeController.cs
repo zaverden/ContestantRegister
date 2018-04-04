@@ -190,25 +190,30 @@ namespace ContestantRegister.Controllers
         {
             ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
             var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
+            users = users.OrderBy(u => u.DisplayName).ToList();
 
             if (viewModel.ParticipantType == ParticipantType.Pupil)
             {
                 ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", viewModel.Participant1Id);
                 ViewData["TrainerId"] = new SelectList(users, "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users, "Id", "DisplayName", viewModel.ManagerId);
-                ViewData["StudyPlaces"] = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
+                var schools = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["StudyPlaces"] = schools.OrderBy(s => s.ShortName);
             }
             else
             {
                 ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", viewModel.Participant1Id);
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
-                ViewData["StudyPlaces"] = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
+                var institutions = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
+                ViewData["StudyPlaces"] = institutions.OrderBy(inst => inst.ShortName);
             }
 
             if (contest.IsAreaRequired)
             {
-                ViewData["Area"] = new SelectList(contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries));
+                var areas = contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                Array.Sort(areas);
+                ViewData["Area"] = new SelectList(areas);
             }
         }
 

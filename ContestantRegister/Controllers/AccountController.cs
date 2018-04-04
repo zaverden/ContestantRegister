@@ -116,8 +116,7 @@ namespace ContestantRegister.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
 
-            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name");
-            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            await FillViewData();
 
             var vm = new RegisterViewModel
             {
@@ -125,6 +124,14 @@ namespace ContestantRegister.Controllers
             };
 
             return View(vm);
+        }
+
+        private async Task FillViewData()
+        {
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name");
+
+            var studyPlaces = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = studyPlaces.OrderBy(s => s.ShortName);
         }
 
         [HttpPost]
@@ -162,8 +169,7 @@ namespace ContestantRegister.Controllers
                 ModelState.AddErrors(result.Errors);
             }
 
-            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            await FillViewData();
 
             // If we got this far, something failed, redisplay form
             return View(viewModel);
