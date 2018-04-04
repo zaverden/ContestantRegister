@@ -205,6 +205,15 @@ namespace ContestantRegister.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{userId}'.");
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (!result.Succeeded)
+            {
+                foreach (var identityError in result.Errors)
+                {
+                    _logger.LogError(identityError.Description);
+                }
+            }
+
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 
