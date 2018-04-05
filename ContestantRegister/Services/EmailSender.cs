@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ContestantRegister.Data;
 
 namespace ContestantRegister.Services
@@ -23,7 +24,8 @@ namespace ContestantRegister.Services
             {
                 Address = email,
                 Subject = subject,
-                Message = message
+                Message = message,
+                CreateDate = DateTime.Now,
             };
             _context.Emails.Add(mail);
             await _context.SaveChangesAsync();

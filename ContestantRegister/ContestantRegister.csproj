@@ -13,6 +13,8 @@
     <Compile Remove="Data\Migrations\20180320162540_Add_Region_For_School.Designer.cs" />
     <Compile Remove="Data\Migrations\20180320170459_add-regions.cs" />
     <Compile Remove="Data\Migrations\20180320170459_add-regions.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180405041519_Email_Add_CreateDate_Column.cs" />
+    <Compile Remove="Data\Migrations\20180405041519_Email_Add_CreateDate_Column.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

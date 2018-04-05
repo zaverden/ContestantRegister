@@ -28,6 +28,9 @@ namespace ContestantRegister.Models
         [Display(Name = "Изменено")]
         public DateTime? ChangeDate { get; set; }
 
+        [Display(Name = "Создано")]
+        public DateTime? CreateDate { get; set; }
+
         [Display(Name = "Попыток")]
         public int SendAttempts { get; set; }
     }
