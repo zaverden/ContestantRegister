@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Data;
@@ -13,8 +15,10 @@ using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.AccountViewModels;
+using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.ViewModels.ListItemViewModels;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ContestantRegister.Controllers
 {
@@ -206,15 +210,20 @@ namespace ContestantRegister.Controllers
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
-            if (!result.Succeeded)
+            if (result.Succeeded) return View("ConfirmEmail");
+
+            var sb = new StringBuilder();
+            foreach (var error in result.Errors)
             {
-                foreach (var identityError in result.Errors)
-                {
-                    _logger.LogError(identityError.Description);
-                }
+                sb.AppendLine($"{error.Code}: {error.Description}<br>");
             }
 
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            //TODO может просто показывать сообщение, а не ошибку?
+            return View("Error", new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Message = sb.ToString(),
+            });
         }
 
         [HttpGet]

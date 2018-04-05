@@ -3,17 +3,23 @@
     ViewData["Title"] = "Ошибка";
 }
 
-<h1 class="text-danger">Ошибка</h1>
 <h2 class="text-danger">При обработке вашего запроса произошла ошибка</h2>
 
-@if (Model.ShowRequestId)
+@if (Model?.ShowRequestId ?? false)
 {
     <p>
-        <strong>ID запроса:</strong> <code>@Model.RequestId</code>
+        <strong>ID запроса:</strong> @Model.RequestId
     </p>
 }
 
+@if (Model != null)
+{
+    <p>
+        <code>@Html.Raw(Model.Message)</code>
+</p>
+}
+
 <p>
-    Пожалуйста, отправтье на <a href="mailto:acm@sfu-kras.ru">acm@sfu-kras.ru</a> описание ваших действий, которые привели к ошибке.
+    Пожалуйста, отправьте на <a href="mailto:acm@sfu-kras.ru">acm@sfu-kras.ru</a> описание ваших действий, которые привели к ошибке.
     И мы обязательно ее исправим!
 </p>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ContestantRegister.Data;
+using ContestantRegister.Models;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 
@@ -19,9 +20,33 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Emails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string emailFilter, int? sendedFilter)
         {
-            return View(await _context.Emails.OrderByDescending(e => e.Id).Take(100).ToListAsync());
+            ViewData["emailFilter"] = emailFilter;
+            ViewData["sendedFilter"] = sendedFilter;
+
+            IQueryable<Email> emails = _context.Emails;
+            bool filtered = false; 
+            if (!string.IsNullOrEmpty(emailFilter))
+            {
+                filtered = true;
+                emails = emails.Where(e => e.Address.Contains(emailFilter));
+            }
+
+            //if (!string.IsNullOrEmpty(sendedFilter))
+            if (sendedFilter.HasValue)
+            {
+                filtered = true;
+                var sended = sendedFilter.Value != 0;
+                emails = emails.Where(e => e.IsSended == sended);
+            }
+            
+            if (!filtered)
+            {
+                emails = emails.OrderByDescending(e => e.Id).Take(100);
+            }
+
+            return View(emails);
         }
     }
 }
