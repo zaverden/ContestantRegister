@@ -215,6 +215,8 @@ namespace ContestantRegister.Controllers
             var sb = new StringBuilder();
             foreach (var error in result.Errors)
             {
+                _logger.LogError($"{error.Code}: {error.Description}");
+
                 sb.AppendLine($"{error.Code}: {error.Description}<br>");
             }
 
