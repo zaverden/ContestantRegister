@@ -18,6 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
+            <th>Подтвержден</th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -48,40 +49,43 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Patronymic)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastName)
-                </td>
-                <td>
-                    @item.UserType.GetDisplayName()
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a> |
-                    <a asp-action="ChangePassword" asp-route-id="@item.Id">Установить пароль</a>
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Patronymic)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @item.UserType.GetDisplayName()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a> |
+                <a asp-action="ChangePassword" asp-route-id="@item.Id">Установить пароль</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
