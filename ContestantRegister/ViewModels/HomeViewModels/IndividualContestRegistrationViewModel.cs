@@ -4,6 +4,15 @@ using ContestantRegister.Properties;
 
 namespace ContestantRegister.ViewModels.HomeViewModels
 {
+    public class EditIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
+    {
+        [Display(Name = "Логин в ЯКонтесте")]
+        public string YaContestLogin { get; set; }
+
+        [Display(Name = "Пароль в ЯКонтесте")]
+        public string YaContestPassword { get; set; }
+    }
+
     public class IndividualContestRegistrationViewModel
     {
         [Display(Name = "Участник")]
@@ -39,7 +48,7 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         public ParticipantType ParticipantType { get; set; }
 
         public int RegistrationId { get; set; }
-
+        
         public string ContestName { get; set; }
 
         public int ContestId { get; set; }

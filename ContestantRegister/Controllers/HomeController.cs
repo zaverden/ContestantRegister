@@ -456,7 +456,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var viewModel = new IndividualContestRegistrationViewModel
+            var viewModel = new EditIndividualContestRegistrationViewModel
             {
                 ContestName = registration.Contest.Name,
                 RegistrationId = registration.Id,
@@ -476,7 +476,7 @@ namespace ContestantRegister.Controllers
         /// </summary>
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> EditRegistration(int id, IndividualContestRegistrationViewModel viewModel)
+        public async Task<IActionResult> EditRegistration(int id, EditIndividualContestRegistrationViewModel viewModel)
         {
             var dbRedistration = await _context.ContestRegistrations
                 .OfType<IndividualContestRegistration>()
