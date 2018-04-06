@@ -6,6 +6,19 @@
 
 <h2>Школы</h2>
 
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Краткое название<input type="text" name="shortNameFilter" value="@ViewData["shortNameFilter"]" />
+            Город<input type="text" name="cityFilter" value="@ViewData["cityFilter"]" />
+            
+            <input type="submit" value="Искать" class="btn btn-default" /> |
+
+            <a asp-action="Index">Очистить</a>
+        </p>
+    </div>
+</form>
+
 <p>
     <a asp-action="Create">Создать</a>
 </p>

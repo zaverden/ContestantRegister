@@ -25,10 +25,24 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Schools
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string shortNameFilter, string cityFilter)
         {
-            var applicationDbContext = _context.Schools.Include(s => s.City);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["shortNameFilter"] = shortNameFilter;
+            ViewData["cityFilter"] = cityFilter;
+
+            IQueryable<School> schools = _context.Schools.Include(s => s.City);
+
+            if (!string.IsNullOrEmpty(shortNameFilter))
+            {
+                schools = schools.Where(s => s.ShortName.Contains(shortNameFilter));
+            }
+
+            if (!string.IsNullOrEmpty(cityFilter))
+            {
+                schools = schools.Where(s => s.City.Name.Contains(cityFilter));
+            }
+
+            return View(await schools.ToListAsync());
         }
 
         // GET: Schools/Create
