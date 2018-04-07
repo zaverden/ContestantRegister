@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using ContestantRegister.Data;
 using ContestantRegister.Utils;
 using FluentScheduler;
@@ -8,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
+using Newtonsoft.Json.Linq;
 
 namespace ContestantRegister.Services.BackgroundJobs
 {
@@ -28,37 +31,36 @@ namespace ContestantRegister.Services.BackgroundJobs
         {
             using (var ctx = _context)
             {
-                using (var client = new SmtpClient())
+                using (var client = new HttpClient())
                 {
-                    client.Connect(_options.Server, _options.Port, _options.UseSsl);
-                    if (!string.IsNullOrEmpty(_options.Password))
-                    {
-                        client.Authenticate(_options.Email, _options.Password);
-                    }
-
+                    client.DefaultRequestHeaders.Add("Accept", "application/json");
+                    client.DefaultRequestHeaders.Add("X-Secure-Token", _options.SecurityToken);
+                    
                     foreach (var email in _context.Emails.Where(e => !e.IsSended && e.SendAttempts < 2))
                     {
-                        var message = new MimeMessage();
-                        message.From.Add(new MailboxAddress(_options.FromName, _options.Email));
-                        message.To.Add(new MailboxAddress(email.Address));
-                        message.Subject = email.Subject;
-                        message.Body = new TextPart(TextFormat.Html) { Text = email.Message };
-
+                        dynamic message = new JObject();
+                        message.from = _options.Email;
+                        message.to = new JArray(email.Address);
+                        message.subject = email.Subject;
+                        message.html_body = email.Message;
+                        
                         try
                         {
-                            client.Send(message);
+                            var content = new StringContent(message.ToString(), Encoding.UTF8, "application/json");
+                            client.PostAsync("http://api.mailhandler.ru/message/send/", content).Wait();
+                            
                             email.IsSended = true;
-                            //TODO Коммит можно делать после каждой успешной отправки email. Но тогда список email нужно будет выбирать заранее по ToList
                         }
                         catch (Exception ex)
                         {
                             email.SendAttempts++;
+
                             _logger.LogError(ex, $"Unable to send email to {email.Address}");
                         }
                         email.ChangeDate = DateTime.Now;
                     }
 
-                    client.Disconnect(true);
+                    
                 }
 
                 ctx.SaveChanges();
