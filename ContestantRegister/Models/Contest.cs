@@ -20,7 +20,6 @@ namespace ContestantRegister.Models
         public string Description { get; set; }
 
         [Display(Name = "Регистрация до")]
-        //[DisplayFormat(DataFormatString = "{0:dd.MM.yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime RegistrationEnd { get; set; }
 
         [Display(Name = "Старт")]

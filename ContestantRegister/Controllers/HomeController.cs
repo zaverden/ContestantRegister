@@ -263,15 +263,21 @@ namespace ContestantRegister.Controllers
             {
                 var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
                 await _emailSender.SendEmailAsync(participant.Email,
-                    "Вы зарегистрированы на контест",
-                    $"Вы успешно зарегистрированы на контест: {contest.Name}<br>" +
+                    "Вы зарегистрированы на соревнование по программированию ИКИТ СФУ",
+                    $"Вы успешно зарегистрированы на соревнование: {contest.Name}<br>" +
                     $"Ваши учетные данные для входа в систему:<br>" +
                     $"логин {registration.YaContestLogin}<br>" +
                     $"пароль {registration.YaContestPassword}<br>" +
-                    $"cсылка для входа: {contest.YaContestLink} ");
+                    $"cсылка для входа: {contest.YaContestLink}<br>");
             }
 
-            return RedirectToAction(nameof(Registration), new { registration.Id });
+            if (contest.ShowRegistrationInfo)
+            {
+                //TODO стоит ли показывать эту страницу для тренера?
+                return RedirectToAction(nameof(Registration), new {registration.Id});
+            }
+
+            return RedirectToAction(nameof(Details), new {id});
         }
 
         [Authorize]
