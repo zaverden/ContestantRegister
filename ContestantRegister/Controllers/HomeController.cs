@@ -329,10 +329,16 @@ namespace ContestantRegister.Controllers
             };
 
 
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name");
-            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            await FillRegisterContestParticipantViewData();
 
             return View(vm);
+        }
+
+        private async Task FillRegisterContestParticipantViewData()
+        {
+            ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name");
+            var studyPlaces = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            ViewData["StudyPlaces"] = studyPlaces.OrderBy(s => s.ShortName);
         }
 
         [Authorize]
@@ -366,8 +372,7 @@ namespace ContestantRegister.Controllers
                 ModelState.AddErrors(result.Errors);
             }
 
-            ViewData["CityId"] = new SelectList(_context.Cities, "Id", "Name", viewModel.CityId);
-            ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            await FillRegisterContestParticipantViewData();
 
             return View(viewModel);
         }

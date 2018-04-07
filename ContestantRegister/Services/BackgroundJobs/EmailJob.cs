@@ -55,7 +55,7 @@ namespace ContestantRegister.Services.BackgroundJobs
                         {
                             email.SendAttempts++;
 
-                            _logger.LogError(ex, $"Unable to send email to {email.Address}");
+                            _logger.LogError(ex, $"Unable to send email id {email.Id} to {email.Address}");
                         }
                         email.ChangeDate = DateTime.Now;
                     }
