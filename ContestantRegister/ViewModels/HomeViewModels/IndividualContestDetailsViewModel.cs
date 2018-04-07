@@ -7,6 +7,8 @@ namespace ContestantRegister.ViewModels.HomeViewModels
     {
         public Contest Contest { get; set; }
 
-        public ICollection<ContestRegistration> UseRegistrations { get; set; }
+        public ICollection<ContestRegistration> UserRegistrations { get; set; }
+
+        public ContestRegistration ParticipantRegistration { get; set; }
     }
 }

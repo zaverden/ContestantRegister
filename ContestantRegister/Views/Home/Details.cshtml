@@ -83,7 +83,18 @@
     }
 </p>
 
-@if (User.Identity.IsAuthenticated && Model.UseRegistrations.Any())
+@if (User.Identity.IsAuthenticated && Model.ParticipantRegistration != null)
+{
+    <h4>Вы зарегистрированы на соревнование</h4>
+    <p>
+        Данные для входа в проверяющую систему:<br>
+        Логин: @Html.DisplayFor(model => Model.ParticipantRegistration.YaContestLogin)<br>
+        Пароль: @Html.DisplayFor(model => Model.ParticipantRegistration.YaContestPassword)<br>
+        Ссылка для входа: @Html.DisplayFor(model => model.Contest.YaContestLink)<br>
+    </p>
+}
+
+@if (User.Identity.IsAuthenticated && Model.UserRegistrations.Any())
 {
     <h4>Мои регистрации</h4>
     <table class="table">
@@ -112,7 +123,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.UseRegistrations)
+            @foreach (var item in Model.UserRegistrations)
             {
                 <tr>
                     <td>

@@ -6,7 +6,7 @@ namespace ContestantRegister.Services.BackgroundJobs
     {
         public FluentSchedulerRegistry()
         {
-            Schedule<EmailJob>().NonReentrant().ToRunEvery(1).Minutes();
+            Schedule<EmailJob>().NonReentrant().ToRunEvery(15).Seconds();
 
             Schedule<ContestStatusJob>().NonReentrant().ToRunEvery(5).Minutes();
         }

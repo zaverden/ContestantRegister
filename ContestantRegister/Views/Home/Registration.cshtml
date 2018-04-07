@@ -1,0 +1,20 @@
+﻿@model IndividualContestRegistration
+
+@{
+    ViewData["Title"] = "Вы зарегистрированы на соревнование";
+}
+
+<h2>Вы зарегистрированы на соревнование</h2>
+
+<h4>@Html.DisplayFor(model => model.Contest.Name)</h4>
+
+<p>
+    Данные для входа в проверяющую систему:<br>
+    Логин: @Html.DisplayFor(model => model.YaContestLogin)<br>
+    Пароль: @Html.DisplayFor(model => model.YaContestPassword)<br>
+    Ссылка для входа: @Html.DisplayFor(model => model.Contest.YaContestLink)<br>
+</p>
+    
+<form asp-controller="Home" asp-action="Details" asp-route-id="@Model.ContestId" method="get">
+    <input type="submit" value="OK" class="btn btn-default" />
+</form>

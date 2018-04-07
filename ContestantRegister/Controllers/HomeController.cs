@@ -93,7 +93,8 @@ namespace ContestantRegister.Controllers
             var viewModel = new IndividualContestDetailsViewModel
             {
                 Contest = contest,
-                UseRegistrations = userRegistrations,
+                UserRegistrations = userRegistrations,
+                ParticipantRegistration = userRegistrations.SingleOrDefault(r => r.Participant1Id == user.Id),
             };
 
             return View(viewModel);
@@ -255,18 +256,8 @@ namespace ContestantRegister.Controllers
             registration.YaContestPassword = yacontestaccount[1];
 
             _context.ContestRegistrations.Add(registration);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-
+            await _context.SaveChangesAsync();
+            
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
             {
@@ -280,7 +271,21 @@ namespace ContestantRegister.Controllers
                     $"cсылка для входа: {contest.YaContestLink} ");
             }
 
-            return RedirectToAction(nameof(Details), new { id });
+            return RedirectToAction(nameof(Registration), new { registration.Id });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Registration(int id)
+        {
+            var registration = await _context.IndividualContestRegistrations
+                .Include(r => r.Contest)
+                .SingleOrDefaultAsync(r => r.Id == id);
+            if (registration == null)
+            {
+                return NotFound();
+            }
+
+            return View(registration);
         }
 
         [Authorize]
