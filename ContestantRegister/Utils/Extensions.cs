@@ -16,6 +16,8 @@ namespace ContestantRegister.Utils
 {
     public static class Extensions
     {
+        public static DateTime SfuServerNow => DateTime.Now.AddHours(7);
+
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
             return emailSender.SendEmailAsync(email, "Подтвердите email на сайте олимпиад ИКИТ СФУ",

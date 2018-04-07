@@ -110,7 +110,7 @@ namespace ContestantRegister.Controllers
             var user = new ApplicationUser
             {
                 UserName = viewModel.Email,
-                RegistrationDateTime = DateTime.Now,
+                RegistrationDateTime = Extensions.SfuServerNow,
                 RegistredBy = await _userManager.GetUserAsync(User) //Хотя пользователя регистрирует админ, все равно проставляем кто зарегал, иначе не отличить от тех, кто зарегался сам
             };
 

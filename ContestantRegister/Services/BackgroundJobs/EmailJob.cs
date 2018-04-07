@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using MimeKit.Text;
 using Newtonsoft.Json.Linq;
+using Extensions = ContestantRegister.Utils.Extensions;
 
 namespace ContestantRegister.Services.BackgroundJobs
 {
@@ -57,7 +58,7 @@ namespace ContestantRegister.Services.BackgroundJobs
 
                             _logger.LogError(ex, $"Unable to send email id {email.Id} to {email.Address}");
                         }
-                        email.ChangeDate = DateTime.Now;
+                        email.ChangeDate = Extensions.SfuServerNow;
                     }
 
                     

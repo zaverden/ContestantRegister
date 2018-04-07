@@ -241,7 +241,7 @@ namespace ContestantRegister.Controllers
             var registration = new IndividualContestRegistration();
 
             _mapper.Map(viewModel, registration);
-            registration.RegistrationDateTime = DateTime.Now;
+            registration.RegistrationDateTime = Extensions.SfuServerNow;
             registration.RegistredBy = await _userManager.GetUserAsync(User);
             registration.Status = ContestRegistrationStatus.Completed;
 
@@ -353,7 +353,7 @@ namespace ContestantRegister.Controllers
                 var user = new ApplicationUser
                 {
                     UserName = viewModel.Email,
-                    RegistrationDateTime = DateTime.Now,
+                    RegistrationDateTime = Extensions.SfuServerNow,
                     RegistredBy = await _userManager.GetUserAsync(User)
                 };
 
@@ -550,7 +550,7 @@ namespace ContestantRegister.Controllers
             }
 
             registration.Status = ContestRegistrationStatus.Completed;
-            registration.RegistrationDateTime = DateTime.Now;
+            registration.RegistrationDateTime = Extensions.SfuServerNow;
             registration.RegistredBy = await _userManager.GetUserAsync(User);
             await _context.SaveChangesAsync();
 

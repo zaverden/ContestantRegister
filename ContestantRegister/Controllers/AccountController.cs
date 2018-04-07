@@ -153,7 +153,7 @@ namespace ContestantRegister.Controllers
                 var user = new ApplicationUser
                 {
                     UserName = viewModel.Email,
-                    RegistrationDateTime = DateTime.Now
+                    RegistrationDateTime = Extensions.SfuServerNow
                 };
 
                 _mapper.Map(viewModel, user);

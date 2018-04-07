@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
+using ContestantRegister.Utils;
 
 namespace ContestantRegister.Services
 {
@@ -25,7 +26,7 @@ namespace ContestantRegister.Services
                 Address = email,
                 Subject = subject,
                 Message = message,
-                CreateDate = DateTime.Now,
+                CreateDate = Extensions.SfuServerNow,
             };
             _context.Emails.Add(mail);
             await _context.SaveChangesAsync();
