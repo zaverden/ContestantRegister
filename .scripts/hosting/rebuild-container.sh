@@ -15,4 +15,5 @@ docker run \
  --link inbucket \
  --env-file $ENVIR.env \
  --volume /storage/$ENVIR-logs:/app/logs \
+ --volume /storage/$ENVIR-data-protection-keys:/app/data-protection-keys \
  ikitsfu/contestantregister:$VERSION
