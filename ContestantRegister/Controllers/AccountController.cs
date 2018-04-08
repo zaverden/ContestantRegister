@@ -208,6 +208,8 @@ namespace ContestantRegister.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{userId}'.");
             }
+
+            code = code.Replace(" ", "+");
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (result.Succeeded) return View("ConfirmEmail");
@@ -254,7 +256,7 @@ namespace ContestantRegister.Controllers
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Сброс пароля на сайте олимпиад ИКИТ СФУ",
-                   $"Для сброса пароля нажмите на ссылку: <a href='{callbackUrl}'>link</a>");
+                   $"Для сброса пароля нажмите на ссылку: <a href='{callbackUrl}'>ссылка</a>");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
 
@@ -303,7 +305,9 @@ namespace ContestantRegister.Controllers
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(UnknownUser));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
+            var code = model.Code.Replace(" ", "+");
+            var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
