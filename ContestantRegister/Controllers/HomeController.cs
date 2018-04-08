@@ -196,8 +196,8 @@ namespace ContestantRegister.Controllers
             if (viewModel.ParticipantType == ParticipantType.Pupil)
             {
                 ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", viewModel.Participant1Id);
-                ViewData["TrainerId"] = new SelectList(users, "Id", "DisplayName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(users, "Id", "DisplayName", viewModel.ManagerId);
+                ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
                 var schools = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
                 ViewData["StudyPlaces"] = schools.OrderBy(s => s.ShortName);
             }
