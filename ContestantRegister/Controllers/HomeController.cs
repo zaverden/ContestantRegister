@@ -417,6 +417,7 @@ namespace ContestantRegister.Controllers
                 $"Предложил {viewModel.Email}<br>" +
                 $"Краткое название {viewModel.ShortName}<br>" +
                 $"Полное название {viewModel.FullName}<br>" +
+                $"Регион {viewModel.Region}<br>" +
                 $"Город {viewModel.City}<br>" +
                 $"Официальный email {viewModel.SchoolEmail}<br>" +
                 $"Сайт {viewModel.Site}<br>");
@@ -450,6 +451,7 @@ namespace ContestantRegister.Controllers
                 $"Предложил {viewModel.Email}<br>" +
                 $"Краткое название {viewModel.ShortName}<br>" +
                 $"Полное название {viewModel.FullName}<br>" +
+                $"Регион {viewModel.Region}<br>" +
                 $"Город {viewModel.City}<br>" +
                 $"Краткое название англ {viewModel.ShortNameEn}<br>" +
                 $"Полное название англ {viewModel.FullNameEn}<br>" +

@@ -18,6 +18,10 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string FullName { get; set; }
 
+        [Display(Name = "Регион (край, область, республика)")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public string Region { get; set; }
+
         [Display(Name = "Город")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string City { get; set; }
