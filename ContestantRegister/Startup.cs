@@ -6,6 +6,7 @@ using ContestantRegister.Services;
 using ContestantRegister.Services.BackgroundJobs;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,10 @@ namespace ContestantRegister
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo("data-protection-keys"))
+                .SetApplicationName("olimp.ikit.sfu-kras.ru");
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("PostgreConnection")));
 

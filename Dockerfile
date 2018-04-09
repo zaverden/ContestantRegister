@@ -4,6 +4,7 @@ WORKDIR /app
 COPY _publish/ ./
 RUN mkdir ./logs
 VOLUME ./logs
+VOLUME ./data-protection-keys
 EXPOSE 5000
 
 ENTRYPOINT ["dotnet", "ContestantRegister.dll"]
