@@ -34,7 +34,7 @@ namespace ContestantRegister.Services
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
 
             if (contest.IsProgrammingLanguageNeeded && string.IsNullOrEmpty(viewModel.ProgrammingLanguage))
-                result.Add(KeyValuePair.Create(nameof(viewModel.ProgrammingLanguage), "Поле \"Язык программирования\" обязательное"));
+                result.Add(KeyValuePair.Create(nameof(viewModel.ProgrammingLanguage), "Поле 'Язык программирования' обязательное"));
 
             var studyPlace = await _context.StudyPlaces.SingleAsync(s => s.Id == viewModel.StudyPlaceId);
             if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
