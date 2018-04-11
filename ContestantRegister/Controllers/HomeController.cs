@@ -136,7 +136,9 @@ namespace ContestantRegister.Controllers
             {
                 ContestName = contest.Name,
                 ContestId = contest.Id,
-                ParticipantType = contest.ParticipantType
+                ParticipantType = contest.ParticipantType,
+                IsAreaRequired = contest.IsAreaRequired,
+                IsProgrammingLanguageNeeded = contest.IsProgrammingLanguageNeeded,
             };
 
             var user = await _userManager.GetUserAsync(User);
