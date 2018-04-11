@@ -479,6 +479,8 @@ namespace ContestantRegister.Controllers
             var viewModel = new EditIndividualContestRegistrationViewModel
             {
                 ContestName = registration.Contest.Name,
+                IsAreaRequired = registration.Contest.IsAreaRequired,
+                IsProgrammingLanguageNeeded = registration.Contest.IsProgrammingLanguageNeeded,
                 RegistrationId = registration.Id,
                 ParticipantType = registration.Contest.ParticipantType,
                 CityId = registration.StudyPlace.CityId,
