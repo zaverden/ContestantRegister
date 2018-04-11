@@ -264,12 +264,21 @@ namespace ContestantRegister.Controllers
             if (contest.SendRegistrationEmail)
             {
                 var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
+                
+                //Хак. На никсах после пароля подставляется пробел. На винде проблема не воспроизводится
+                var pass = $"{registration.YaContestPassword}<br>";
+                if (pass.Contains(" "))
+                {
+                    pass = pass.Replace(" ", "");
+                    _logger.LogWarning("Removed space from password at email ");
+                }
+
                 await _emailSender.SendEmailAsync(participant.Email,
                     "Вы зарегистрированы на соревнование по программированию ИКИТ СФУ",
                     $"Вы успешно зарегистрированы на соревнование: {contest.Name}<br>" +
                     $"Ваши учетные данные для входа в систему:<br>" +
                     $"логин {registration.YaContestLogin}<br>" +
-                    $"пароль {registration.YaContestPassword}<br>" +
+                    $"пароль {pass}" +
                     $"cсылка для входа: {contest.YaContestLink}<br>");
             }
 
