@@ -20,10 +20,11 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Emails
-        public async Task<IActionResult> Index(string emailFilter, int? sendedFilter)
+        public async Task<IActionResult> Index(string emailFilter, int? sendedFilter, string messageFilter)
         {
             ViewData["emailFilter"] = emailFilter;
             ViewData["sendedFilter"] = sendedFilter;
+            ViewData["messageFilter"] = messageFilter;
 
             IQueryable<Email> emails = _context.Emails;
             bool filtered = false; 
@@ -33,12 +34,17 @@ namespace ContestantRegister.Controllers
                 emails = emails.Where(e => e.Address.Contains(emailFilter));
             }
 
-            //if (!string.IsNullOrEmpty(sendedFilter))
             if (sendedFilter.HasValue)
             {
                 filtered = true;
                 var sended = sendedFilter.Value != 0;
                 emails = emails.Where(e => e.IsSended == sended);
+            }
+
+            if (!string.IsNullOrEmpty(messageFilter))
+            {
+                filtered = true;
+                emails = emails.Where(e => e.Message.Contains(messageFilter));
             }
             
             if (!filtered)
