@@ -41,7 +41,7 @@
 </div>
 <div class="form-group">
     <label asp-for="CityId" class="control-label"></label>
-    <select asp-for="CityId" class="form-control" asp-items="ViewBag.CityId" onchange="filterStudyPlaces()"></select>
+    <select asp-for="CityId" class="form-control apply-select2" asp-items="ViewBag.CityId" onchange="filterStudyPlaces()"></select>
     <span asp-validation-for="CityId" class="text-danger"></span>
 </div>
 <div class="form-group">
