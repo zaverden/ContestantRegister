@@ -1,11 +1,10 @@
-﻿@using ContestantRegister.ViewModels.HomeViewModels
-@model ContestantRegister.ViewModels.HomeViewModels.IndividualContestRegistrationViewModel
+﻿@model ContestantRegister.ViewModels.HomeViewModels.CreateIndividualContestRegistrationViewModel
 
 @{
-    ViewData["Title"] = "Регистрация на контест";
+    ViewData["Title"] = "Регистрация на соревнование";
 }
 
-<h2>Регистрация на контест</h2>
+<h2>Регистрация на соревнование</h2>
 
 <h4>@Html.DisplayFor(model => model.ContestName)</h4>
 
@@ -21,7 +20,6 @@ else
     <a asp-route-id="@Model.ContestId" asp-action="RegisterStudent">Зарегистрировать нового участника</a>
 }
     <p><a asp-route-id="@Model.ContestId" asp-action="RegisterTrainer">Зарегистрировать тренера</a></p>
-</p>
 
 <div class="row">
     <div class="col-md-4">
@@ -29,6 +27,12 @@ else
             <h4>Регистрация нового участника</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Participant1Id" class="control-label"></label>
+                <select asp-for="Participant1Id" class="form-control apply-select2" asp-items="ViewBag.Participant1Id"><option></option></select>
+                <span asp-validation-for="Participant1Id" class="text-danger"></span>
+            </div>
 
             @await Html.PartialAsync("_RegistrationPartial")
 

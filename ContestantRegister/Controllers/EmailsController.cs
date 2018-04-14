@@ -52,7 +52,7 @@ namespace ContestantRegister.Controllers
                 emails = emails.OrderByDescending(e => e.Id).Take(100);
             }
 
-            return View(emails);
+            return View(await emails.ToListAsync());
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿@using ContestantRegister.ViewModels.HomeViewModels
-@model ContestantRegister.ViewModels.HomeViewModels.EditIndividualContestRegistrationViewModel
+﻿@model ContestantRegister.ViewModels.HomeViewModels.EditIndividualContestRegistrationViewModel
 
 @{
     ViewData["Title"] = "Изменить регистрационные данные";
@@ -22,7 +21,6 @@
         <a asp-route-id="@Model.ContestId" asp-action="RegisterStudent">Зарегистрировать нового участника</a>
     }
     <p><a asp-route-id="@Model.ContestId" asp-action="RegisterTrainer">Зарегистрировать тренера</a></p>
-</p>
 
 <div class="row">
     <div class="col-md-4">
@@ -30,6 +28,11 @@
             <h4></h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="ParticipantName" class="control-label"></label>
+                <input asp-for="ParticipantName" class="form-control" disabled />
+            </div>
 
             @await Html.PartialAsync("_RegistrationPartial")
             
@@ -45,18 +48,20 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="RegistrationDateTime" class="control-label"></label>
-                    <input asp-for="RegistrationDateTime" class="form-control" />
+                    <input asp-for="RegistrationDateTime" class="form-control" disabled />
                 </div>
                 <div class="form-group">
                     <label asp-for="RegistredByName" class="control-label"></label>
-                    <input asp-for="RegistredByName" class="form-control" />
+                    <input asp-for="RegistredByName" class="form-control" disabled />
                 </div>
             }
 
             <input type="hidden" asp-for="YaContestLogin" />
             <input type="hidden" asp-for="YaContestPassword" />
-            <input type="hidden" asp-for="RegistrationId" />
+            <input type="hidden" asp-for="RegistrationDateTime" />
             <input type="hidden" asp-for="RegistredByName" />
+            <input type="hidden" asp-for="RegistrationId" />
+            <input type="hidden" asp-for="Participant1Id" />
 
             <button type="submit" class="btn btn-default">Сохранить</button>
         </form>

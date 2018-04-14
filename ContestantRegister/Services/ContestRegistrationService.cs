@@ -13,7 +13,8 @@ namespace ContestantRegister.Services
 {
     public interface IContestRegistrationService
     {
-        Task<List<KeyValuePair<string, string>>> ValidateContestRegistrationAsync(IndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user, bool editRegistration);
+        Task<List<KeyValuePair<string, string>>> ValidateCreateContestRegistrationAsync(CreateIndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user);
+        Task<List<KeyValuePair<string, string>>> ValidateEditContestRegistrationAsync(EditIndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user);
     }
 
     public class ContestRegistrationService : IContestRegistrationService
@@ -27,7 +28,7 @@ namespace ContestantRegister.Services
             _userManager = userManager;
         }
 
-        public async Task<List<KeyValuePair<string, string>>> ValidateContestRegistrationAsync(IndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user, bool editRegistration)
+        private async Task<List<KeyValuePair<string, string>>> ValidateContestRegistrationAsync(IndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user, bool editRegistration)
         {
             var result = new List<KeyValuePair<string, string>>();
 
@@ -85,6 +86,16 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.Area), "Поле 'Площадка' обязательное"));
 
             return result;
+        }
+
+        public Task<List<KeyValuePair<string, string>>> ValidateCreateContestRegistrationAsync(CreateIndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user)
+        {
+            return ValidateContestRegistrationAsync(viewModel, user, false);
+        }
+
+        public Task<List<KeyValuePair<string, string>>> ValidateEditContestRegistrationAsync(EditIndividualContestRegistrationViewModel viewModel, ClaimsPrincipal user)
+        {
+            return ValidateContestRegistrationAsync(viewModel, user, true);
         }
     }
 }

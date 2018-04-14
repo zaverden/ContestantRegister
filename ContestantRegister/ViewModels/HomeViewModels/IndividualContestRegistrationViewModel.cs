@@ -18,9 +18,16 @@ namespace ContestantRegister.ViewModels.HomeViewModels
 
         [Display(Name = "Кем зарегистрирован")]
         public string RegistredByName { get; set; }
+
+        [Display(Name = "Участник")]
+        public string ParticipantName { get; set; }
     }
 
-    public class IndividualContestRegistrationViewModel
+    public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
+    {
+    }
+
+    public abstract class IndividualContestRegistrationViewModel
     {
         [Display(Name = "Участник")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]

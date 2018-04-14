@@ -135,7 +135,7 @@ namespace ContestantRegister.Controllers
 
             if (contest.ContestType == ContestType.Collegiate) throw new NotImplementedException();
 
-            var viewModel = new IndividualContestRegistrationViewModel
+            var viewModel = new CreateIndividualContestRegistrationViewModel
             {
                 ContestName = contest.Name,
                 ContestId = contest.Id,
@@ -197,10 +197,14 @@ namespace ContestantRegister.Controllers
             ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
             var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
             users = users.OrderBy(u => u.DisplayName).ToList();
+            var createVM = viewModel as CreateIndividualContestRegistrationViewModel;
 
             if (viewModel.ParticipantType == ParticipantType.Pupil)
             {
-                ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", viewModel.Participant1Id);
+                if (createVM != null)
+                {
+                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", createVM.Participant1Id);
+                }
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
                 var schools = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
@@ -208,7 +212,10 @@ namespace ContestantRegister.Controllers
             }
             else
             {
-                ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", viewModel.Participant1Id);
+                if (createVM != null)
+                {
+                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", createVM.Participant1Id);
+                }
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
                 var institutions = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
@@ -225,7 +232,7 @@ namespace ContestantRegister.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Register(int id, IndividualContestRegistrationViewModel viewModel)
+        public async Task<IActionResult> Register(int id, CreateIndividualContestRegistrationViewModel viewModel)
         {
             var contest = await GetContest(id);
             if (contest == null)
@@ -233,7 +240,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var validationResult = await _contestRegistrationService.ValidateContestRegistrationAsync(viewModel, User, false);
+            var validationResult = await _contestRegistrationService.ValidateCreateContestRegistrationAsync(viewModel, User);
             if (validationResult.Any())
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
@@ -552,6 +559,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Contest)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
+                .Include(r => r.Participant1)
                 .SingleOrDefaultAsync(r => r.Id == id);
 
             if (registration == null)
@@ -567,14 +575,17 @@ namespace ContestantRegister.Controllers
                 RegistrationId = registration.Id,
                 ParticipantType = registration.Contest.ParticipantType,
                 CityId = registration.StudyPlace.CityId,
+                ParticipantName = $"{registration.Participant1.Name} {registration.Participant1.Surname} ({registration.Participant1.Email})"
             };
 
+            _mapper.Map(registration, viewModel);
+
+            //Выставлять RegistredBy надо после маппинга, а то шибко умный маппер в поле RegistredByName кладет значение RegistredBy.Name, фамилия и email пропадают
             if (registration.RegistredBy != null)
             {
                 viewModel.RegistredByName = $"{registration.RegistredBy.Name} {registration.RegistredBy.Surname} ({registration.RegistredBy.Email})";
             }
 
-            _mapper.Map(registration, viewModel);
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
 
             await FillViewDataForIndividualContestRegistration(viewModel, contest);
@@ -597,7 +608,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var validationResult = await _contestRegistrationService.ValidateContestRegistrationAsync(viewModel, User, true);
+            var validationResult = await _contestRegistrationService.ValidateEditContestRegistrationAsync(viewModel, User);
             if (validationResult.Any())
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
