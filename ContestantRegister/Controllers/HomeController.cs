@@ -258,7 +258,7 @@ namespace ContestantRegister.Controllers
             contest.UsedAccountsCount++;
 
             registration.YaContestLogin = yacontestaccount[0];
-            registration.YaContestPassword = yacontestaccount[1];
+            registration.YaContestPassword = yacontestaccount[1].TrimEnd('\r');
 
             _context.ContestRegistrations.Add(registration);
             await _context.SaveChangesAsync();
@@ -551,6 +551,7 @@ namespace ContestantRegister.Controllers
                 .OfType<IndividualContestRegistration>()
                 .Include(r => r.Contest)
                 .Include(r => r.StudyPlace)
+                .Include(r => r.RegistredBy)
                 .SingleOrDefaultAsync(r => r.Id == id);
 
             if (registration == null)
@@ -567,6 +568,12 @@ namespace ContestantRegister.Controllers
                 ParticipantType = registration.Contest.ParticipantType,
                 CityId = registration.StudyPlace.CityId,
             };
+
+            if (registration.RegistredBy != null)
+            {
+                viewModel.RegistredByName = $"{registration.RegistredBy.Name} {registration.RegistredBy.Surname} ({registration.RegistredBy.Email})";
+            }
+
             _mapper.Map(registration, viewModel);
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
 

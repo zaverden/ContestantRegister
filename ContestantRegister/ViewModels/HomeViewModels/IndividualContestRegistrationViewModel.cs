@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
 
@@ -11,6 +12,12 @@ namespace ContestantRegister.ViewModels.HomeViewModels
 
         [Display(Name = "Пароль в ЯКонтесте")]
         public string YaContestPassword { get; set; }
+
+        [Display(Name = "Data регистрации")]
+        public DateTime? RegistrationDateTime { get; set; }
+
+        [Display(Name = "Кем зарегистрирован")]
+        public string RegistredByName { get; set; }
     }
 
     public class IndividualContestRegistrationViewModel
