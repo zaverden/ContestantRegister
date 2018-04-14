@@ -283,7 +283,7 @@ namespace ContestantRegister.Controllers
                     $"Вы успешно зарегистрированы на соревнование: {contest.Name}<br>" +
                     $"Ваши учетные данные для входа в систему:<br>" +
                     $"логин {registration.YaContestLogin}<br>" +
-                    $"пароль {registration.YaContestPassword}" +
+                    $"пароль {registration.YaContestPassword}<br>" +
                     $"cсылка для входа: {contest.YaContestLink}<br>");
             }
 
