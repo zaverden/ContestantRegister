@@ -153,7 +153,7 @@
                         @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened)
                         {
                             <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                            <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                            @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
                         }
                         else if (item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
                                  item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
@@ -162,12 +162,12 @@
                             {
                                 <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
                                 <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                                <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                                @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
                             }
                             else // ContestRegistrationStatus.Completed
                             {
                                 <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                                <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
+                                @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
                             }
                         }
                     </td>
@@ -209,7 +209,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Contest.ContestRegistrations.Where(r => r.Status != ContestRegistrationStatus.Canceled))
+        @foreach (var item in Model.Contest.ContestRegistrations)
         {
             <tr>
                 <td>

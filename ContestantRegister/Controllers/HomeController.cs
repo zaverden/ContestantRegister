@@ -89,7 +89,6 @@ namespace ContestantRegister.Controllers
             {
                 userRegistrations = await _context.ContestRegistrations
                     .Where(r => r.ContestId == id &&
-                                r.Status != ContestRegistrationStatus.Canceled &&
                                 (r.Participant1Id == user.Id || r.TrainerId == user.Id || r.ManagerId == user.Id))
                     .ToListAsync();
             }
