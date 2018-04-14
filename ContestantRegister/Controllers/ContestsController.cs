@@ -44,6 +44,13 @@ namespace ContestantRegister
         {
             if (ModelState.IsValid)
             {
+                //Если создавать контест на винде, перевод строки там два символа. А потом при регистрации на никсах идет сплит по переводу строки, а это один символ. И \r добавляется сзади к паролю.
+                //Это ломает экспорт в csv и при отправле пароля по email этот символ рендерится как пробел
+                if (contest.YaContestAccountsCSV.Contains('\r'))
+                {
+                    contest.YaContestAccountsCSV = contest.YaContestAccountsCSV.Replace("\r", "");
+                }
+
                 _context.Add(contest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,6 +91,11 @@ namespace ContestantRegister
             {
                 try
                 {
+                    if (contest.YaContestAccountsCSV.Contains('\r'))
+                    {
+                        contest.YaContestAccountsCSV = contest.YaContestAccountsCSV.Replace("\r", "");
+                    }
+
                     //TODO Нужен ли Automapper?
                     _context.Update(contest);
                     await _context.SaveChangesAsync();
