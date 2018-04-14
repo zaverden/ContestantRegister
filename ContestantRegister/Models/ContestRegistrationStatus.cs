@@ -9,5 +9,8 @@ namespace ContestantRegister.Models
 
         [Display(Name = "Подтверждение участия")]
         ConfirmParticipation = 2,
+
+        [Display(Name = "Отменена")]
+        Canceled = 3,
     }
 }

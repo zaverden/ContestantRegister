@@ -200,7 +200,7 @@ namespace ContestantRegister
                             StudyPlaceId = registration.StudyPlaceId,
                             ContestId = id,
                             YaContestLogin = account[0],
-                            YaContestPassword = account[1],
+                            YaContestPassword = account[1].TrimEnd('\r'),
                         };
                         contest.UsedAccountsCount++;
                         _context.ContestRegistrations.Add(newRegistration);
