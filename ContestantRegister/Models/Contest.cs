@@ -80,6 +80,8 @@ namespace ContestantRegister.Models
 
         public ICollection<ContestRegistration> ContestRegistrations { get; set; }
 
-        
+        [Display(Name = "Зарегистрировано")]
+        [Range(0, int.MaxValue)]
+        public int RegistrationsCount { get; set; }
     }
 }

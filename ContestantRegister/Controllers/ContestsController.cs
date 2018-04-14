@@ -201,8 +201,10 @@ namespace ContestantRegister
                             ContestId = id,
                             YaContestLogin = account[0],
                             YaContestPassword = account[1].TrimEnd('\r'),
+                            Number = contest.RegistrationsCount + 1,
                         };
                         contest.UsedAccountsCount++;
+                        contest.RegistrationsCount++;
                         _context.ContestRegistrations.Add(newRegistration);
                     }
                 }

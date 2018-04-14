@@ -64,5 +64,9 @@ namespace ContestantRegister.Models
         [MaxLength(50)]
         public string Area { get; set; }
 
+        [Display(Name = "№")]
+        [Range(1, int.MaxValue)]
+        public int Number { get; set; }
+
     }
 }

@@ -180,7 +180,10 @@
 <h4>Участники</h4>
 <table class="table">
     <thead>
-        <tr>
+    <tr>
+            <th>
+                №
+            </th>
             <th>
                 Участник
             </th>
@@ -196,6 +199,12 @@
             <th>
                 Город
             </th>
+            @if (Model.Contest.IsAreaRequired)
+            {
+                <th>
+                   Площадка
+                </th>
+            }
             <th>
                 Статус
             </th>
@@ -213,6 +222,9 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </td>
+                <td>
                     <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
                 </td>
                 <td>
@@ -227,6 +239,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
                 </td>
+                @if (Model.Contest.IsAreaRequired)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area)
+                    </td>
+                }
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>

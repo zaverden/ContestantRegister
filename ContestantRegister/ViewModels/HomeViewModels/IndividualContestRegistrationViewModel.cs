@@ -21,6 +21,10 @@ namespace ContestantRegister.ViewModels.HomeViewModels
 
         [Display(Name = "Участник")]
         public string ParticipantName { get; set; }
+
+        [Display(Name = "№")]
+        [Range(1, int.MaxValue)]
+        public int Number { get; set; }
     }
 
     public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
@@ -70,5 +74,6 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         public string ContestName { get; set; }
 
         public int ContestId { get; set; }
+        
     }
 }

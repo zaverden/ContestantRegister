@@ -262,10 +262,13 @@ namespace ContestantRegister.Controllers
                 .Skip(contest.UsedAccountsCount)
                 .First()
                 .Split(',');
-            contest.UsedAccountsCount++;
 
             registration.YaContestLogin = yacontestaccount[0];
             registration.YaContestPassword = yacontestaccount[1].TrimEnd('\r');
+            registration.Number = contest.RegistrationsCount + 1;
+
+            contest.RegistrationsCount++;
+            contest.UsedAccountsCount++;
 
             _context.ContestRegistrations.Add(registration);
             await _context.SaveChangesAsync();
