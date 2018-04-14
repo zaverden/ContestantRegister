@@ -34,11 +34,28 @@ namespace ContestantRegister.Utils
             CreateMap<ApplicationUser, IndexViewModel>();
 
             CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
-                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name));
+                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
+                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => sp is School ? sp.ShortName : $"{sp.ShortName} ({sp.FullName})"))
+                ;
+
+            CreateMap<Institution, StudyPlaceListItemViewModel>()
+                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
+                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => $"{sp.ShortName} ({sp.FullName})"))
+                ;
 
             CreateMap<ApplicationUser, UserListItemViewModel>()
                 .ForMember(ulivm => ulivm.DisplayName, opt => opt.MapFrom(au => $"{au.Name} {au.Surname} ({au.Email})"));
 
+            CreateMap<IndividualContestRegistration, IndividualRegistrationExport>()
+                .ForMember(e => e.Email, opt => opt.MapFrom(r => r.Participant1.Email))
+                .ForMember(e => e.Surname, opt => opt.MapFrom(r => r.Participant1.Surname))
+                .ForMember(e => e.Name, opt => opt.MapFrom(r => r.Participant1.Name))
+                .ForMember(e => e.Patronymic, opt => opt.MapFrom(r => r.Participant1.Patronymic))
+                .ForMember(e => e.Trainer, opt => opt.MapFrom(r => $"{r.Trainer.Surname} {r.Trainer.Name} {r.Trainer.Patronymic}"))
+                .ForMember(e => e.City, opt => opt.MapFrom(r => r.StudyPlace.City.Name))
+                .ForMember(e => e.StudyPlace, opt => opt.MapFrom(r => r.StudyPlace.ShortName))
+                ;
+            CreateMap<IndividualRegistrationExport, IndividualContestRegistration>();
         }
     }
 }

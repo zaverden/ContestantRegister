@@ -45,6 +45,10 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [Display(Name = "Площадка")]
         public string Area { get; set; }
 
+        [Display(Name = "Рабочее место")]
+        [MaxLength(50)]
+        public string ComputerName { get; set; }
+
         public ParticipantType ParticipantType { get; set; }
 
         public int RegistrationId { get; set; }

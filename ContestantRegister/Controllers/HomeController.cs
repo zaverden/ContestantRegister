@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Data;
@@ -10,6 +12,7 @@ using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.HomeViewModels;
 using ContestantRegister.ViewModels.ListItemViewModels;
+using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -291,6 +294,28 @@ namespace ContestantRegister.Controllers
             return RedirectToAction(nameof(Details), new {id});
         }
 
+        [Authorize(Roles = Roles.Admin)]
+        public FileResult ExportParticipants(int id)
+        {
+            var registrations = _context.IndividualContestRegistrations
+                .Include(r => r.Contest)
+                .Include(r => r.StudyPlace)
+                .Include(r => r.StudyPlace.City)
+                .Include(r => r.Participant1)
+                .Include(r => r.Trainer)
+                .Include(r => r.Manager)
+                .Where(r => r.ContestId == id);
+
+            var items = _mapper.Map<List<IndividualRegistrationExport>>(registrations);
+
+            StringWriter sw = new StringWriter();
+            var csv = new CsvWriter(sw);
+            csv.WriteRecords(items);
+            var data = sw.ToString();
+            var bytes = Encoding.Default.GetBytes(data);
+            return File(bytes, "text/csv", "Participants.csv");
+        }
+
         [Authorize]
         public async Task<IActionResult> Registration(int id)
         {
@@ -303,6 +328,54 @@ namespace ContestantRegister.Controllers
             }
 
             return View(registration);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> ImportComputerNames(int id)
+        {
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new ImportComputerNamesViewModel
+            {
+                ContestName = contest.Name
+            };
+
+            return View(vm);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> ImportComputerNames(int id, ImportComputerNamesViewModel viewModel)
+        {
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            var sr = new StringReader(viewModel.Data);
+            var csv = new CsvReader(sr);
+            csv.Read();
+            csv.ReadHeader();
+            while(csv.Read())
+            {
+                var item = csv.GetRecord<IndividualRegistrationExport>();
+                var registration = await _context.IndividualContestRegistrations.SingleOrDefaultAsync
+                    (r => r.YaContestPassword == item.YaContestPassword);
+
+                if (registration != null)
+                {
+                    registration.ComputerName = item.ComputerName;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new {id});
         }
 
         [Authorize]

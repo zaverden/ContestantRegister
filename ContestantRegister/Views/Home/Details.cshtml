@@ -80,6 +80,8 @@
     @if (User.IsInRole(Roles.Admin))
     {
         <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрировать</a>
+        <a asp-action="ExportParticipants" asp-route-id="@Model.Contest.Id">Экспорт участников</a>
+        <a asp-action="ImportComputerNames" asp-route-id="@Model.Contest.Id">Импорт рабочих мест</a>
     }
 </p>
 
@@ -197,6 +199,12 @@
             <th>
                 Статус
             </th>
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <th>
+                    Рабочее место
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -222,6 +230,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
+                @if (User.IsInRole(Roles.Admin))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerName)
+                    </td>
+                }
                 <td>
                     @if (User.IsInRole(Roles.Admin))
                     {
