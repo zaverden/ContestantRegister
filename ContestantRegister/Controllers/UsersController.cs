@@ -17,6 +17,17 @@ using ContestantRegister.ViewModels.ListItemViewModels;
 
 namespace ContestantRegister.Controllers
 {
+    public class UserFilter
+    {
+        public string Email { get; set; }
+        public int? EmailConfirmed { get; set; }
+        public string Surname { get; set; }
+        public string Name { get; set; }
+        public string City { get; set; }
+        public string StudyPlace { get; set; }
+        public string UserTypeName { get; set; }
+    }
+
     [Authorize(Roles = Roles.Admin)]
     public class UsersController : BaseController
     {
@@ -38,12 +49,65 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(UserFilter filter)
         {
-            var applicationDbContext = _context.Users
+            ViewData["Email"] = filter.Email;
+            ViewData["EmailConfirmed"] = filter.EmailConfirmed;
+            ViewData["Surname"] = filter.Surname;
+            ViewData["Name"] = filter.Name;
+            ViewData["City"] = filter.City;
+            ViewData["StudyPlace"] = filter.StudyPlace;
+            ViewData["UserTypeName"] = filter.UserTypeName;
+
+            IQueryable<ApplicationUser> users = _context.Users
                 .Include(c => c.StudyPlace)
                 .Include(c => c.StudyPlace.City);
-            return View(await applicationDbContext.ToListAsync());
+
+            if (!string.IsNullOrEmpty(filter.Email))
+            {
+                users = users.Where(u => u.Email.Contains(filter.Email));
+            }
+
+            if (filter.EmailConfirmed.HasValue)
+            {
+                var confirmed = filter.EmailConfirmed.Value == 1;
+                users = users.Where(u => u.EmailConfirmed == confirmed);
+            }
+
+            if (!string.IsNullOrEmpty(filter.Surname))
+            {
+                users = users.Where(u => u.Surname.Contains(filter.Surname));
+            }
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                users = users.Where(u => u.Name.Contains(filter.Name));
+            }
+
+            if (!string.IsNullOrEmpty(filter.City))
+            {
+                users = users.Where(u => u.StudyPlace.City.Name.Contains(filter.City));
+            }
+
+            if (!string.IsNullOrEmpty(filter.StudyPlace))
+            {
+                users = users.Where(u => u.StudyPlace.ShortName.Contains(filter.StudyPlace));
+            }
+
+            if (!string.IsNullOrEmpty(filter.UserTypeName))
+            {
+                var types = Enum.GetValues(typeof(UserType))
+                    .Cast<UserType>()
+                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).Contains(filter.UserTypeName))
+                    .ToList();
+
+                if (types.Count == 1)
+                {
+                    users = users.Where(u => u.UserType == types.First());
+                }
+            }
+
+            return View(await users.ToListAsync());
         }
 
         // GET: Admins

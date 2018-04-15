@@ -9,6 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers
 {
+    public class EmailFilter
+    {
+        public string Email { get; set; }
+        public int? Sended { get; set; }
+        public string Message { get; set; }
+    }
+
     [Authorize(Roles = Roles.Admin)]
     public class EmailsController : Controller
     {
@@ -20,31 +27,31 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Emails
-        public async Task<IActionResult> Index(string emailFilter, int? sendedFilter, string messageFilter)
+        public async Task<IActionResult> Index(EmailFilter filter)
         {
-            ViewData["emailFilter"] = emailFilter;
-            ViewData["sendedFilter"] = sendedFilter;
-            ViewData["messageFilter"] = messageFilter;
+            ViewData["Email"] = filter.Email;
+            ViewData["Sended"] = filter.Sended;
+            ViewData["Message"] = filter.Message;
 
             IQueryable<Email> emails = _context.Emails;
             bool filtered = false; 
-            if (!string.IsNullOrEmpty(emailFilter))
+            if (!string.IsNullOrEmpty(filter.Email))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Address.Contains(emailFilter));
+                emails = emails.Where(e => e.Address.Contains(filter.Email));
             }
 
-            if (sendedFilter.HasValue)
+            if (filter.Sended.HasValue)
             {
                 filtered = true;
-                var sended = sendedFilter.Value != 0;
-                emails = emails.Where(e => e.IsSended == sended);
+                var isSended = filter.Sended.Value != 0;
+                emails = emails.Where(e => e.IsSended == isSended);
             }
 
-            if (!string.IsNullOrEmpty(messageFilter))
+            if (!string.IsNullOrEmpty(filter.Message))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Message.Contains(messageFilter));
+                emails = emails.Where(e => e.Message.Contains(filter.Message));
             }
             
             if (!filtered)
