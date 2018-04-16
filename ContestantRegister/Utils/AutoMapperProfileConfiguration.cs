@@ -52,6 +52,7 @@ namespace ContestantRegister.Utils
                 .ForMember(e => e.Name, opt => opt.MapFrom(r => r.Participant1.Name))
                 .ForMember(e => e.Patronymic, opt => opt.MapFrom(r => r.Participant1.Patronymic))
                 .ForMember(e => e.Trainer, opt => opt.MapFrom(r => $"{r.Trainer.Surname} {r.Trainer.Name} {r.Trainer.Patronymic}"))
+                .ForMember(e => e.Region, opt => opt.MapFrom(r => r.StudyPlace.City.Region.Name))
                 .ForMember(e => e.City, opt => opt.MapFrom(r => r.StudyPlace.City.Name))
                 .ForMember(e => e.StudyPlace, opt => opt.MapFrom(r => r.StudyPlace.ShortName))
                 ;

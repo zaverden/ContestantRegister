@@ -303,6 +303,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Contest)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.StudyPlace.City)
+                .Include(r => r.StudyPlace.City.Region)
                 .Include(r => r.Participant1)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
@@ -369,9 +370,16 @@ namespace ContestantRegister.Controllers
                 var registration = await _context.IndividualContestRegistrations.SingleOrDefaultAsync
                     (r => r.ContestId == id && r.YaContestLogin == item.YaContestLogin);
 
-                if (registration != null)
+                if (registration == null) continue;
+
+                if (!string.IsNullOrEmpty(item.ComputerName))
                 {
                     registration.ComputerName = item.ComputerName;
+                }
+
+                if (item.Number.HasValue)
+                {
+                    registration.Number = item.Number.Value;
                 }
             }
 
