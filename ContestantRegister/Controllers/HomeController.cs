@@ -65,7 +65,7 @@ namespace ContestantRegister.Controllers
         {
             var archiveContests = _context.Contests.Where(c => c.IsArchive);
 
-            return View(await archiveContests.OrderBy(item => item.Id).ToListAsync());
+            return View(await archiveContests.OrderByDescending(item => item.Id).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
