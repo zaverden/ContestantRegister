@@ -53,9 +53,9 @@ namespace ContestantRegister.Utils
             return JsonConvert.SerializeObject(value);
         }
 
-        public static string[] SplitAndRemoveWindowsLineEnds(this string value, string separator)
+        public static string[] SplitByNewLineEndAndRemoveWindowsLineEnds(this string value)
         {
-            var res = value.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            var res = value.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < res.Length; i++)
             {
                 res[i] = res[i].TrimEnd('\r');

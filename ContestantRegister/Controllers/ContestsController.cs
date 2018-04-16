@@ -1,15 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContestantRegister.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using ContestantRegister.Controllers;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.ContestViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ContestantRegister
 {
@@ -17,7 +18,7 @@ namespace ContestantRegister
     public class ContestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        
         public ContestsController(ApplicationDbContext context)
         {
             _context = context;
@@ -191,8 +192,8 @@ namespace ContestantRegister
 
             if (ModelState.IsValid)
             {
-                var loginsForImport = viewModel.ParticipantYaContestLogins.SplitAndRemoveWindowsLineEnds(Environment.NewLine).ToHashSet();
-                var accounts = contest.YaContestAccountsCSV.SplitAndRemoveWindowsLineEnds(Environment.NewLine);
+                var loginsForImport = viewModel.ParticipantYaContestLogins.SplitByNewLineEndAndRemoveWindowsLineEnds().ToHashSet();
+                var accounts = contest.YaContestAccountsCSV.SplitByNewLineEndAndRemoveWindowsLineEnds();
                 var registrations = _context.ContestRegistrations.Where(r => r.ContestId == viewModel.FromContestId);
                 foreach (var registration in registrations)
                 {
@@ -209,6 +210,7 @@ namespace ContestantRegister
                         }
 
                         var account = accounts[contest.UsedAccountsCount].Split(',');
+                        //Здесь не нужно выставлять время регистрации и зарегистрировавшего, т.к. эти данные подставляются при подтверждении регистрации
                         var newRegistration = new IndividualContestRegistration
                         {
                             Status = ContestRegistrationStatus.ConfirmParticipation,
