@@ -224,7 +224,7 @@ namespace ContestantRegister.Controllers
 
             if (contest.IsAreaRequired)
             {
-                var areas = contest.Areas.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                var areas = contest.Areas.SplitAndRemoveWindowsLineEnds(Environment.NewLine);
                 Array.Sort(areas);
                 ViewData["Area"] = new SelectList(areas);
             }
@@ -258,13 +258,13 @@ namespace ContestantRegister.Controllers
             registration.Status = ContestRegistrationStatus.Completed;
 
             var yacontestaccount = contest.YaContestAccountsCSV
-                .Split(Environment.NewLine)
+                .SplitAndRemoveWindowsLineEnds(Environment.NewLine)
                 .Skip(contest.UsedAccountsCount)
                 .First()
                 .Split(',');
 
             registration.YaContestLogin = yacontestaccount[0];
-            registration.YaContestPassword = yacontestaccount[1].TrimEnd('\r').TrimEnd('\n');
+            registration.YaContestPassword = yacontestaccount[1];
             registration.Number = contest.RegistrationsCount + 1;
 
             contest.RegistrationsCount++;
