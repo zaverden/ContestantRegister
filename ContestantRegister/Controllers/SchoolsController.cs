@@ -42,7 +42,7 @@ namespace ContestantRegister.Controllers
                 schools = schools.Where(s => s.City.Name.Contains(cityFilter));
             }
 
-            return View(await schools.ToListAsync());
+            return View(await schools.OrderBy(item => item.ShortName).ToListAsync());
         }
 
         // GET: Schools/Create

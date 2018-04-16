@@ -27,7 +27,7 @@ namespace ContestantRegister
         // GET: Contests
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contests.ToListAsync());
+            return View(await _context.Contests.OrderBy(item => item.Id).ToListAsync());
         }
 
         // GET: Contests/Create

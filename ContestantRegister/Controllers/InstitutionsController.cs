@@ -28,7 +28,7 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Institutions.Include(i => i.City);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.OrderBy(item => item.ShortName).ToListAsync());
         }
 
         // GET: Institutions/Create

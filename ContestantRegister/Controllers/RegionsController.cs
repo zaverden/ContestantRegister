@@ -25,7 +25,7 @@ namespace ContestantRegister.Controllers
         // GET: Regions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Regions.ToListAsync());
+            return View(await _context.Regions.OrderBy(item => item.Name).ToListAsync());
         }
 
         // GET: Regions/Create
