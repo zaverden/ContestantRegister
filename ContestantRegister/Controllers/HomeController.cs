@@ -362,6 +362,7 @@ namespace ContestantRegister.Controllers
 
             var sr = new StringReader(viewModel.Data);
             var csv = new CsvReader(sr);
+            csv.Configuration.MissingFieldFound = null;
             csv.Read();
             csv.ReadHeader();
             while(csv.Read())
