@@ -367,6 +367,8 @@ namespace ContestantRegister.Controllers
             while(csv.Read())
             {
                 var item = csv.GetRecord<IndividualRegistrationExport>();
+                if (string.IsNullOrEmpty(item.YaContestLogin)) continue;
+
                 var registration = await _context.IndividualContestRegistrations.SingleOrDefaultAsync
                     (r => r.ContestId == id && r.YaContestLogin == item.YaContestLogin);
 
