@@ -191,8 +191,11 @@ namespace ContestantRegister
 
             if (ModelState.IsValid)
             {
-                var loginsForImport = viewModel.ParticipantYaContestLogins.Split(Environment.NewLine).ToHashSet();
-                var accounts = contest.YaContestAccountsCSV.Split(Environment.NewLine);
+                var loginsForImport = viewModel.ParticipantYaContestLogins
+                    .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(login => login.TrimEnd('\r'))
+                    .ToHashSet();
+                var accounts = contest.YaContestAccountsCSV.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
                 var registrations = _context.ContestRegistrations.Where(r => r.ContestId == viewModel.FromContestId);
                 foreach (var registration in registrations)
                 {
@@ -219,7 +222,7 @@ namespace ContestantRegister
                             StudyPlaceId = registration.StudyPlaceId,
                             ContestId = id,
                             YaContestLogin = account[0],
-                            YaContestPassword = account[1].TrimEnd('\r'),
+                            YaContestPassword = account[1].TrimEnd('\r').TrimEnd('\n'),
                             Number = contest.RegistrationsCount + 1,
                         };
                         contest.UsedAccountsCount++;

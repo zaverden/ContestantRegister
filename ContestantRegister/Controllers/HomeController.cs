@@ -264,7 +264,7 @@ namespace ContestantRegister.Controllers
                 .Split(',');
 
             registration.YaContestLogin = yacontestaccount[0];
-            registration.YaContestPassword = yacontestaccount[1].TrimEnd('\r');
+            registration.YaContestPassword = yacontestaccount[1].TrimEnd('\r').TrimEnd('\n');
             registration.Number = contest.RegistrationsCount + 1;
 
             contest.RegistrationsCount++;
