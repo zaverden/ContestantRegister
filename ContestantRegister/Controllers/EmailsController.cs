@@ -19,7 +19,7 @@ namespace ContestantRegister.Controllers
     [Authorize(Roles = Roles.Admin)]
     public class EmailsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context; 
 
         public EmailsController(ApplicationDbContext context)
         {
