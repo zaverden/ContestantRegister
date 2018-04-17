@@ -309,7 +309,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Manager)
                 .Where(r => r.ContestId == id);
 
-            var items = _mapper.Map<List<IndividualRegistrationExport>>(registrations);
+            var items = _mapper.Map<List<IndividualRegistrationDTO>>(registrations);
 
             StringWriter sw = new StringWriter();
             var csv = new CsvWriter(sw);
@@ -334,7 +334,7 @@ namespace ContestantRegister.Controllers
         }
 
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> ImportComputerNames(int id)
+        public async Task<IActionResult> ImportParticipants(int id)
         {
             var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)
@@ -342,7 +342,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            var vm = new ImportComputerNamesViewModel
+            var vm = new ImportParticipantsViewModel
             {
                 ContestName = contest.Name
             };
@@ -352,7 +352,7 @@ namespace ContestantRegister.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public async Task<IActionResult> ImportComputerNames(int id, ImportComputerNamesViewModel viewModel)
+        public async Task<IActionResult> ImportParticipants(int id, ImportParticipantsViewModel viewModel)
         {
             var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)
@@ -367,22 +367,26 @@ namespace ContestantRegister.Controllers
             csv.ReadHeader();
             while(csv.Read())
             {
-                var item = csv.GetRecord<IndividualRegistrationExport>();
-                if (string.IsNullOrEmpty(item.YaContestLogin)) continue;
-
+                var dto = csv.GetRecord<IndividualRegistrationDTO>();
+                if (string.IsNullOrEmpty(dto.YaContestLogin)) continue;
                 var registration = await _context.IndividualContestRegistrations.SingleOrDefaultAsync
-                    (r => r.ContestId == id && r.YaContestLogin == item.YaContestLogin);
+                    (r => r.ContestId == id && r.YaContestLogin == dto.YaContestLogin);
 
                 if (registration == null) continue;
 
-                if (!string.IsNullOrEmpty(item.ComputerName))
+                _mapper.Map(dto, registration);
+
+                if (dto.Number.HasValue)
                 {
-                    registration.ComputerName = item.ComputerName;
+                    registration.Number = dto.Number.Value;
                 }
 
-                if (item.Number.HasValue)
+                if (!string.IsNullOrEmpty(dto.Status))
                 {
-                    registration.Number = item.Number.Value;
+                    if (Enum.TryParse<ContestRegistrationStatus>(dto.Status, out var status))
+                    {
+                        registration.Status = status;
+                    }
                 }
             }
 

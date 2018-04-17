@@ -3,7 +3,7 @@ using ContestantRegister.Properties;
 
 namespace ContestantRegister.ViewModels.HomeViewModels
 {
-    public class ImportComputerNamesViewModel
+    public class ImportParticipantsViewModel
     {
         public string ContestName { get; set; }
 
