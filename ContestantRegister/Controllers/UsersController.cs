@@ -107,7 +107,7 @@ namespace ContestantRegister.Controllers
                 }
             }
 
-            return View(await users.ToListAsync());
+            return View(await users.OrderBy(u => u.Id).ToListAsync());
         }
 
         // GET: Admins
@@ -125,7 +125,7 @@ namespace ContestantRegister.Controllers
 
             viewModels.AddRange(notAdminViewModels);
 
-            return View(viewModels);
+            return View(viewModels.OrderBy(vm => vm.User.Id));
         }
 
         public async Task<IActionResult> MakeAdmin(string id)
