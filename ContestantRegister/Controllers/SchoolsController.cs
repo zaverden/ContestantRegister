@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -34,12 +35,12 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(shortNameFilter))
             {
-                schools = schools.Where(s => s.ShortName.Contains(shortNameFilter));
+                schools = schools.Where(s => s.ShortName.IndexOf(shortNameFilter, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (!string.IsNullOrEmpty(cityFilter))
             {
-                schools = schools.Where(s => s.City.Name.Contains(cityFilter));
+                schools = schools.Where(s => s.City.Name.IndexOf(cityFilter, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             return View(await schools.OrderBy(item => item.ShortName).ToListAsync());

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.Email))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Address.Contains(filter.Email));
+                emails = emails.Where(e => e.Address.IndexOf(filter.Email, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (filter.Sended.HasValue)
@@ -51,7 +52,7 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.Message))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Message.Contains(filter.Message));
+                emails = emails.Where(e => e.Message.IndexOf(filter.Message, StringComparison.OrdinalIgnoreCase) >= 0);
             }
             
             if (!filtered)

@@ -65,7 +65,7 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(filter.Email))
             {
-                users = users.Where(u => u.Email.Contains(filter.Email));
+                users = users.Where(u => u.Email.IndexOf(filter.Email, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (filter.EmailConfirmed.HasValue)
@@ -76,22 +76,22 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(filter.Surname))
             {
-                users = users.Where(u => u.Surname.Contains(filter.Surname));
+                users = users.Where(u => u.Surname.IndexOf(filter.Surname, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                users = users.Where(u => u.Name.Contains(filter.Name));
+                users = users.Where(u => u.Name.IndexOf(filter.Name, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (!string.IsNullOrEmpty(filter.City))
             {
-                users = users.Where(u => u.StudyPlace.City.Name.Contains(filter.City));
+                users = users.Where(u => u.StudyPlace.City.Name.IndexOf(filter.City, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (!string.IsNullOrEmpty(filter.StudyPlace))
             {
-                users = users.Where(u => u.StudyPlace.ShortName.Contains(filter.StudyPlace));
+                users = users.Where(u => u.StudyPlace.ShortName.IndexOf(filter.StudyPlace, StringComparison.OrdinalIgnoreCase) >= 0);
             }
 
             if (!string.IsNullOrEmpty(filter.UserTypeName))
