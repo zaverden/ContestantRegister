@@ -8,19 +8,6 @@
 
 <h4>@Html.DisplayFor(model => model.ContestName)</h4>
 
-<p>
-@if (Model.ParticipantType == ParticipantType.Pupil)
-{
-    <p>Если вашей школы нет в списке учебных заведений, вы можете предложить администраторам сайта <a asp-action="SuggestSchool">создать новую школу</a>. </p>
-    <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">Зарегистрировать нового участника</a>
-}
-else
-{ 
-    <p>Если вашего учебного заведения нет в списке, вы можете предложить администраторам сайта <a asp-action="SuggestInstitution">создать его</a>. </p>
-    <a asp-route-id="@Model.ContestId" asp-action="RegisterStudent">Зарегистрировать нового участника</a>
-}
-    <p><a asp-route-id="@Model.ContestId" asp-action="RegisterTrainer">Зарегистрировать тренера</a></p>
-
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -32,6 +19,14 @@ else
                 <label asp-for="Participant1Id" class="control-label"></label>
                 <select asp-for="Participant1Id" class="form-control apply-select2" asp-items="ViewBag.Participant1Id"><option></option></select>
                 <span asp-validation-for="Participant1Id" class="text-danger"></span>
+                @if (Model.ParticipantType == ParticipantType.Pupil)
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+                else
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
             </div>
 
             @await Html.PartialAsync("_RegistrationPartial")
