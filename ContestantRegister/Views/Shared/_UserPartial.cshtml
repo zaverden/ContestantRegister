@@ -52,10 +52,7 @@
 @if (Model.CanSuggestStudyPlace)
 {
     <div class="form-group">
-        <p>Если вашего учебного заведения нет в списке, вы можете предложить администраторам сайта его добавить.</p>
-        <p>Вы получите email уведомление, когда новое учебное закедение будет добавлено.</p>
-        <p> <a id="suggestSchool" class="conditional @UserType.Pupil @UserType.Trainer" asp-controller="Home" asp-action="SuggestSchool">Предложить новую школу</a> </p>
-        <p> <a id="suggestInstitution" class="conditional @UserType.Student @UserType.Trainer" asp-controller="Home" asp-action="SuggestInstitution">Предложить новый вуз/ссуз</a> </p>
+        <p>Если вашего учебного заведения нет в списке, вы можете <a id="suggestSchool" class="conditional @UserType.Pupil @UserType.Trainer" asp-controller="Home" asp-action="SuggestSchool">добавить его</a><a id="suggestInstitution" class="conditional @UserType.Student @UserType.Trainer" asp-controller="Home" asp-action="SuggestInstitution">добавить его</a></p>
     </div>
 }
 @*Student*@
