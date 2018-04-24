@@ -514,6 +514,92 @@ namespace ContestantRegister.Controllers
             return RedirectToAction(nameof(Details), new {id});
         }
 
+        public async Task<IActionResult> ImportFromContest(int id)
+        {
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrEmpty(contest.YaContestAccountsCSV))
+            {
+                throw new Exception("В контесте нет логинов-паролей для участников");
+            }
+
+            var viewModel = new ImportContestParticipantsViewModel();
+
+            var contests = _context.Contests.Where(c => c.ParticipantType == contest.ParticipantType &&
+                                                        c.ContestType == contest.ContestType &&
+                                                        c.Id != contest.Id);
+            ViewData["FromContestId"] = new SelectList(contests, "Id", "Name");
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ImportFromContest(int id, ImportContestParticipantsViewModel viewModel)
+        {
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var loginsForImport = viewModel.ParticipantYaContestLogins.SplitByNewLineEndAndRemoveWindowsLineEnds().ToHashSet();
+                var accounts = contest.YaContestAccountsCSV.SplitByNewLineEndAndRemoveWindowsLineEnds();
+                var registrations = _context.ContestRegistrations.Where(r => r.ContestId == viewModel.FromContestId);
+                foreach (var registration in registrations)
+                {
+                    if (loginsForImport.Contains(registration.YaContestLogin))
+                    {
+                        if (contest.UsedAccountsCount == accounts.Length)
+                        {
+                            ModelState.AddModelError(string.Empty, "В контесте, в который импортируются участники, не хватает яконтест аккаунтов для завершения импорта");
+                            var contests1 = _context.Contests.Where(c => c.ParticipantType == contest.ParticipantType &&
+                                                                        c.ContestType == contest.ContestType &&
+                                                                        c.Id != contest.Id);
+                            ViewData["FromContestId"] = new SelectList(contests1, "Id", "Name", viewModel.FromContestId);
+                            return View(viewModel);
+                        }
+
+                        var account = accounts[contest.UsedAccountsCount].Split(',');
+                        //Здесь не нужно выставлять время регистрации и зарегистрировавшего, т.к. эти данные подставляются при подтверждении регистрации
+                        var newRegistration = new IndividualContestRegistration
+                        {
+                            Status = ContestRegistrationStatus.ConfirmParticipation,
+                            ProgrammingLanguage = registration.ProgrammingLanguage,
+                            Participant1Id = registration.Participant1Id,
+                            TrainerId = registration.TrainerId,
+                            ManagerId = registration.ManagerId,
+                            StudyPlaceId = registration.StudyPlaceId,
+                            ContestId = id,
+                            YaContestLogin = account[0],
+                            YaContestPassword = account[1],
+                            Number = contest.RegistrationsCount + 1,
+                        };
+                        contest.UsedAccountsCount++;
+                        contest.RegistrationsCount++;
+                        _context.ContestRegistrations.Add(newRegistration);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                //TODO Сказать о том, что участники успешно импортированы
+
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            var contests = _context.Contests.Where(c => c.ParticipantType == contest.ParticipantType &&
+                                                        c.ContestType == contest.ContestType &&
+                                                        c.Id != contest.Id);
+            ViewData["FromContestId"] = new SelectList(contests, "Id", "Name", viewModel.FromContestId);
+            return View(viewModel);
+        }
+
         [Authorize]
         public IActionResult RegisterStudent(int id)
         {
