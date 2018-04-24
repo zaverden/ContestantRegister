@@ -44,7 +44,7 @@ namespace ContestantRegister.Controllers
             IOptions<MailOptions> options,
             IContestRegistrationService contestRegistrationService,
             IUserService userService)
-        {
+        { 
             _logger = logger;
             _context = context;
             _mapper = mapper;
