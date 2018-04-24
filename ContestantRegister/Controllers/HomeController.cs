@@ -25,6 +25,17 @@ using OfficeOpenXml;
 
 namespace ContestantRegister.Controllers
 {
+    public class ContestParticipantFilter
+    {
+        public string ParticipantName { get; set; }
+        public string TrainerName { get; set; }
+        public string ManagerName { get; set; }
+        public string City { get; set; }
+        public string Area { get; set; }
+        public string Status { get; set; }
+        public string StudyPlace { get; set; }
+    }
+
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
@@ -69,7 +80,7 @@ namespace ContestantRegister.Controllers
             return View(await archiveContests.OrderByDescending(item => item.Id).ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
+        public async Task<IActionResult> Details(int id, ContestParticipantFilter filter) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
             var contest = await _context.Contests
                 .Include(c => c.ContestRegistrations)
@@ -84,6 +95,14 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
+            ViewData["ParticipantName"] = filter.ParticipantName;
+            ViewData["TrainerName"] = filter.TrainerName;
+            ViewData["ManagerName"] = filter.ManagerName;
+            ViewData["City"] = filter.City;
+            ViewData["Area"] = filter.Area;
+            ViewData["StudyPlace"] = filter.StudyPlace;
+            ViewData["Status"] = filter.Status;
+
             var user = await _userManager.GetUserAsync(User);
             ICollection<ContestRegistration> userRegistrations = new List<ContestRegistration>();
             if (User.Identity.IsAuthenticated)
@@ -94,9 +113,56 @@ namespace ContestantRegister.Controllers
                     .ToListAsync();
             }
 
+            IEnumerable<ContestRegistration> contestRegistrations = contest.ContestRegistrations;
+            if (!string.IsNullOrEmpty(filter.ParticipantName))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => r.Participant1.Surname.IndexOf(filter.ParticipantName, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.TrainerName))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => r.Trainer.Surname.IndexOf(filter.TrainerName, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.ManagerName))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => r.Manager != null && 
+                                r.Manager.Surname.IndexOf(filter.ManagerName, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.Area))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => !string.IsNullOrEmpty(r.Area) && 
+                                r.Area.IndexOf(filter.Area, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.City))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => r.StudyPlace.City.Name.IndexOf(filter.City, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.StudyPlace))
+            {
+                contestRegistrations = contestRegistrations
+                    .Where(r => r.StudyPlace.ShortName.IndexOf(filter.StudyPlace, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+            if (!string.IsNullOrEmpty(filter.Status))
+            {
+                var types = Enum.GetValues(typeof(ContestRegistrationStatus))
+                    .Cast<ContestRegistrationStatus>()
+                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).Contains(filter.Status))
+                    .ToList();
+
+                if (types.Count == 1)
+                {
+                    contestRegistrations = contestRegistrations.Where(r => r.Status == types.First());
+                }
+            }
+
             var viewModel = new IndividualContestDetailsViewModel
             {
                 Contest = contest,
+                ContestRegistrations = contestRegistrations.ToList(),
                 UserRegistrations = userRegistrations,
                 ParticipantRegistration = userRegistrations.SingleOrDefault(r => r.Participant1Id == user.Id),
             };

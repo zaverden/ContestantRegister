@@ -178,12 +178,40 @@
 }
 
 <h4>Участники</h4>
+
+@if (User.IsInRole(Roles.Admin))
+{
+    <p>Количество: @Model.ContestRegistrations.Count</p>
+    <form asp-action="Details" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Уч. Ф<input type="text" name="ParticipantName" value="@ViewData["ParticipantName"]" />
+                Тренер Ф<input type="text" name="TrainerName" value="@ViewData["TrainerName"]" />
+                Рук. Ф<input type="text" name="ManagerName" value="@ViewData["ManagerName"]" />
+                Уч. зав.<input type="text" name="StudyPlace" value="@ViewData["StudyPlace"]" />
+                Город<input type="text" name="City" value="@ViewData["City"]" />
+                Площадка<input type="text" name="Area" value="@ViewData["Area"]" />
+                Статус<input type="text" name="Status" value="@ViewData["Status"]" />
+                <input type="submit" value="Искать" class="btn btn-default" /> |
+
+                <a asp-action="Details">Очистить</a>
+            </p>
+        </div>
+    </form>
+}
+
 <table class="table">
     <thead>
-    <tr>
+        <tr>
             <th>
                 №
             </th>
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <th>
+                    Email
+                </th>
+            }
             <th>
                 Участник
             </th>
@@ -202,7 +230,7 @@
             @if (Model.Contest.IsAreaRequired)
             {
                 <th>
-                   Площадка
+                    Площадка
                 </th>
             }
             <th>
@@ -218,12 +246,18 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Contest.ContestRegistrations.OrderBy(r => r.Number))
+        @foreach (var item in Model.ContestRegistrations.OrderBy(r => r.Number))
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Number)
                 </td>
+                @if (User.IsInRole(Roles.Admin))
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Participant1.Email)
+                    </td>
+                }
                 <td>
                     <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
                 </td>
