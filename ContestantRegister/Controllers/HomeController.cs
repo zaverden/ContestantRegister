@@ -478,6 +478,10 @@ namespace ContestantRegister.Controllers
             var sr = new StringReader(viewModel.Data);
             var csv = new CsvReader(sr);
             csv.Configuration.MissingFieldFound = null;
+            if (viewModel.TabDelimeter)
+            {
+                csv.Configuration.Delimiter = "\t";
+            }
             csv.Read();
             csv.ReadHeader();
             while(csv.Read())
