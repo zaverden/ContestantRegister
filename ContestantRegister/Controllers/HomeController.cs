@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OfficeOpenXml;
 
 namespace ContestantRegister.Controllers
 {
@@ -309,14 +310,61 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Manager)
                 .Where(r => r.ContestId == id);
 
-            var items = _mapper.Map<List<IndividualRegistrationDTO>>(registrations);
+            var package = new ExcelPackage();
+            
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Participants");
+                worksheet.Cells["A1"].Value = "Email";
+                worksheet.Cells["B1"].Value = "Name";
+                worksheet.Cells["C1"].Value = "Surname";
+                worksheet.Cells["D1"].Value = "Patronymic";
+                worksheet.Cells["E1"].Value = "TrainerEmail";
+                worksheet.Cells["F1"].Value = "TrainerName";
+                worksheet.Cells["G1"].Value = "ManagerEmail";
+                worksheet.Cells["H1"].Value = "ManagerName";
+                worksheet.Cells["I1"].Value = "Region";
+                worksheet.Cells["J1"].Value = "City";
+                worksheet.Cells["K1"].Value = "StudyPlace";
+                worksheet.Cells["L1"].Value = "Status";
+                worksheet.Cells["M1"].Value = "YaContestLogin";
+                worksheet.Cells["N1"].Value = "YaContestPassword";
+                worksheet.Cells["O1"].Value = "Area";
+                worksheet.Cells["P1"].Value = "Number";
+                worksheet.Cells["Q1"].Value = "ComputerName";
+                worksheet.Cells["R1"].Value = "ProgrammingLanguage";
 
-            StringWriter sw = new StringWriter();
-            var csv = new CsvWriter(sw);
-            csv.WriteRecords(items);
-            var data = sw.ToString();
-            var bytes = Encoding.Default.GetBytes(data);
-            return File(bytes, "text/csv", "Participants.csv");
+                int row = 1;
+                foreach (var registration in registrations)
+                {
+                    row++;
+
+                    worksheet.Cells[row, 1].Value = registration.Participant1.Email;
+                    worksheet.Cells[row, 2].Value = registration.Participant1.Name;
+                    worksheet.Cells[row, 3].Value = registration.Participant1.Surname;
+                    worksheet.Cells[row, 4].Value = registration.Participant1.Patronymic;
+                    worksheet.Cells[row, 5].Value = registration.Trainer.Email;
+                    worksheet.Cells[row, 6].Value = $"{registration.Trainer.Surname} {registration.Trainer.Name} {registration.Trainer.Patronymic}";
+                    
+                    if (registration.Manager != null)
+                    {
+                        worksheet.Cells[row, 7].Value = registration.Manager.Email;
+                        worksheet.Cells[row, 8].Value = $"{registration.Manager.Surname} {registration.Manager.Name} {registration.Manager.Patronymic}";
+                    }
+
+                    worksheet.Cells[row, 9].Value = registration.StudyPlace.City.Region.Name;
+                    worksheet.Cells[row, 10].Value = registration.StudyPlace.City.Name;
+                    worksheet.Cells[row, 11].Value = registration.StudyPlace.ShortName;
+                    worksheet.Cells[row, 12].Value = registration.Status;
+                    worksheet.Cells[row, 13].Value = registration.YaContestLogin;
+                    worksheet.Cells[row, 14].Value = registration.YaContestPassword;
+                    worksheet.Cells[row, 15].Value = registration.Area;
+                    worksheet.Cells[row, 16].Value = registration.Number;
+                    worksheet.Cells[row, 17].Value = registration.ComputerName;
+                    worksheet.Cells[row, 18].Value = registration.ProgrammingLanguage;
+                }
+            var ms = new MemoryStream();
+            package.SaveAs(ms);
+            ms.Position = 0;
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
         }
 
         [Authorize]
