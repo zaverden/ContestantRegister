@@ -39,7 +39,7 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.Email))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Address.IndexOf(filter.Email, StringComparison.OrdinalIgnoreCase) >= 0);
+                emails = emails.Where(e => e.Address.ContainsIgnoreCase(filter.Email));
             }
 
             if (filter.Sended.HasValue)
@@ -52,7 +52,7 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.Message))
             {
                 filtered = true;
-                emails = emails.Where(e => e.Message.IndexOf(filter.Message, StringComparison.OrdinalIgnoreCase) >= 0);
+                emails = emails.Where(e => e.Message.ContainsIgnoreCase(filter.Message));
             }
             
             if (!filtered)

@@ -117,40 +117,40 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.ParticipantName))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.Participant1.Surname.IndexOf(filter.ParticipantName, StringComparison.OrdinalIgnoreCase) >= 0);
+                    .Where(r => r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
             }
             if (!string.IsNullOrEmpty(filter.TrainerName))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.Trainer.Surname.IndexOf(filter.TrainerName, StringComparison.OrdinalIgnoreCase) >= 0);
+                    .Where(r => r.Trainer.Surname.ContainsIgnoreCase(filter.TrainerName));
             }
             if (!string.IsNullOrEmpty(filter.ManagerName))
             {
                 contestRegistrations = contestRegistrations
                     .Where(r => r.Manager != null && 
-                                r.Manager.Surname.IndexOf(filter.ManagerName, StringComparison.OrdinalIgnoreCase) >= 0);
+                                r.Manager.Surname.ContainsIgnoreCase(filter.ManagerName));
             }
             if (!string.IsNullOrEmpty(filter.Area))
             {
                 contestRegistrations = contestRegistrations
                     .Where(r => !string.IsNullOrEmpty(r.Area) && 
-                                r.Area.IndexOf(filter.Area, StringComparison.OrdinalIgnoreCase) >= 0);
+                                r.Area.ContainsIgnoreCase(filter.Area));
             }
             if (!string.IsNullOrEmpty(filter.City))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.StudyPlace.City.Name.IndexOf(filter.City, StringComparison.OrdinalIgnoreCase) >= 0);
+                    .Where(r => r.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
             }
             if (!string.IsNullOrEmpty(filter.StudyPlace))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.StudyPlace.ShortName.IndexOf(filter.StudyPlace, StringComparison.OrdinalIgnoreCase) >= 0);
+                    .Where(r => r.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
             }
             if (!string.IsNullOrEmpty(filter.Status))
             {
                 var types = Enum.GetValues(typeof(ContestRegistrationStatus))
                     .Cast<ContestRegistrationStatus>()
-                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).Contains(filter.Status))
+                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.Status))
                     .ToList();
 
                 if (types.Count == 1)

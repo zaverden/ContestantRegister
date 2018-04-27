@@ -65,7 +65,7 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(filter.Email))
             {
-                users = users.Where(u => u.Email.IndexOf(filter.Email, StringComparison.OrdinalIgnoreCase) >= 0);
+                users = users.Where(u => u.Email.ContainsIgnoreCase(filter.Email));
             }
 
             if (filter.EmailConfirmed.HasValue)
@@ -76,29 +76,29 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(filter.Surname))
             {
-                users = users.Where(u => u.Surname.IndexOf(filter.Surname, StringComparison.OrdinalIgnoreCase) >= 0);
+                users = users.Where(u => u.Surname.ContainsIgnoreCase(filter.Surname));
             }
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                users = users.Where(u => u.Name.IndexOf(filter.Name, StringComparison.OrdinalIgnoreCase) >= 0);
+                users = users.Where(u => u.Name.ContainsIgnoreCase(filter.Name));
             }
 
             if (!string.IsNullOrEmpty(filter.City))
             {
-                users = users.Where(u => u.StudyPlace.City.Name.IndexOf(filter.City, StringComparison.OrdinalIgnoreCase) >= 0);
+                users = users.Where(u => u.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
             }
 
             if (!string.IsNullOrEmpty(filter.StudyPlace))
             {
-                users = users.Where(u => u.StudyPlace.ShortName.IndexOf(filter.StudyPlace, StringComparison.OrdinalIgnoreCase) >= 0);
+                users = users.Where(u => u.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
             }
 
             if (!string.IsNullOrEmpty(filter.UserTypeName))
             {
                 var types = Enum.GetValues(typeof(UserType))
                     .Cast<UserType>()
-                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).Contains(filter.UserTypeName))
+                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.UserTypeName))
                     .ToList();
 
                 if (types.Count == 1)

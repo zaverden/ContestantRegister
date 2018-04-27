@@ -24,6 +24,11 @@ namespace ContestantRegister.Utils
                 $"Подтвердите ваш email на сайте олимпиад ИКИТ СФУ olimp.ikit.sfu-kras.ru, кликнув по ссылке: <a href='{HtmlEncoder.Default.Encode(link)}'>ссылка</a>");
         }
 
+        public static bool ContainsIgnoreCase(this string str, string substr)
+        {
+            return str.IndexOf(substr, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
         /// <summary>
         /// Синхронный метод нужен для использования во вьюхах
         /// </summary>

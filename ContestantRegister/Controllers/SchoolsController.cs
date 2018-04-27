@@ -35,12 +35,12 @@ namespace ContestantRegister.Controllers
 
             if (!string.IsNullOrEmpty(shortNameFilter))
             {
-                schools = schools.Where(s => s.ShortName.IndexOf(shortNameFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+                schools = schools.Where(s => s.ShortName.ContainsIgnoreCase(shortNameFilter));
             }
 
             if (!string.IsNullOrEmpty(cityFilter))
             {
-                schools = schools.Where(s => s.City.Name.IndexOf(cityFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+                schools = schools.Where(s => s.City.Name.ContainsIgnoreCase(cityFilter));
             }
 
             return View(await schools.OrderBy(item => item.ShortName).ToListAsync());
