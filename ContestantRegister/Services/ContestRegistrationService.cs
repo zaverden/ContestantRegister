@@ -73,6 +73,8 @@ namespace ContestantRegister.Services
                 {
                     result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста"));
                 }
+                if (!viewModel.Class.HasValue)
+                    result.Add(KeyValuePair.Create(nameof(viewModel.Class), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Class))));
             }
 
             if (contest.ParticipantType == ParticipantType.Student)
@@ -80,10 +82,13 @@ namespace ContestantRegister.Services
                 if (participant.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста"));
                 if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
                 if (manager != null && manager.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
+
+                if (!viewModel.Course.HasValue)
+                    result.Add(KeyValuePair.Create(nameof(viewModel.Course), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Course))));
             }
 
             if (contest.IsAreaRequired && string.IsNullOrEmpty(viewModel.Area))
-                result.Add(KeyValuePair.Create(nameof(viewModel.Area), "Поле 'Площадка' обязательное"));
+                result.Add(KeyValuePair.Create(nameof(viewModel.Area), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Area))));
 
             return result;
         }

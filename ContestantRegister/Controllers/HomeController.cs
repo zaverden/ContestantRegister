@@ -401,6 +401,10 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["T1"].Value = "Number";
             worksheet.Cells["U1"].Value = "ComputerName";
             worksheet.Cells["V1"].Value = "ProgrammingLanguage";
+            worksheet.Cells["W1"].Value = "DateOfBirth";
+            worksheet.Cells["X1"].Value = "Class";
+            worksheet.Cells["Y1"].Value = "Course";
+            worksheet.Cells["Z1"].Value = "StudentType";
 
             int row = 1;
             foreach (var registration in registrations)
@@ -434,6 +438,10 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 20].Value = registration.Number;
                 worksheet.Cells[row, 21].Value = registration.ComputerName;
                 worksheet.Cells[row, 22].Value = registration.ProgrammingLanguage;
+                worksheet.Cells[row, 23].Value = registration.Participant1.DateOfBirth;
+                worksheet.Cells[row, 24].Value = registration.Class;
+                worksheet.Cells[row, 25].Value = registration.Course;
+                worksheet.Cells[row, 25].Value = registration.StudentType;
             }
 
             var ms = new MemoryStream();
