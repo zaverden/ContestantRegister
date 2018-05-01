@@ -44,8 +44,6 @@ namespace ContestantRegister.Services
                         result.Add(KeyValuePair.Create(nameof(viewModel.EducationStartDate), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.EducationStartDate))));
                     if (!viewModel.EducationEndDate.HasValue)
                         result.Add(KeyValuePair.Create(nameof(viewModel.EducationEndDate), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.EducationEndDate))));
-                    if (!viewModel.DateOfBirth.HasValue)
-                        result.Add(KeyValuePair.Create(nameof(viewModel.DateOfBirth), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.DateOfBirth))));
                     if (viewModel.EducationStartDate.HasValue && viewModel.EducationEndDate.HasValue && viewModel.EducationStartDate > viewModel.EducationEndDate)
                         result.Add(KeyValuePair.Create(string.Empty, "Дата начала обучения должна быть позже даты конца обучения"));
                     if (viewModel.DateOfBirth.HasValue && DateTime.Now.Year - viewModel.DateOfBirth.Value.Year < 16)

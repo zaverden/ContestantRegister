@@ -55,6 +55,10 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Учебное заведение")]
         public int StudyPlaceId { get; set; }
 
+        [Display(Name = "Дата рождения")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [DataType(DataType.Date)]
+        public DateTime? DateOfBirth { get; set; }
 
         //Student
         [Display(Name = "Дата начала обучения")]
@@ -64,11 +68,7 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Дата завершения обучения")]
         [DataType(DataType.Date)]
         public DateTime? EducationEndDate { get; set; }
-
-        [Display(Name = "Дата рождения")]
-        [DataType(DataType.Date)]
-        public DateTime? DateOfBirth { get; set; }
-
+        
         //Trainer
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }
