@@ -32,7 +32,14 @@ namespace ContestantRegister
         // GET: Contests/Create
         public IActionResult Create()
         {
+            FillViewData();
+
             return View();
+        }
+
+        private void FillViewData()
+        {
+            ViewData["CompClasses"] = _context.CompClasses;
         }
 
         // POST: Contests/Create
@@ -52,23 +59,24 @@ namespace ContestantRegister
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            FillViewData();
+
             return View(contest);
         }
 
         //TODO зчем везде nullable id? Или пофиг, не править же генеренный код, который работает
         // GET: Contests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            
             var contest = await _context.Contests.SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
                 return NotFound();
             }
+
+            FillViewData();
+
             return View(contest);
         }
 
@@ -107,6 +115,9 @@ namespace ContestantRegister
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            FillViewData();
+
             return View(contest);
         }
 

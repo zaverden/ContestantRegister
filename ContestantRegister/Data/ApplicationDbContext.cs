@@ -27,6 +27,10 @@ namespace ContestantRegister.Data
 
         public DbSet<Email> Emails { get; set; }
 
+        public DbSet<CompClass> CompClasses { get; set; }
+        public DbSet<ContestCompClass> ContestCompClasses { get; set; }
+        public DbSet<ContestCompClassParticipant> ContestCompClassParticipants { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -41,7 +45,9 @@ namespace ContestantRegister.Data
             builder.Entity<TeamContestRegistration>().HasBaseType<ContestRegistration>();
             builder.Entity<IndividualContestRegistration>().HasBaseType<ContestRegistration>();
 
-            
+            builder.Entity<ContestCompClass>()
+                .HasAlternateKey(item => new {item.ContestId, item.CompClassId});
+
             builder.Entity<StudyPlace>(entity =>
             {
                 entity.HasOne(e => e.City)

@@ -2,6 +2,7 @@
 using AutoMapper;
 using ContestantRegister.Models;
 using ContestantRegister.ViewModels.AccountViewModels;
+using ContestantRegister.ViewModels.ContestViewModels;
 using ContestantRegister.ViewModels.HomeViewModels;
 using ContestantRegister.ViewModels.ListItemViewModels;
 using ContestantRegister.ViewModels.ManageViewModels;
@@ -21,6 +22,9 @@ namespace ContestantRegister.Utils
             
             CreateMap<IndividualContestRegistrationViewModel, IndividualContestRegistration>();
             CreateMap<IndividualContestRegistration, IndividualContestRegistrationViewModel>();
+
+            CreateMap<Contest, ContestViewModel>();
+            CreateMap<ContestViewModel, Contest>();
 
             CreateMap<ApplicationUser, CreateUserViewModel>();
             CreateMap<CreateUserViewModel, ApplicationUser>();

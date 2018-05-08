@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using ContestantRegister.Properties;
 
 namespace ContestantRegister.Models
@@ -25,7 +26,6 @@ namespace ContestantRegister.Models
         [Display(Name = "Старт")]
         public DateTime Start { get; set; }
 
-        //TODO сделать ли дробным? чтобы контест был по 3,5 часа
         [Display(Name = "Часов")]
         [Range(1, int.MaxValue)]
         public int Duration { get; set; }
@@ -83,5 +83,11 @@ namespace ContestantRegister.Models
         [Display(Name = "Зарегистрировано")]
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
+
+        [Display(Name = "Комп. классы")]
+        public ICollection<ContestCompClass> ContestCompClasses { get; set; }
+
+        [NotMapped]
+        public List<CompClass> CompClasses { get; set; }
     }
 }

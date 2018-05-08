@@ -17,6 +17,8 @@
     <Compile Remove="Data\Migrations\20180405041519_Email_Add_CreateDate_Column.Designer.cs" />
     <Compile Remove="Data\Migrations\20180501100444_Add_Class_Course_StudentType_For_Registration.cs" />
     <Compile Remove="Data\Migrations\20180501100444_Add_Class_Course_StudentType_For_Registration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
