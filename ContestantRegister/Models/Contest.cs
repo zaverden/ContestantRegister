@@ -84,10 +84,10 @@ namespace ContestantRegister.Models
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
 
-        [Display(Name = "Комп. классы")]
-        public ICollection<ContestCompClass> ContestCompClasses { get; set; }
+        public ICollection<ContestCompClass> CompClasses { get; set; }
 
         [NotMapped]
-        public List<CompClass> CompClasses { get; set; }
+        [Display(Name = "Комп. классы")]
+        public int[] SelectedCompClassIds { get; set; }
     }
 }

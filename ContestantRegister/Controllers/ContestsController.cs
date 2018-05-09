@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace ContestantRegister
 {
@@ -17,10 +19,12 @@ namespace ContestantRegister
     public class ContestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
-        public ContestsController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+
+        public ContestsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Contests
@@ -30,16 +34,23 @@ namespace ContestantRegister
         }
 
         // GET: Contests/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            FillViewData();
+            await FillViewData();
 
             return View();
         }
 
-        private void FillViewData()
+        private async Task FillViewData(Contest contest = null)
         {
-            ViewData["CompClasses"] = _context.CompClasses;
+            if (contest?.CompClasses == null)
+            {
+                ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses, "Id", "Name");
+            }
+            else
+            {
+                ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses, "Id", "Name", contest.CompClasses.Select(c => c.CompClassId));
+            }
         }
 
         // POST: Contests/Create
@@ -54,13 +65,19 @@ namespace ContestantRegister
                 //Если создавать контест на винде, перевод строки там два символа. А потом при регистрации на никсах идет сплит по переводу строки, а это один символ. И \r добавляется сзади к паролю.
                 //Это ломает экспорт в csv и при отправле пароля по email этот символ рендерится как пробел
                 RemoveWindowsLineEnds(contest);
-
+                if (contest.SelectedCompClassIds != null)
+                {
+                    contest.CompClasses = await _context.CompClasses
+                        .Where(c => contest.SelectedCompClassIds.Contains(c.Id))
+                        .Select(c => new ContestCompClass {CompClass = c, CompClassId = c.Id, Contest = contest})
+                        .ToListAsync();
+                }
                 _context.Add(contest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            FillViewData();
+            await FillViewData(contest);
 
             return View(contest);
         }
@@ -69,13 +86,15 @@ namespace ContestantRegister
         // GET: Contests/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var contest = await _context.Contests.SingleOrDefaultAsync(m => m.Id == id);
+            var contest = await _context.Contests
+                .Include(c => c.CompClasses)
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
                 return NotFound();
             }
 
-            FillViewData();
+            await FillViewData(contest);
 
             return View(contest);
         }
@@ -97,9 +116,40 @@ namespace ContestantRegister
                 try
                 {
                     RemoveWindowsLineEnds(contest);
+                    List<CompClass> selectedCompClasses = new List<CompClass>();
+                    if (contest.SelectedCompClassIds != null)
+                    {
+                        selectedCompClasses = await _context.CompClasses
+                            .Where(c => contest.SelectedCompClassIds.Contains(c.Id))
+                            .ToListAsync();
+                    }
 
-                    //TODO Нужен ли Automapper?
-                    _context.Update(contest);
+                    var dbContest = await _context.Contests
+                        .Include(c => c.CompClasses)
+                        .Where(c => c.Id == id)
+                        .SingleOrDefaultAsync();
+                    if (dbContest.CompClasses == null)
+                    {
+                        dbContest.CompClasses = new List<ContestCompClass>();
+                    }
+                    foreach (var oldCompClass in dbContest.CompClasses.ToList())
+                    {
+                        if (!selectedCompClasses.Any(c => c.Id == oldCompClass.CompClassId))
+                        {
+                            dbContest.CompClasses.Remove(oldCompClass);
+                        }
+                    }
+                    foreach (var compClass in selectedCompClasses)
+                    {
+                        if (!dbContest.CompClasses.Any(c => c.CompClassId == compClass.Id))
+                        {
+                            dbContest.CompClasses.Add(new ContestCompClass { CompClass = compClass, Contest = contest });
+                        }
+                    }
+
+                    _mapper.Map(contest, dbContest);
+
+                    _context.Update(dbContest);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -116,7 +166,7 @@ namespace ContestantRegister
                 return RedirectToAction(nameof(Index));
             }
 
-            FillViewData();
+            await FillViewData(contest);
 
             return View(contest);
         }
