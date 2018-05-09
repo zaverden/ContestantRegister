@@ -89,6 +89,7 @@ namespace ContestantRegister.Controllers
                 .Include("ContestRegistrations.Manager")
                 .Include("ContestRegistrations.StudyPlace")
                 .Include("ContestRegistrations.StudyPlace.City")
+                .Include("ContestRegistrations.Area")
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -133,8 +134,8 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.Area))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => !string.IsNullOrEmpty(r.Area) && 
-                                r.Area.ContainsIgnoreCase(filter.Area));
+                    .Where(r => r.ContestArea != null && 
+                                r.ContestArea.Area.Name.ContainsIgnoreCase(filter.Area));
             }
             if (!string.IsNullOrEmpty(filter.City))
             {
@@ -291,9 +292,7 @@ namespace ContestantRegister.Controllers
 
             if (contest.IsAreaRequired)
             {
-                var areas = contest.Areas.SplitByNewLineEndAndRemoveWindowsLineEnds();
-                Array.Sort(areas);
-                ViewData["Area"] = new SelectList(areas);
+                ViewData["Area"] = new SelectList(contest.Areas.OrderBy(a => a.Area.Name), "Id", "Area.Name", viewModel.AreaId);
             }
         }
 
@@ -374,6 +373,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant1)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
+                .Include(r => r.ContestArea)
+                .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id);
 
             var package = new ExcelPackage();
@@ -434,7 +435,7 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 16].Value = registration.Status;
                 worksheet.Cells[row, 17].Value = registration.YaContestLogin;
                 worksheet.Cells[row, 18].Value = registration.YaContestPassword;
-                worksheet.Cells[row, 19].Value = registration.Area;
+                worksheet.Cells[row, 19].Value = registration.ContestArea.Area.Name;
                 worksheet.Cells[row, 20].Value = registration.Number;
                 worksheet.Cells[row, 21].Value = registration.ComputerName;
                 worksheet.Cells[row, 22].Value = registration.ProgrammingLanguage;

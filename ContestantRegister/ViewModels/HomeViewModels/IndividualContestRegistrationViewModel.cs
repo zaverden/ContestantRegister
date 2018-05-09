@@ -61,7 +61,7 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         public bool IsAreaRequired { get; set; }
 
         [Display(Name = "Площадка")]
-        public string Area { get; set; }
+        public int AreaId { get; set; }
 
         [Display(Name = "Рабочее место")]
         [MaxLength(50)]

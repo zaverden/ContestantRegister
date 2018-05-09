@@ -87,8 +87,8 @@ namespace ContestantRegister.Services
                     result.Add(KeyValuePair.Create(nameof(viewModel.Course), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Course))));
             }
 
-            if (contest.IsAreaRequired && string.IsNullOrEmpty(viewModel.Area))
-                result.Add(KeyValuePair.Create(nameof(viewModel.Area), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Area))));
+            if (contest.IsAreaRequired && viewModel.AreaId == 0)
+                result.Add(KeyValuePair.Create(nameof(viewModel.AreaId), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.AreaId))));
 
             return result;
         }

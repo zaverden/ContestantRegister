@@ -61,8 +61,9 @@ namespace ContestantRegister.Models
         public string YaContestPassword { get; set; }
 
         [Display(Name = "Площадка")]
-        [MaxLength(50)]
-        public string Area { get; set; }
+        public int? ContestAreaId { get; set; }
+
+        public ContestArea ContestArea { get; set; }
 
         [Display(Name = "№")]
         [Range(1, int.MaxValue)]

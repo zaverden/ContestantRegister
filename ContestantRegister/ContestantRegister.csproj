@@ -19,6 +19,18 @@
     <Compile Remove="Data\Migrations\20180501100444_Add_Class_Course_StudentType_For_Registration.Designer.cs" />
     <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.cs" />
     <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509123601_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509123601_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509124039_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509124039_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509124432_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509124432_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509124859_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509124859_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509130722_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509130722_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509130839_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509130839_Add_Area_Entity.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -45,11 +45,11 @@ namespace ContestantRegister
         {
             if (contest?.CompClasses == null)
             {
-                ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses, "Id", "Name");
+                ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name");
             }
             else
             {
-                ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses, "Id", "Name", contest.CompClasses.Select(c => c.CompClassId));
+                ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name", contest.CompClasses.Select(c => c.CompClassId));
             }
         }
 
@@ -176,11 +176,6 @@ namespace ContestantRegister
             if (!string.IsNullOrEmpty(contest.YaContestAccountsCSV) && contest.YaContestAccountsCSV.Contains('\r'))
             {
                 contest.YaContestAccountsCSV = contest.YaContestAccountsCSV.Replace("\r", "");
-            }
-
-            if (!string.IsNullOrEmpty(contest.Areas) && contest.Areas.Contains('\r'))
-            {
-                contest.Areas = contest.Areas.Replace("\r", "");
             }
         }
 

@@ -16,9 +16,10 @@ namespace ContestantRegister.Models
         public int CompNumber { get; set; }
 
         [Display(Name = "Площадка")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        [MaxLength(50)]
-        public string Area { get; set; }
+        //[Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public int? AreaId { get; set; }
+
+        public Area Area { get; set; }
 
         [Display(Name = "Комментарий")]
         [MaxLength(500)]
