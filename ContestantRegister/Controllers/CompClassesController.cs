@@ -25,30 +25,12 @@ namespace ContestantRegister.Controllers
         // GET: CompClasses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CompClasses.ToListAsync());
+            return View(await _context.CompClasses.Include(c => c.Area).ToListAsync());
         }
 
-        private void FillViewData()
+        private void FillViewData(CompClass currentItem = null)
         {
-            ViewData["Area"] = _context.Areas;
-        }
-
-        // GET: CompClasses/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var compClass = await _context.CompClasses
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (compClass == null)
-            {
-                return NotFound();
-            }
-
-            return View(compClass);
+             ViewData["Area"] = new SelectList(_context.Areas, "Id", "Name", currentItem?.AreaId);
         }
 
         // GET: CompClasses/Create
@@ -73,7 +55,7 @@ namespace ContestantRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            FillViewData();
+            FillViewData(compClass);
 
             return View(compClass);
         }
@@ -92,7 +74,7 @@ namespace ContestantRegister.Controllers
                 return NotFound();
             }
 
-            FillViewData();
+            FillViewData(compClass);
             return View(compClass);
         }
 
@@ -129,7 +111,7 @@ namespace ContestantRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            FillViewData();
+            FillViewData(compClass);
             return View(compClass);
         }
 

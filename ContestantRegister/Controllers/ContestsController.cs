@@ -1,9 +1,7 @@
-﻿using ContestantRegister.Controllers;
-using ContestantRegister.Data;
+﻿using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -43,14 +41,8 @@ namespace ContestantRegister
 
         private async Task FillViewData(Contest contest = null)
         {
-            if (contest?.CompClasses == null)
-            {
-                ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name");
-            }
-            else
-            {
-                ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name", contest.CompClasses.Select(c => c.CompClassId));
-            }
+            ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name", contest?.CompClasses.Select(c => c.CompClassId));
+            ViewData["Areas"] = new MultiSelectList(await _context.Areas.ToListAsync(), "Id", "Name", contest?.ContestAreas.Select(c => c.AreaId));
         }
 
         // POST: Contests/Create
@@ -65,13 +57,11 @@ namespace ContestantRegister
                 //Если создавать контест на винде, перевод строки там два символа. А потом при регистрации на никсах идет сплит по переводу строки, а это один символ. И \r добавляется сзади к паролю.
                 //Это ломает экспорт в csv и при отправле пароля по email этот символ рендерится как пробел
                 RemoveWindowsLineEnds(contest);
-                if (contest.SelectedCompClassIds != null)
-                {
-                    contest.CompClasses = await _context.CompClasses
-                        .Where(c => contest.SelectedCompClassIds.Contains(c.Id))
-                        .Select(c => new ContestCompClass {CompClass = c, CompClassId = c.Id, Contest = contest})
-                        .ToListAsync();
-                }
+
+                await SyncManyToMany(contest.SelectedCompClassIds, _context.CompClasses, contest.CompClasses, CreateContestCompClassRelation, CmpCompClass, contest);
+
+                await SyncManyToMany(contest.SelectedAreaIds, _context.Areas, contest.ContestAreas, CreateContestAreaRelation, CmpArea, contest);
+
                 _context.Add(contest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,6 +78,7 @@ namespace ContestantRegister
         {
             var contest = await _context.Contests
                 .Include(c => c.CompClasses)
+                .Include(c => c.ContestAreas)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -116,36 +107,15 @@ namespace ContestantRegister
                 try
                 {
                     RemoveWindowsLineEnds(contest);
-                    List<CompClass> selectedCompClasses = new List<CompClass>();
-                    if (contest.SelectedCompClassIds != null)
-                    {
-                        selectedCompClasses = await _context.CompClasses
-                            .Where(c => contest.SelectedCompClassIds.Contains(c.Id))
-                            .ToListAsync();
-                    }
-
                     var dbContest = await _context.Contests
                         .Include(c => c.CompClasses)
+                        .Include(c => c.ContestAreas)
                         .Where(c => c.Id == id)
                         .SingleOrDefaultAsync();
-                    if (dbContest.CompClasses == null)
-                    {
-                        dbContest.CompClasses = new List<ContestCompClass>();
-                    }
-                    foreach (var oldCompClass in dbContest.CompClasses.ToList())
-                    {
-                        if (!selectedCompClasses.Any(c => c.Id == oldCompClass.CompClassId))
-                        {
-                            dbContest.CompClasses.Remove(oldCompClass);
-                        }
-                    }
-                    foreach (var compClass in selectedCompClasses)
-                    {
-                        if (!dbContest.CompClasses.Any(c => c.CompClassId == compClass.Id))
-                        {
-                            dbContest.CompClasses.Add(new ContestCompClass { CompClass = compClass, Contest = contest });
-                        }
-                    }
+
+                    await SyncManyToMany(contest.SelectedCompClassIds, _context.CompClasses, dbContest.CompClasses, CreateContestCompClassRelation, CmpCompClass, dbContest);
+
+                    await SyncManyToMany(contest.SelectedAreaIds, _context.Areas, dbContest.ContestAreas, CreateContestAreaRelation, CmpArea, dbContest);
 
                     _mapper.Map(contest, dbContest);
 
@@ -171,6 +141,61 @@ namespace ContestantRegister
             return View(contest);
         }
 
+        private ContestCompClass CreateContestCompClassRelation(CompClass compClass, Contest contest)
+        {
+            return new ContestCompClass
+            {
+                CompClass = compClass,
+                Contest = contest,
+            };
+        }
+
+        private bool CmpCompClass(CompClass compClass, ContestCompClass contestCompClass)
+        {
+            return compClass.Id == contestCompClass.CompClassId;
+        }
+
+        private bool CmpArea(Area area, ContestArea contestArea)
+        {
+            return area.Id == contestArea.AreaId;
+        }
+
+        private ContestArea CreateContestAreaRelation(Area area, Contest contest)
+        {
+            return new ContestArea
+            {
+                Area = area,
+                Contest = contest,
+            };
+        }
+
+        private async Task SyncManyToMany<TEntity, TRelationEntity>(int[] selectedIds, DbSet<TEntity> dbSet, ICollection<TRelationEntity> items, Func<TEntity, Contest, TRelationEntity> relationFactory, Func<TEntity, TRelationEntity, bool> comparator, Contest contest)
+            where TEntity : DomainObject
+            where TRelationEntity : DomainObject
+        {
+            var selectedItems = new List<TEntity>();
+            if (selectedIds != null)
+            {
+                selectedItems = await dbSet.Where(item => selectedIds.Contains(item.Id)).ToListAsync();
+            }
+
+            foreach (var currentItem in items.ToList())
+            {
+                if (!selectedItems.Any(item => comparator(item, currentItem)))
+                {
+                    items.Remove(currentItem);
+                }
+            }
+
+            foreach (var selectedItem in selectedItems)
+            {
+                if (!items.Any(item => comparator(selectedItem, item)))
+                {
+                    items.Add(relationFactory(selectedItem, contest));
+                }
+            }
+        }
+        
         private static void RemoveWindowsLineEnds(Contest contest)
         {
             if (!string.IsNullOrEmpty(contest.YaContestAccountsCSV) && contest.YaContestAccountsCSV.Contains('\r'))

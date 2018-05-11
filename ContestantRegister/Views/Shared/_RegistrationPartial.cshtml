@@ -72,9 +72,9 @@
 @if (Model.IsAreaRequired)
 {
     <div class="form-group">
-        <label asp-for="AreaId" class="control-label"></label>
-        <select asp-for="AreaId" class="form-control" asp-items="ViewBag.Area"></select>
-        <span asp-validation-for="AreaId" class="text-danger"></span>
+        <label asp-for="ContestAreaId" class="control-label"></label>
+        <select asp-for="ContestAreaId" class="form-control" asp-items="ViewBag.Area"></select>
+        <span asp-validation-for="ContestAreaId" class="text-danger"></span>
     </div>
 }
 
@@ -90,7 +90,7 @@
 <input type="hidden" asp-for="ContestId" />
 <input type="hidden" asp-for="ParticipantType" />
 <input type="hidden" asp-for="IsAreaRequired" />
-<input type="hidden" asp-for="AreaId" />
+<input type="hidden" asp-for="ContestAreaId" />
 <input type="hidden" asp-for="ComputerName" />
 <input type="hidden" asp-for="IsProgrammingLanguageNeeded" />
 <input type="hidden" asp-for="ProgrammingLanguage" />

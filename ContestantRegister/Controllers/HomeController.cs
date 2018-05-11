@@ -89,7 +89,8 @@ namespace ContestantRegister.Controllers
                 .Include("ContestRegistrations.Manager")
                 .Include("ContestRegistrations.StudyPlace")
                 .Include("ContestRegistrations.StudyPlace.City")
-                .Include("ContestRegistrations.Area")
+                .Include("ContestRegistrations.ContestArea")
+                .Include("ContestRegistrations.ContestArea.Area")
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -195,6 +196,8 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
             var contest = await _context.Contests
+                .Include(c => c.ContestAreas)
+                .Include("ContestAreas.Area")
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -257,7 +260,10 @@ namespace ContestantRegister.Controllers
 
         private async Task<Contest> GetContest(int contestId)
         {
-            return await _context.Contests.SingleOrDefaultAsync(c => c.Id == contestId);
+            return await _context.Contests
+                .Include(c => c.ContestAreas)
+                .Include("ContestAreas.Area")
+                .SingleOrDefaultAsync(c => c.Id == contestId);
         }
 
         private async Task FillViewDataForIndividualContestRegistration(IndividualContestRegistrationViewModel viewModel, Contest contest)
@@ -292,7 +298,7 @@ namespace ContestantRegister.Controllers
 
             if (contest.IsAreaRequired)
             {
-                ViewData["Area"] = new SelectList(contest.Areas.OrderBy(a => a.Area.Name), "Id", "Area.Name", viewModel.AreaId);
+                ViewData["Area"] = new SelectList(contest.ContestAreas.OrderBy(a => a.Area.Name), "Id", "Area.Name", viewModel.ContestAreaId);
             }
         }
 
@@ -375,7 +381,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Manager)
                 .Include(r => r.ContestArea)
                 .Include(r => r.ContestArea.Area)
-                .Where(r => r.ContestId == id);
+                .Where(r => r.ContestId == id)
+                .OrderBy(r => r.Number);
 
             var package = new ExcelPackage();
             
@@ -435,7 +442,7 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 16].Value = registration.Status;
                 worksheet.Cells[row, 17].Value = registration.YaContestLogin;
                 worksheet.Cells[row, 18].Value = registration.YaContestPassword;
-                worksheet.Cells[row, 19].Value = registration.ContestArea.Area.Name;
+                worksheet.Cells[row, 19].Value = registration.ContestArea?.Area.Name;
                 worksheet.Cells[row, 20].Value = registration.Number;
                 worksheet.Cells[row, 21].Value = registration.ComputerName;
                 worksheet.Cells[row, 22].Value = registration.ProgrammingLanguage;
@@ -789,6 +796,8 @@ namespace ContestantRegister.Controllers
             var registration = await _context.ContestRegistrations
                 .OfType<IndividualContestRegistration>()
                 .Include(r => r.Contest)
+                .Include(r => r.Contest.ContestAreas)
+                .Include("Contest.ContestAreas.Area")
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
                 .Include(r => r.Participant1)
@@ -845,7 +854,7 @@ namespace ContestantRegister.Controllers
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
-                var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
+                var contest = await GetContest(viewModel.ContestId);
 
                 await FillViewDataForIndividualContestRegistration(viewModel, contest);
 

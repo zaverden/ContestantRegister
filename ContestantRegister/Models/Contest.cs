@@ -71,7 +71,7 @@ namespace ContestantRegister.Models
         public int UsedAccountsCount { get; set; } = 0;
 
         [Display(Name = "Площадки")]
-        public List<ContestArea> Areas { get; set; }
+        public List<ContestArea> ContestAreas { get; set; } = new List<ContestArea>();
 
         [Display(Name = "Указывать ли площадку при регистрации")]
         public bool IsAreaRequired { get; set; }
@@ -82,7 +82,11 @@ namespace ContestantRegister.Models
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
 
-        public ICollection<ContestCompClass> CompClasses { get; set; }
+        public List<ContestCompClass> CompClasses { get; set; } = new List<ContestCompClass>();
+
+        [NotMapped]
+        [Display(Name = "Площадки")]
+        public int[] SelectedAreaIds { get; set; }
 
         [NotMapped]
         [Display(Name = "Комп. классы")]

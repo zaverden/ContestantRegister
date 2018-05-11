@@ -24,12 +24,12 @@
         public string Region { get; set; }
         public string City { get; set; }
         public string StudyPlace { get; set; }
+        public string Area { get; set; }
 
         //Эти поля напрямую маппятся на регистрацию и их можно импортировать
         public string Status { get; set; }
         public string YaContestLogin { get; set; }
         public string YaContestPassword { get; set; }
-        public string Area { get; set; }
         public int? Number { get; set; }
         public string ComputerName { get; set; }
         public string ProgrammingLanguage { get; set; }
