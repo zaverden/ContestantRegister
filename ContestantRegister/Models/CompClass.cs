@@ -24,7 +24,5 @@ namespace ContestantRegister.Models
         [Display(Name = "Комментарий")]
         [MaxLength(500)]
         public string Comment { get; set; }
-
-        public ICollection<ContestCompClass> ContestCompClasses { get; set; }
     }
 }

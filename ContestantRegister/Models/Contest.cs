@@ -82,14 +82,10 @@ namespace ContestantRegister.Models
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
 
-        public List<ContestCompClass> CompClasses { get; set; } = new List<ContestCompClass>();
-
+        //TODO можно вынести это во ViewModel
         [NotMapped]
+        [Required]
         [Display(Name = "Площадки")]
         public int[] SelectedAreaIds { get; set; }
-
-        [NotMapped]
-        [Display(Name = "Комп. классы")]
-        public int[] SelectedCompClassIds { get; set; }
     }
 }

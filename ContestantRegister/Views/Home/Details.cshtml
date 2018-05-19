@@ -83,6 +83,7 @@
         <a asp-action="ExportParticipants" asp-route-id="@Model.Contest.Id">Экспорт участников</a>
         <a asp-action="ImportParticipants" asp-route-id="@Model.Contest.Id">Импорт CSV</a>
         <a asp-action="ImportFromContest" asp-route-id="@Model.Contest.Id">Импорт участников из контеста</a>
+        <a asp-action="Sorting" asp-route-id="@Model.Contest.Id">Жеребьевка</a>
     }
 </p>
 
@@ -237,12 +238,6 @@
             <th>
                 Статус
             </th>
-            @if (User.IsInRole(Roles.Admin))
-            {
-                <th>
-                    Рабочее место
-                </th>
-            }
             <th></th>
         </tr>
     </thead>
@@ -283,12 +278,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
-                @if (User.IsInRole(Roles.Admin))
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ComputerName)
-                    </td>
-                }
                 <td>
                     @if (User.IsInRole(Roles.Admin))
                     {

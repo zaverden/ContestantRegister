@@ -1,0 +1,72 @@
+﻿@model ContestantRegister.ViewModels.Home.SortingViewModel
+
+@{
+    ViewData["Title"] = "Жеребьевка";
+}
+
+<h2>@Html.DisplayFor(model => model.Contest.Name)</h2>
+
+<form method="get">
+    <div class="form-actions no-color">
+        <p>
+            <label class="control-label">Площадка</label>
+            <select asp-for="SelectedAreaId" asp-items="ViewBag.Areas" class="form-control"></select>
+            <input type="submit" value="Выбрать" class="btn btn-default" />
+        </p>
+    </div>
+</form>
+
+<form method="post">
+    <div class="form-actions no-color">
+        <p>
+            <label class="control-label">Комп. классы</label>
+            <select asp-for="SelectedCompClassIds" asp-items="ViewBag.CompClasses" multiple="multiple" class="form-control apply-select2"></select>
+            <input type="submit" value="Сохранить" class="btn btn-default" />
+        </p>
+    </div>
+</form>
+
+@foreach (var areaCompClass in Model.ContestAreaCompClasses)
+{
+    <h4>areaCompClass.CompClass.Name</h4>
+    <label class="control-label">Компьютеров</label>
+    @Html.EditorFor(model => areaCompClass.UsedComputersCount)
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Участник
+                </th>
+                <th>
+                    Учебное заведение
+                </th>
+                <th>
+                    Рабочее место
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var computer in areaCompClass.Computers)
+            {
+                @*<tr>
+                    <td>@Html.DisplayFor(modelItem => compClass.CompClass.Name)</td>
+                </tr>
+                foreach (var regComputer in compClass.ContestRegistrationComputers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Surname) @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Name) @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Patronymic)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => regComputer.ContestRegistration.StudyPlace.ShortName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => regComputer.Computer.Number)
+                        </td>
+                    </tr>
+                }*@
+            }
+        </tbody>
+    </table>
+}

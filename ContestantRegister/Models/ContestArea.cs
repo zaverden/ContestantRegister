@@ -1,4 +1,7 @@
-﻿namespace ContestantRegister.Models
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ContestantRegister.Models
 {
     public class ContestArea : DomainObject
     {
@@ -7,5 +10,7 @@
 
         public Contest Contest { get; set; }
         public Area Area { get; set; }
+
+        public string CompClassesData { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Utils;
+using ContestantRegister.ViewModels.Home;
 using ContestantRegister.ViewModels.HomeViewModels;
 using ContestantRegister.ViewModels.ListItemViewModels;
 using CsvHelper;
@@ -21,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 
 namespace ContestantRegister.Controllers
@@ -444,7 +446,12 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 18].Value = registration.YaContestPassword;
                 worksheet.Cells[row, 19].Value = registration.ContestArea?.Area.Name;
                 worksheet.Cells[row, 20].Value = registration.Number;
-                worksheet.Cells[row, 21].Value = registration.ComputerName;
+                //TODO сделать экспор рабочего места
+                //if (registration.ContestRegistrationComputer != null)
+                //{
+                //    worksheet.Cells[row, 21].Value =
+                //        $"{registration.ContestRegistrationComputer.ContestAreaCompClass.CompClass.Name} - {registration.ContestRegistrationComputer.Computer.Number}";
+                //}
                 worksheet.Cells[row, 22].Value = registration.ProgrammingLanguage;
                 worksheet.Cells[row, 23].Value = registration.Participant1.DateOfBirth;
                 worksheet.Cells[row, 24].Value = registration.Class;
@@ -657,7 +664,6 @@ namespace ContestantRegister.Controllers
                 UserType = userType,
                 IsUserTypeDisabled = true
             };
-
 
             await FillRegisterContestParticipantViewData();
 
@@ -912,6 +918,99 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> StatusToConfirmParticipation(int id)
         {
             return await ChangeRegistrationStatus(id, ContestRegistrationStatus.ConfirmParticipation);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> Sorting(int id, int? selectedAreaId)
+        {
+            var contest = await _context.Contests
+                .Include(c => c.ContestAreas)
+                .Include("ContestAreas.Area")
+                .Include(c => c.ContestRegistrations)
+                .Include("ContestRegistrations.Participant1")
+                .Include("ContestRegistrations.StudyPlace")
+                .SingleOrDefaultAsync(m => m.Id == id);
+
+            if (contest == null) return NotFound();
+
+            var areaId = selectedAreaId ?? contest.ContestAreas.First().AreaId;
+            
+            var classes = GetClassesForArea(areaId, contest.ContestAreas.Single(c => c.AreaId == areaId));
+
+            var viewModel = new SortingViewModel
+            {
+                Contest = contest,
+                SelectedAreaId = selectedAreaId,
+                ContestAreaCompClasses = classes,
+                SelectedCompClassIds = classes.Select(c => c.CompClass.Id).ToArray()
+            };
+
+            ViewData["Areas"] = new SelectList(contest.ContestAreas.Select(ca => ca.Area), "Id", "Name", selectedAreaId);
+            ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses.Where(c => c.AreaId == areaId), "Id", "Name", viewModel.SelectedCompClassIds);
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> Sorting(int id, SortingViewModel viewModel)
+        {
+            var contest = _context.Contests.Find(id);
+            if (contest == null) return NotFound();
+
+            var ca = await _context.ContestAreas.SingleAsync(c => c.AreaId == viewModel.SelectedAreaId &&
+                                                                  c.ContestId == id);
+            foreach (var compClass in viewModel.ContestAreaCompClasses)
+            {
+                if (compClass.Computers.Count < compClass.UsedComputersCount)
+                {
+                    for (int i = compClass.Computers.Count + 1; i <= compClass.UsedComputersCount; i++)
+                    {
+                        compClass.Computers.Add(new Computer{ Number = i});
+                    }
+                }
+                if (compClass.Computers.Count > compClass.UsedComputersCount)
+                {
+                    for (int i = compClass.Computers.Count + 1; i <= compClass.UsedComputersCount; i++)
+                    {
+                        compClass.Computers.RemoveRange(compClass.UsedComputersCount, compClass.Computers.Count - compClass.UsedComputersCount);
+                    }
+                }
+            }
+            ca.CompClassesData = JsonConvert.SerializeObject(viewModel.ContestAreaCompClasses);
+            await _context.SaveChangesAsync();
+
+            return View(viewModel);
+        }
+
+        private List<ContestAreaCompClass> GetClassesForArea(int value, ContestArea contestArea)
+        {
+            List<ContestAreaCompClass> result;
+
+            if (contestArea.CompClassesData == null)
+            {
+                result = new List<ContestAreaCompClass>();
+            }
+            else
+            {
+                result = JsonConvert.DeserializeObject<List<ContestAreaCompClass>>(contestArea.CompClassesData);
+            }
+
+            foreach (var contestAreaCompClass in result)
+            {
+                contestAreaCompClass.CompClass = _context.CompClasses.Find(contestAreaCompClass.CompClassId);
+
+                foreach (var computer in contestAreaCompClass.Computers)
+                {
+                    if (computer.ContestRegistrationId.HasValue)
+                    {
+                        computer.ContestRegistration =
+                            _context.ContestRegistrations.Find(computer.ContestRegistrationId.Value);
+                    }
+                }
+            }
+
+            return result;
         }
 
         private async Task<IActionResult> ChangeRegistrationStatus(int registrationId, ContestRegistrationStatus status, Func<ContestRegistration, Task> onConfirmParticipation = null)

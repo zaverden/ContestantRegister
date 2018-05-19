@@ -16,7 +16,8 @@ namespace ContestantRegister.Data
         public DbSet<City> Cities { get; set; }
 
         public DbSet<Contest> Contests { get; set; }
-
+        public DbSet<ContestArea> ContestAreas { get; set; }
+        
         public DbSet<Region> Regions { get; set; }
 
         public DbSet<StudyPlace> StudyPlaces { get; set; }
@@ -30,9 +31,6 @@ namespace ContestantRegister.Data
         public DbSet<Email> Emails { get; set; }
 
         public DbSet<CompClass> CompClasses { get; set; }
-        public DbSet<ContestCompClass> ContestCompClasses { get; set; }
-        public DbSet<ContestArea> ContestAreas { get; set; }
-        public DbSet<ContestCompClassParticipant> ContestCompClassParticipants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,9 +46,7 @@ namespace ContestantRegister.Data
             builder.Entity<TeamContestRegistration>().HasBaseType<ContestRegistration>();
             builder.Entity<IndividualContestRegistration>().HasBaseType<ContestRegistration>();
 
-            builder.Entity<ContestCompClass>()
-                .HasAlternateKey(item => new {item.ContestId, item.CompClassId});
-            builder.Entity<ContestArea>()
+           builder.Entity<ContestArea>()
                 .HasAlternateKey(item => new { item.ContestId, item.AreaId });
 
             builder.Entity<StudyPlace>(entity =>

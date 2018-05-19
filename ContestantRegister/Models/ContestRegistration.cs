@@ -48,10 +48,6 @@ namespace ContestantRegister.Models
         [MaxLength(100)]
         public string ProgrammingLanguage { get; set; }
 
-        [Display(Name = "Рабочее место")]
-        [MaxLength(50)]
-        public string ComputerName { get; set; }
-
         [Display(Name = "Логин в ЯКонтесте")]
         [MaxLength(50)]
         public string YaContestLogin { get; set; }

@@ -41,7 +41,6 @@ namespace ContestantRegister
 
         private async Task FillViewData(Contest contest = null)
         {
-            ViewData["CompClasses"] = new MultiSelectList(await _context.CompClasses.ToListAsync(), "Id", "Name", contest?.CompClasses.Select(c => c.CompClassId));
             ViewData["Areas"] = new MultiSelectList(await _context.Areas.ToListAsync(), "Id", "Name", contest?.ContestAreas.Select(c => c.AreaId));
         }
 
@@ -57,8 +56,6 @@ namespace ContestantRegister
                 //Если создавать контест на винде, перевод строки там два символа. А потом при регистрации на никсах идет сплит по переводу строки, а это один символ. И \r добавляется сзади к паролю.
                 //Это ломает экспорт в csv и при отправле пароля по email этот символ рендерится как пробел
                 RemoveWindowsLineEnds(contest);
-
-                await SyncManyToMany(contest.SelectedCompClassIds, _context.CompClasses, contest.CompClasses, CreateContestCompClassRelation, CmpCompClass, contest);
 
                 await SyncManyToMany(contest.SelectedAreaIds, _context.Areas, contest.ContestAreas, CreateContestAreaRelation, CmpArea, contest);
 
@@ -77,7 +74,6 @@ namespace ContestantRegister
         public async Task<IActionResult> Edit(int id)
         {
             var contest = await _context.Contests
-                .Include(c => c.CompClasses)
                 .Include(c => c.ContestAreas)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
@@ -108,12 +104,9 @@ namespace ContestantRegister
                 {
                     RemoveWindowsLineEnds(contest);
                     var dbContest = await _context.Contests
-                        .Include(c => c.CompClasses)
                         .Include(c => c.ContestAreas)
                         .Where(c => c.Id == id)
                         .SingleOrDefaultAsync();
-
-                    await SyncManyToMany(contest.SelectedCompClassIds, _context.CompClasses, dbContest.CompClasses, CreateContestCompClassRelation, CmpCompClass, dbContest);
 
                     await SyncManyToMany(contest.SelectedAreaIds, _context.Areas, dbContest.ContestAreas, CreateContestAreaRelation, CmpArea, dbContest);
 
@@ -139,20 +132,6 @@ namespace ContestantRegister
             await FillViewData(contest);
 
             return View(contest);
-        }
-
-        private ContestCompClass CreateContestCompClassRelation(CompClass compClass, Contest contest)
-        {
-            return new ContestCompClass
-            {
-                CompClass = compClass,
-                Contest = contest,
-            };
-        }
-
-        private bool CmpCompClass(CompClass compClass, ContestCompClass contestCompClass)
-        {
-            return compClass.Id == contestCompClass.CompClassId;
         }
 
         private bool CmpArea(Area area, ContestArea contestArea)
