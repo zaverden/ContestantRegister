@@ -44,6 +44,10 @@ namespace ContestantRegister.Models
 
         public Contest Contest { get; set; }
 
+        [Display(Name = "Рабочее место")]
+        [MaxLength(50)]
+        public string ComputerName { get; set; }
+
         [Display(Name = "Язык программирования")]
         [MaxLength(100)]
         public string ProgrammingLanguage { get; set; }

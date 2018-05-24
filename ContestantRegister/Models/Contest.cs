@@ -10,7 +10,7 @@ namespace ContestantRegister.Models
     [DisplayName("Контест")]
     public class Contest : DomainObject
     {
-        [Required (ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(200)]
         [Display(Name = "Название")]
         public string Name { get; set; }
@@ -81,6 +81,10 @@ namespace ContestantRegister.Models
         [Display(Name = "Зарегистрировано")]
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
+
+        [Display(Name = "Комп. классы")]
+        [MaxLength(1000)]
+        public string SortingResults { get; set; }
 
         //TODO можно вынести это во ViewModel
         [NotMapped]

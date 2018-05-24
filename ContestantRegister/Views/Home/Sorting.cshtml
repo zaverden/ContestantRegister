@@ -4,69 +4,66 @@
     ViewData["Title"] = "Жеребьевка";
 }
 
-<h2>@Html.DisplayFor(model => model.Contest.Name)</h2>
+<h2>@ViewData["Title"]</h2>
 
-<form method="get">
-    <div class="form-actions no-color">
-        <p>
-            <label class="control-label">Площадка</label>
-            <select asp-for="SelectedAreaId" asp-items="ViewBag.Areas" class="form-control"></select>
-            <input type="submit" value="Выбрать" class="btn btn-default" />
-        </p>
-    </div>
-</form>
+<h4>@Html.DisplayFor(model => model.Name)</h4>
 
 <form method="post">
-    <div class="form-actions no-color">
-        <p>
-            <label class="control-label">Комп. классы</label>
-            <select asp-for="SelectedCompClassIds" asp-items="ViewBag.CompClasses" multiple="multiple" class="form-control apply-select2"></select>
-            <input type="submit" value="Сохранить" class="btn btn-default" />
-        </p>
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label class="control-label">Площадка</label>
+        <select asp-for="SelectedAreaId" onchange="filterCompClasses()" asp-items="ViewBag.Areas" class="form-control"></select>
     </div>
+
+    <div class="form-group">
+        <label class="control-label">Комп. классы</label>
+        <select asp-for="SelectedCompClassIds" class="form-control"></select>
+        <span asp-validation-for="SelectedCompClassIds" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Результаты</label>
+        <p>@Html.DisplayFor(m => m.SortingResults)</p>        
+    </div>
+
+    <p>Жеребьевка очистит все рабочие места для регистраций выбранной площадки!</p>
+    <input type="submit" value="Запустить жеребьевку" class="btn btn-default" />
+
 </form>
 
-@foreach (var areaCompClass in Model.ContestAreaCompClasses)
-{
-    <h4>areaCompClass.CompClass.Name</h4>
-    <label class="control-label">Компьютеров</label>
-    @Html.EditorFor(model => areaCompClass.UsedComputersCount)
+<a asp-action="Details" asp-route-id="@Model.Id">Назад к контесту</a>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Участник
-                </th>
-                <th>
-                    Учебное заведение
-                </th>
-                <th>
-                    Рабочее место
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var computer in areaCompClass.Computers)
-            {
-                @*<tr>
-                    <td>@Html.DisplayFor(modelItem => compClass.CompClass.Name)</td>
-                </tr>
-                foreach (var regComputer in compClass.ContestRegistrationComputers)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Surname) @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Name) @Html.DisplayFor(modelItem => regComputer.ContestRegistration.Participant1.Patronymic)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => regComputer.ContestRegistration.StudyPlace.ShortName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => regComputer.Computer.Number)
-                        </td>
-                    </tr>
-                }*@
-            }
-        </tbody>
-    </table>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<partial-script>
+    <script type="text/javascript">
+        const serverData = {};
+        serverData.compClasses = @Html.RawJson(ViewData["CompClasses"]);
+
+        function filterCompClasses() {
+            
+            let compClasses = serverData.compClasses;
+            const areaId = parseInt($("#SelectedAreaId").val());
+
+            const compClassesSelect = $("#SelectedCompClassIds");
+            compClassesSelect.empty();
+            compClassesSelect.select2({
+                data: compClasses
+                    .filter(c => c.AreaId === areaId)
+                    .map(c => ({
+                        id: c.Id,
+                        text: c.Name,
+                        selected: c.Selected,
+                    }))
+            });
+        }
+
+        $(document).ready(function () {
+            filterCompClasses();
+        });
+
+    </script>
+</partial-script>

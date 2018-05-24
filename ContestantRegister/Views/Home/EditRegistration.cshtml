@@ -15,19 +15,24 @@
             <h4></h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
-            
+
             <div class="form-group">
                 <label asp-for="ParticipantName" class="control-label"></label>
                 <input asp-for="ParticipantName" class="form-control" disabled />
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="Number" class="control-label"></label>
                 <input asp-for="Number" class="form-control" disabled="@(User.IsInRole(Roles.Admin) ? null : "disabled")" />
             </div>
 
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ContestRegistrationStatus>()"></select>
+            </div>
+
             @await Html.PartialAsync("_RegistrationPartial")
-            
+
             @if (User.IsInRole(Roles.Admin))
             {
                 <div class="form-group">

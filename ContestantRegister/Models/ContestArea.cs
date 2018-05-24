@@ -9,8 +9,8 @@ namespace ContestantRegister.Models
         public int AreaId { get; set; }
 
         public Contest Contest { get; set; }
-        public Area Area { get; set; }
+        public Area Area { get; set; }        
 
-        public string CompClassesData { get; set; }
+        public List<ContestRegistration> ContestRegistrations { get; set; }
     }
 }

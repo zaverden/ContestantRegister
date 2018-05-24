@@ -105,8 +105,7 @@ namespace ContestantRegister
                     RemoveWindowsLineEnds(contest);
                     var dbContest = await _context.Contests
                         .Include(c => c.ContestAreas)
-                        .Where(c => c.Id == id)
-                        .SingleOrDefaultAsync();
+                        .SingleOrDefaultAsync(c => c.Id == id);
 
                     await SyncManyToMany(contest.SelectedAreaIds, _context.Areas, dbContest.ContestAreas, CreateContestAreaRelation, CmpArea, dbContest);
 

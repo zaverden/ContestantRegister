@@ -201,6 +201,9 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<bool>("ShowRegistrationInfo");
 
+                    b.Property<string>("SortingResults")
+                        .HasMaxLength(1000);
+
                     b.Property<DateTime>("Start");
 
                     b.Property<int>("UsedAccountsCount");
@@ -222,8 +225,6 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<int>("AreaId");
 
-                    b.Property<string>("CompClassesData");
-
                     b.Property<int>("ContestId");
 
                     b.HasKey("Id");
@@ -241,6 +242,9 @@ namespace ContestantRegister.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("Class");
+
+                    b.Property<string>("ComputerName")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("ContestAreaId");
 
@@ -589,8 +593,9 @@ namespace ContestantRegister.Data.Migrations
             modelBuilder.Entity("ContestantRegister.Models.ContestRegistration", b =>
                 {
                     b.HasOne("ContestantRegister.Models.ContestArea", "ContestArea")
-                        .WithMany()
-                        .HasForeignKey("ContestAreaId");
+                        .WithMany("ContestRegistrations")
+                        .HasForeignKey("ContestAreaId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ContestantRegister.Models.Contest", "Contest")
                         .WithMany("ContestRegistrations")

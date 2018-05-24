@@ -4,23 +4,22 @@ using System.Collections.Generic;
 
 namespace ContestantRegister.Data.Migrations
 {
-    public partial class Add_Area_For_CompClass : Migration
+    public partial class Contest_SortingResults : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Area",
-                table: "CompClasses",
-                maxLength: 50,
-                nullable: false,
-                defaultValue: "");
+                name: "SortingResults",
+                table: "Contests",
+                maxLength: 1000,
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Area",
-                table: "CompClasses");
+                name: "SortingResults",
+                table: "Contests");
         }
     }
 }

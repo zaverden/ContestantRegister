@@ -19,6 +19,10 @@
     <Compile Remove="Data\Migrations\20180501100444_Add_Class_Course_StudentType_For_Registration.Designer.cs" />
     <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.cs" />
     <Compile Remove="Data\Migrations\20180501143645_Add_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501145126_Add_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180501145126_Add_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180501153707_Add_Area_For_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180501153707_Add_Area_For_CompClass.Designer.cs" />
     <Compile Remove="Data\Migrations\20180509123601_Add_Area_Entity.cs" />
     <Compile Remove="Data\Migrations\20180509123601_Add_Area_Entity.Designer.cs" />
     <Compile Remove="Data\Migrations\20180509124039_Add_Area_Entity.cs" />
@@ -31,6 +35,18 @@
     <Compile Remove="Data\Migrations\20180509130722_Add_Area_Entity.Designer.cs" />
     <Compile Remove="Data\Migrations\20180509130839_Add_Area_Entity.cs" />
     <Compile Remove="Data\Migrations\20180509130839_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180509131011_Add_Area_Entity.cs" />
+    <Compile Remove="Data\Migrations\20180509131011_Add_Area_Entity.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180519085431_Sorting.cs" />
+    <Compile Remove="Data\Migrations\20180519085431_Sorting.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180523142728_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180523142728_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180523145454_CompClass_Fix.cs" />
+    <Compile Remove="Data\Migrations\20180523145454_CompClass_Fix.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180523151058_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180523151058_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180523151442_CompClass.cs" />
+    <Compile Remove="Data\Migrations\20180523151442_CompClass.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

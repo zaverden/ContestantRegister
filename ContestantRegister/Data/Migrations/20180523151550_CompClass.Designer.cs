@@ -13,8 +13,8 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180519085431_Sorting")]
-    partial class Sorting
+    [Migration("20180523151550_CompClass")]
+    partial class CompClass
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -223,8 +223,6 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<int>("AreaId");
 
-                    b.Property<string>("CompClassesData");
-
                     b.Property<int>("ContestId");
 
                     b.HasKey("Id");
@@ -242,6 +240,9 @@ namespace ContestantRegister.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("Class");
+
+                    b.Property<string>("ComputerName")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("ContestAreaId");
 
@@ -590,8 +591,9 @@ namespace ContestantRegister.Data.Migrations
             modelBuilder.Entity("ContestantRegister.Models.ContestRegistration", b =>
                 {
                     b.HasOne("ContestantRegister.Models.ContestArea", "ContestArea")
-                        .WithMany()
-                        .HasForeignKey("ContestAreaId");
+                        .WithMany("ContestRegistrations")
+                        .HasForeignKey("ContestAreaId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ContestantRegister.Models.Contest", "Contest")
                         .WithMany("ContestRegistrations")

@@ -24,6 +24,8 @@
         public string Region { get; set; }
         public string City { get; set; }
         public string StudyPlace { get; set; }
+
+        //Для этого поля есть хак для маппинга 
         public string Area { get; set; }
 
         //Эти поля напрямую маппятся на регистрацию и их можно импортировать

@@ -25,6 +25,9 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [Display(Name = "№")]
         [Range(1, int.MaxValue)]
         public int Number { get; set; }
+
+        [Display(Name = "Статус регистрации")]
+        public ContestRegistrationStatus Status { get; set; }
     }
 
     public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel

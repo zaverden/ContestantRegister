@@ -7,6 +7,8 @@ using ContestantRegister.ViewModels.HomeViewModels;
 using ContestantRegister.ViewModels.ListItemViewModels;
 using ContestantRegister.ViewModels.ManageViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
+using ContestantRegister.ViewModels.Home;
+using ContestantRegister.ViewModels.ListItem;
 
 namespace ContestantRegister.Utils
 {
@@ -37,6 +39,9 @@ namespace ContestantRegister.Utils
             
             CreateMap<IndexViewModel, ApplicationUser>();
             CreateMap<ApplicationUser, IndexViewModel>();
+
+            CreateMap<Contest, SortingViewModel>();
+            CreateMap<CompClass, CompClassListItemViewModel>();
 
             CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))

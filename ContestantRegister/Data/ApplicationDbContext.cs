@@ -99,6 +99,10 @@ namespace ContestantRegister.Data
                 entity.HasOne(e => e.Manager)
                     .WithMany(p => p.ContestRegistrationsManager)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.ContestArea)
+                    .WithMany(ca => ca.ContestRegistrations)
+                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             builder.Entity<TeamContestRegistration>(entity =>

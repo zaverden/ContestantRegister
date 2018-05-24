@@ -12,6 +12,7 @@ using ContestantRegister.Services;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.Home;
 using ContestantRegister.ViewModels.HomeViewModels;
+using ContestantRegister.ViewModels.ListItem;
 using ContestantRegister.ViewModels.ListItemViewModels;
 using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +58,7 @@ namespace ContestantRegister.Controllers
             IOptions<MailOptions> options,
             IContestRegistrationService contestRegistrationService,
             IUserService userService)
-        { 
+        {
             _logger = logger;
             _context = context;
             _mapper = mapper;
@@ -91,7 +92,6 @@ namespace ContestantRegister.Controllers
                 .Include("ContestRegistrations.Manager")
                 .Include("ContestRegistrations.StudyPlace")
                 .Include("ContestRegistrations.StudyPlace.City")
-                .Include("ContestRegistrations.ContestArea")
                 .Include("ContestRegistrations.ContestArea.Area")
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
@@ -131,13 +131,13 @@ namespace ContestantRegister.Controllers
             if (!string.IsNullOrEmpty(filter.ManagerName))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.Manager != null && 
+                    .Where(r => r.Manager != null &&
                                 r.Manager.Surname.ContainsIgnoreCase(filter.ManagerName));
             }
             if (!string.IsNullOrEmpty(filter.Area))
             {
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.ContestArea != null && 
+                    .Where(r => r.ContestArea.Area != null &&
                                 r.ContestArea.Area.Name.ContainsIgnoreCase(filter.Area));
             }
             if (!string.IsNullOrEmpty(filter.City))
@@ -346,12 +346,12 @@ namespace ContestantRegister.Controllers
 
             _context.ContestRegistrations.Add(registration);
             await _context.SaveChangesAsync();
-            
+
             //TODO Если регистрирует админ, то email не отправляется?
             if (contest.SendRegistrationEmail)
             {
                 var participant = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
-                
+
                 await _emailSender.SendEmailAsync(participant.Email,
                     "Вы зарегистрированы на соревнование по программированию ИКИТ СФУ",
                     $"Вы успешно зарегистрированы на соревнование: {contest.Name}<br>" +
@@ -364,10 +364,10 @@ namespace ContestantRegister.Controllers
             if (contest.ShowRegistrationInfo)
             {
                 //TODO стоит ли показывать эту страницу для тренера?
-                return RedirectToAction(nameof(Registration), new {registration.Id});
+                return RedirectToAction(nameof(Registration), new { registration.Id });
             }
 
-            return RedirectToAction(nameof(Details), new {id});
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         [Authorize(Roles = Roles.Admin)]
@@ -381,13 +381,12 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant1)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
-                .Include(r => r.ContestArea)
                 .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id)
                 .OrderBy(r => r.Number);
 
             var package = new ExcelPackage();
-            
+
             var worksheet = package.Workbook.Worksheets.Add("Participants");
             worksheet.Cells["A1"].Value = "Email";
             worksheet.Cells["B1"].Value = "Surname";
@@ -446,12 +445,7 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 18].Value = registration.YaContestPassword;
                 worksheet.Cells[row, 19].Value = registration.ContestArea?.Area.Name;
                 worksheet.Cells[row, 20].Value = registration.Number;
-                //TODO сделать экспор рабочего места
-                //if (registration.ContestRegistrationComputer != null)
-                //{
-                //    worksheet.Cells[row, 21].Value =
-                //        $"{registration.ContestRegistrationComputer.ContestAreaCompClass.CompClass.Name} - {registration.ContestRegistrationComputer.Computer.Number}";
-                //}
+                worksheet.Cells[row, 21].Value = registration.ComputerName;
                 worksheet.Cells[row, 22].Value = registration.ProgrammingLanguage;
                 worksheet.Cells[row, 23].Value = registration.Participant1.DateOfBirth;
                 worksheet.Cells[row, 24].Value = registration.Class;
@@ -500,7 +494,10 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportParticipants(int id, ImportParticipantsViewModel viewModel)
         {
-            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            var contest = await _context.Contests
+                .Include(c => c.ContestAreas)
+                .Include("ContestAreas.Area")
+                .SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)
             {
                 return NotFound();
@@ -515,7 +512,7 @@ namespace ContestantRegister.Controllers
             }
             csv.Read();
             csv.ReadHeader();
-            while(csv.Read())
+            while (csv.Read())
             {
                 var dto = csv.GetRecord<IndividualRegistrationDTO>();
                 if (string.IsNullOrEmpty(dto.YaContestLogin)) continue;
@@ -538,11 +535,20 @@ namespace ContestantRegister.Controllers
                         registration.Status = status;
                     }
                 }
+
+                if (!string.IsNullOrEmpty(dto.Area))
+                {
+                    var contestArea = contest.ContestAreas.FirstOrDefault(ca => ca.Area.Name == dto.Area);
+                    if (contestArea != null)
+                    {
+                        registration.ContestAreaId = contestArea.Id;
+                    }
+                }
             }
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new {id});
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         public async Task<IActionResult> ImportFromContest(int id)
@@ -874,7 +880,7 @@ namespace ContestantRegister.Controllers
             return RedirectToAction(nameof(Details), new { id = dbRedistration.ContestId });
         }
 
-        [Authorize (Roles = Roles.Admin)]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteRegistration(int id)
         {
             //TODO На UI переспросить "Вы точно уверены, что хотите удалить регистрацию?"
@@ -921,7 +927,7 @@ namespace ContestantRegister.Controllers
         }
 
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> Sorting(int id, int? selectedAreaId)
+        public async Task<IActionResult> Sorting(int id)
         {
             var contest = await _context.Contests
                 .Include(c => c.ContestAreas)
@@ -933,84 +939,144 @@ namespace ContestantRegister.Controllers
 
             if (contest == null) return NotFound();
 
-            var areaId = selectedAreaId ?? contest.ContestAreas.First().AreaId;
-            
-            var classes = GetClassesForArea(areaId, contest.ContestAreas.Single(c => c.AreaId == areaId));
+            var viewModel = new SortingViewModel();
 
-            var viewModel = new SortingViewModel
-            {
-                Contest = contest,
-                SelectedAreaId = selectedAreaId,
-                ContestAreaCompClasses = classes,
-                SelectedCompClassIds = classes.Select(c => c.CompClass.Id).ToArray()
-            };
+            _mapper.Map(contest, viewModel);
 
-            ViewData["Areas"] = new SelectList(contest.ContestAreas.Select(ca => ca.Area), "Id", "Name", selectedAreaId);
-            ViewData["CompClasses"] = new MultiSelectList(_context.CompClasses.Where(c => c.AreaId == areaId), "Id", "Name", viewModel.SelectedCompClassIds);
+            await FillSortingViewData(contest);
 
             return View(viewModel);
+        }
+
+        private async Task FillSortingViewData(Contest contest, int selectedAreaId = 0, int[] selectedCompClassIds = null)
+        {
+            ViewData["Areas"] = new SelectList(contest.ContestAreas.Select(ca => ca.Area).OrderBy(a => a.Name).ToList(), "Id", "Name", selectedAreaId);
+            var classes = await GetListItemsAsync<CompClass, CompClassListItemViewModel>(_context, _mapper);
+            classes = classes.OrderBy(c => c.Name).ToList();
+            if (selectedCompClassIds != null && selectedCompClassIds.Any())
+            {
+                foreach(var compClass in classes)
+                {
+                    if (selectedCompClassIds.Contains(compClass.Id))
+                        compClass.Selected = true;
+                }
+            }
+            ViewData["CompClasses"] = classes;
         }
 
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Sorting(int id, SortingViewModel viewModel)
         {
-            var contest = _context.Contests.Find(id);
+            var contest = await _context.Contests
+                .Include("ContestAreas.Area")
+                .Include("ContestRegistrations.ContestArea")
+                .SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null) return NotFound();
 
-            var ca = await _context.ContestAreas.SingleAsync(c => c.AreaId == viewModel.SelectedAreaId &&
-                                                                  c.ContestId == id);
-            foreach (var compClass in viewModel.ContestAreaCompClasses)
+            _mapper.Map(contest, viewModel);
+
+            if (viewModel.SelectedCompClassIds == null || !viewModel.SelectedCompClassIds.Any())
             {
-                if (compClass.Computers.Count < compClass.UsedComputersCount)
+                ModelState.AddModelError(nameof(viewModel.SelectedCompClassIds), "Не выбраны комп. классы");
+            }
+            var classes = _context.CompClasses
+                .Where(c => viewModel.SelectedCompClassIds.Contains(c.Id))
+                .ToList();
+            var registrations = contest.ContestRegistrations
+                .Where(r => r.ContestArea.AreaId == viewModel.SelectedAreaId &&
+                            r.Status == ContestRegistrationStatus.Completed)
+                .ToList();
+            var sum = classes.Sum(c => c.CompNumber);
+            if (registrations.Count > sum)
+            {
+                ModelState.AddModelError(nameof(viewModel.SelectedCompClassIds), $"Недостаточно машин. Выбрано {sum}, необходимо {registrations.Count}");
+            }
+            if (!ModelState.IsValid)
+            {
+                await FillSortingViewData(contest, viewModel.SelectedAreaId, viewModel.SelectedCompClassIds);
+
+                return View(viewModel);
+            }
+
+            var computers = new List<Computer>();
+            foreach (var compClass in classes)
+            {
+                for (int i = 1; i <= compClass.CompNumber; i++)
                 {
-                    for (int i = compClass.Computers.Count + 1; i <= compClass.UsedComputersCount; i++)
-                    {
-                        compClass.Computers.Add(new Computer{ Number = i});
-                    }
-                }
-                if (compClass.Computers.Count > compClass.UsedComputersCount)
-                {
-                    for (int i = compClass.Computers.Count + 1; i <= compClass.UsedComputersCount; i++)
-                    {
-                        compClass.Computers.RemoveRange(compClass.UsedComputersCount, compClass.Computers.Count - compClass.UsedComputersCount);
-                    }
+                    computers.Add(new Computer { Number = i, CompClass = compClass });
                 }
             }
-            ca.CompClassesData = JsonConvert.SerializeObject(viewModel.ContestAreaCompClasses);
+            computers = computers.OrderBy(c => c.Number).ToList();
+            computers.RemoveRange(registrations.Count, computers.Count - registrations.Count);
+
+            while (!Ok(registrations, computers))
+            {
+                computers.Shuffle();
+            }
+
+            for (int i = 0; i < registrations.Count; i++)
+            {
+                registrations[i].ComputerName = $"{computers[i].CompClass.Name}-{computers[i].Number}";
+            }
+
+            viewModel.SortingResults = contest.SortingResults = GetSortingResults(computers);
+
             await _context.SaveChangesAsync();
 
-            return View(viewModel);
+            await FillSortingViewData(contest, viewModel.SelectedAreaId, viewModel.SelectedCompClassIds);
+
+            return View(viewModel); 
         }
 
-        private List<ContestAreaCompClass> GetClassesForArea(int value, ContestArea contestArea)
+        private string GetSortingResults(List<Computer> computers)
         {
-            List<ContestAreaCompClass> result;
+            var classes = computers
+                .GroupBy(c => c.CompClass.Name)
+                .OrderBy(g => g.Key);                
 
-            if (contestArea.CompClassesData == null)
+            var sb = new StringBuilder();
+            sb.AppendLine(computers.First().CompClass.Area.Name);
+            foreach(var compClass in classes)
             {
-                result = new List<ContestAreaCompClass>();
+                sb.AppendLine($"{compClass.Key} - {compClass.Count()}");
             }
-            else
+            return sb.ToString();
+        }
+
+        private bool Ok(List<ContestRegistration> registrations, List<Computer> computers)
+        {
+            var pairs = new List<Tuple<ContestRegistration, Computer>>();
+            for (int i = 0; i < registrations.Count; i++)
             {
-                result = JsonConvert.DeserializeObject<List<ContestAreaCompClass>>(contestArea.CompClassesData);
+                pairs.Add(Tuple.Create(registrations[i], computers[i]));
             }
 
-            foreach (var contestAreaCompClass in result)
+            foreach (var studyPlaceGroup in pairs.GroupBy(p => p.Item1.StudyPlaceId))
             {
-                contestAreaCompClass.CompClass = _context.CompClasses.Find(contestAreaCompClass.CompClassId);
-
-                foreach (var computer in contestAreaCompClass.Computers)
+                var classes = studyPlaceGroup.Select(el => el.Item2).GroupBy(e => e.CompClass);
+                foreach (var classGroup in classes)
                 {
-                    if (computer.ContestRegistrationId.HasValue)
+                    var numbers = classGroup.OrderBy(el => el.Number).Select(el => el.Number).ToList();
+                    for (int i = 1; i < numbers.Count - 1; i++)
                     {
-                        computer.ContestRegistration =
-                            _context.ContestRegistrations.Find(computer.ContestRegistrationId.Value);
+                        if (numbers[i] + 1 == numbers[i + 1])
+                        {
+                            return false;
+                        }
                     }
                 }
             }
 
-            return result;
+            return true;
+        }
+
+
+        class Computer
+        {
+            public CompClass CompClass { get; set; }
+
+            public int Number { get; set; }
         }
 
         private async Task<IActionResult> ChangeRegistrationStatus(int registrationId, ContestRegistrationStatus status, Func<ContestRegistration, Task> onConfirmParticipation = null)

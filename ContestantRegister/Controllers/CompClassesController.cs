@@ -25,7 +25,7 @@ namespace ContestantRegister.Controllers
         // GET: CompClasses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CompClasses.Include(c => c.Area).ToListAsync());
+            return View(await _context.CompClasses.Include(c => c.Area).OrderBy(c => c.Name).ToListAsync());
         }
 
         private void FillViewData(CompClass currentItem = null)

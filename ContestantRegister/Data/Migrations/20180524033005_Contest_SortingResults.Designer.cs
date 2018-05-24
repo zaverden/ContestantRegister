@@ -13,8 +13,8 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180501145126_Add_CompClass")]
-    partial class Add_CompClass
+    [Migration("20180524033005_Contest_SortingResults")]
+    partial class Contest_SortingResults
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -109,6 +109,20 @@ namespace ContestantRegister.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("ContestantRegister.Models.Area", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Areas");
+                });
+
             modelBuilder.Entity("ContestantRegister.Models.City", b =>
                 {
                     b.Property<int>("Id")
@@ -132,6 +146,8 @@ namespace ContestantRegister.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("AreaId");
+
                     b.Property<string>("Comment")
                         .HasMaxLength(500);
 
@@ -143,6 +159,8 @@ namespace ContestantRegister.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AreaId");
+
                     b.ToTable("CompClasses");
                 });
 
@@ -150,9 +168,6 @@ namespace ContestantRegister.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Areas")
-                        .HasMaxLength(300);
 
                     b.Property<int>("ContestParticipationType");
 
@@ -187,6 +202,9 @@ namespace ContestantRegister.Data.Migrations
 
                     b.Property<bool>("ShowRegistrationInfo");
 
+                    b.Property<string>("SortingResults")
+                        .HasMaxLength(1000);
+
                     b.Property<DateTime>("Start");
 
                     b.Property<int>("UsedAccountsCount");
@@ -201,42 +219,22 @@ namespace ContestantRegister.Data.Migrations
                     b.ToTable("Contests");
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.ContestCompClass", b =>
+            modelBuilder.Entity("ContestantRegister.Models.ContestArea", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("CompClassId");
+                    b.Property<int>("AreaId");
 
                     b.Property<int>("ContestId");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ContestId", "CompClassId");
+                    b.HasAlternateKey("ContestId", "AreaId");
 
-                    b.HasIndex("CompClassId");
+                    b.HasIndex("AreaId");
 
-                    b.ToTable("ContestCompClasses");
-                });
-
-            modelBuilder.Entity("ContestantRegister.Models.ContestCompClassParticipant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("CompNumber");
-
-                    b.Property<int>("ContestCompClassId");
-
-                    b.Property<string>("ParticipantId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContestCompClassId");
-
-                    b.HasIndex("ParticipantId");
-
-                    b.ToTable("ContestCompClassParticipants");
+                    b.ToTable("ContestAreas");
                 });
 
             modelBuilder.Entity("ContestantRegister.Models.ContestRegistration", b =>
@@ -244,13 +242,12 @@ namespace ContestantRegister.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Area")
-                        .HasMaxLength(50);
-
                     b.Property<int?>("Class");
 
                     b.Property<string>("ComputerName")
                         .HasMaxLength(50);
+
+                    b.Property<int?>("ContestAreaId");
 
                     b.Property<int>("ContestId");
 
@@ -289,6 +286,8 @@ namespace ContestantRegister.Data.Migrations
                         .HasMaxLength(50);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContestAreaId");
 
                     b.HasIndex("ContestId");
 
@@ -572,33 +571,33 @@ namespace ContestantRegister.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.ContestCompClass", b =>
+            modelBuilder.Entity("ContestantRegister.Models.CompClass", b =>
                 {
-                    b.HasOne("ContestantRegister.Models.CompClass", "CompClass")
-                        .WithMany("ContestCompClasses")
-                        .HasForeignKey("CompClassId")
+                    b.HasOne("ContestantRegister.Models.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+                });
+
+            modelBuilder.Entity("ContestantRegister.Models.ContestArea", b =>
+                {
+                    b.HasOne("ContestantRegister.Models.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ContestantRegister.Models.Contest", "Contest")
-                        .WithMany("ContestCompClasses")
+                        .WithMany("ContestAreas")
                         .HasForeignKey("ContestId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("ContestantRegister.Models.ContestCompClassParticipant", b =>
-                {
-                    b.HasOne("ContestantRegister.Models.ContestCompClass", "ContestCompClass")
-                        .WithMany()
-                        .HasForeignKey("ContestCompClassId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ContestantRegister.Models.ApplicationUser", "Participant")
-                        .WithMany()
-                        .HasForeignKey("ParticipantId");
-                });
-
             modelBuilder.Entity("ContestantRegister.Models.ContestRegistration", b =>
                 {
+                    b.HasOne("ContestantRegister.Models.ContestArea", "ContestArea")
+                        .WithMany("ContestRegistrations")
+                        .HasForeignKey("ContestAreaId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("ContestantRegister.Models.Contest", "Contest")
                         .WithMany("ContestRegistrations")
                         .HasForeignKey("ContestId")

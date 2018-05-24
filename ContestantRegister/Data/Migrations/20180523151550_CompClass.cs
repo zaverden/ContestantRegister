@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ContestantRegister.Data.Migrations
 {
-    public partial class Add_Area_Entity : Migration
+    public partial class CompClass : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,18 +17,9 @@ namespace ContestantRegister.Data.Migrations
                 name: "Area",
                 table: "ContestRegistrations");
 
-            migrationBuilder.DropColumn(
-                name: "Area",
-                table: "CompClasses");
-
             migrationBuilder.AddColumn<int>(
                 name: "ContestAreaId",
                 table: "ContestRegistrations",
-                nullable: true);
-
-            migrationBuilder.AddColumn<int>(
-                name: "AreaId",
-                table: "CompClasses",
                 nullable: true);
 
             migrationBuilder.CreateTable(
@@ -42,6 +33,28 @@ namespace ContestantRegister.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Areas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompClasses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    AreaId = table.Column<int>(nullable: true),
+                    Comment = table.Column<string>(maxLength: 500, nullable: true),
+                    CompNumber = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompClasses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompClasses_Areas_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Areas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,31 +100,22 @@ namespace ContestantRegister.Data.Migrations
                 column: "AreaId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_CompClasses_Areas_AreaId",
-                table: "CompClasses",
-                column: "AreaId",
-                principalTable: "Areas",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_ContestRegistrations_ContestAreas_ContestAreaId",
                 table: "ContestRegistrations",
                 column: "ContestAreaId",
                 principalTable: "ContestAreas",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.SetNull);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_CompClasses_Areas_AreaId",
-                table: "CompClasses");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_ContestRegistrations_ContestAreas_ContestAreaId",
                 table: "ContestRegistrations");
+
+            migrationBuilder.DropTable(
+                name: "CompClasses");
 
             migrationBuilder.DropTable(
                 name: "ContestAreas");
@@ -123,17 +127,9 @@ namespace ContestantRegister.Data.Migrations
                 name: "IX_ContestRegistrations_ContestAreaId",
                 table: "ContestRegistrations");
 
-            migrationBuilder.DropIndex(
-                name: "IX_CompClasses_AreaId",
-                table: "CompClasses");
-
             migrationBuilder.DropColumn(
                 name: "ContestAreaId",
                 table: "ContestRegistrations");
-
-            migrationBuilder.DropColumn(
-                name: "AreaId",
-                table: "CompClasses");
 
             migrationBuilder.AddColumn<string>(
                 name: "Areas",
@@ -146,13 +142,6 @@ namespace ContestantRegister.Data.Migrations
                 table: "ContestRegistrations",
                 maxLength: 50,
                 nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Area",
-                table: "CompClasses",
-                maxLength: 50,
-                nullable: false,
-                defaultValue: "");
         }
     }
 }
