@@ -13,9 +13,10 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180527040452_ContestArea_SortingResults")]
+    partial class ContestArea_SortingResults
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +224,6 @@ namespace ContestantRegister.Data.Migrations
                     b.Property<int>("AreaId");
 
                     b.Property<int>("ContestId");
-
-                    b.Property<string>("SortingCompClassIds")
-                        .HasMaxLength(200);
 
                     b.Property<string>("SortingResults")
                         .HasMaxLength(1000);

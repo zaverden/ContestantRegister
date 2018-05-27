@@ -943,25 +943,20 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(contest, viewModel);
 
-            await FillSortingViewData(contest);
+            var compClassIds = contest.ContestAreas
+                .Where(ca => !string.IsNullOrEmpty(ca.SortingCompClassIds))
+                .SelectMany(c => c.SortingCompClassIds.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                .Select(int.Parse)
+                .ToArray();
+            await FillSortingViewData(contest, 0, compClassIds);
 
             return View(viewModel);
         }
 
-        private async Task FillSortingViewData(Contest contest, int selectedAreaId = 0, int[] selectedCompClassIds = null)
+        private async Task FillSortingViewData(Contest contest, int selectedContestAreaId = 0, int[] selectedCompClassIds = null)
         {
-            ViewData["Areas"] = new SelectList(contest.ContestAreas.Select(ca => ca.Area).OrderBy(a => a.Name).ToList(), "Id", "Name", selectedAreaId);
-            var classes = await GetListItemsAsync<CompClass, CompClassListItemViewModel>(_context, _mapper);
-            classes = classes.OrderBy(c => c.Name).ToList();
-            if (selectedCompClassIds != null && selectedCompClassIds.Any())
-            {
-                foreach(var compClass in classes)
-                {
-                    if (selectedCompClassIds.Contains(compClass.Id))
-                        compClass.Selected = true;
-                }
-            }
-            ViewData["CompClasses"] = classes;
+            ViewData["Areas"] = GetListItems<ContestArea, ContestAreaListItemViewModel>(contest.ContestAreas.OrderBy(ca => ca.Area.Name), _mapper, selectedContestAreaId);
+            ViewData["CompClasses"] = GetListItems<CompClass, CompClassListItemViewModel>(_context.CompClasses.OrderBy(c => c.Name), _mapper, selectedCompClassIds);
         }
 
         [HttpPost]
@@ -984,7 +979,7 @@ namespace ContestantRegister.Controllers
                 .Where(c => viewModel.SelectedCompClassIds.Contains(c.Id))
                 .ToList();
             var registrations = contest.ContestRegistrations
-                .Where(r => r.ContestArea.AreaId == viewModel.SelectedAreaId &&
+                .Where(r => r.ContestArea.Id == viewModel.SelectedContestAreaId &&
                             r.Status == ContestRegistrationStatus.Completed)
                 .ToList();
             var sum = classes.Sum(c => c.CompNumber);
@@ -994,7 +989,7 @@ namespace ContestantRegister.Controllers
             }
             if (!ModelState.IsValid)
             {
-                await FillSortingViewData(contest, viewModel.SelectedAreaId, viewModel.SelectedCompClassIds);
+                await FillSortingViewData(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
 
                 return View(viewModel);
             }
@@ -1020,11 +1015,13 @@ namespace ContestantRegister.Controllers
                 registrations[i].ComputerName = $"{computers[i].CompClass.Name}-{computers[i].Number}";
             }
 
-            viewModel.SortingResults = contest.SortingResults = GetSortingResults(computers);
+            var contestArea = contest.ContestAreas.Single(ca => ca.Id == viewModel.SelectedContestAreaId);
+            contestArea.SortingResults = GetSortingResults(computers);
+            contestArea.SortingCompClassIds = string.Join(',', viewModel.SelectedCompClassIds);
 
             await _context.SaveChangesAsync();
 
-            await FillSortingViewData(contest, viewModel.SelectedAreaId, viewModel.SelectedCompClassIds);
+            await FillSortingViewData(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
 
             return View(viewModel); 
         }
@@ -1036,10 +1033,9 @@ namespace ContestantRegister.Controllers
                 .OrderBy(g => g.Key);                
 
             var sb = new StringBuilder();
-            sb.AppendLine(computers.First().CompClass.Area.Name);
             foreach(var compClass in classes)
             {
-                sb.AppendLine($"{compClass.Key} - {compClass.Count()}");
+                sb.AppendLine($"{compClass.Key}: {compClass.Count()} из {compClass.First().CompClass.CompNumber}");
             }
             return sb.ToString();
         }

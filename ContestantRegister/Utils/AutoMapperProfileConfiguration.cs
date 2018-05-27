@@ -41,7 +41,14 @@ namespace ContestantRegister.Utils
             CreateMap<ApplicationUser, IndexViewModel>();
 
             CreateMap<Contest, SortingViewModel>();
-            CreateMap<CompClass, CompClassListItemViewModel>();
+
+            CreateMap<CompClass, CompClassListItemViewModel>()
+                .ForMember(vm => vm.Text, opt => opt.MapFrom(ca => ca.Name))
+                .ForMember(vm => vm.Value, opt => opt.MapFrom(ca => ca.Id));
+
+            CreateMap<ContestArea, ContestAreaListItemViewModel>()
+                .ForMember(vm => vm.Text, opt => opt.MapFrom(ca => ca.Area.Name))
+                .ForMember(vm => vm.Value, opt => opt.MapFrom(ca => ca.Id));
 
             CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))

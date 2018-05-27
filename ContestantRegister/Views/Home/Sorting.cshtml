@@ -13,7 +13,7 @@
 
     <div class="form-group">
         <label class="control-label">Площадка</label>
-        <select asp-for="SelectedAreaId" onchange="filterCompClasses()" asp-items="ViewBag.Areas" class="form-control"></select>
+        <select asp-for="SelectedContestAreaId" onchange="filterCompClasses()" class="form-control"></select>
     </div>
 
     <div class="form-group">
@@ -24,7 +24,7 @@
 
     <div class="form-group">
         <label class="control-label">Результаты</label>
-        <p>@Html.DisplayFor(m => m.SortingResults)</p>        
+        <textarea id="SortingResults" readonly="readonly" rows="10" class="form-control"></textarea>
     </div>
 
     <p>Жеребьевка очистит все рабочие места для регистраций выбранной площадки!</p>
@@ -42,26 +42,41 @@
     <script type="text/javascript">
         const serverData = {};
         serverData.compClasses = @Html.RawJson(ViewData["CompClasses"]);
-
+        serverData.contestAreas = @Html.RawJson(ViewData["Areas"]);
         function filterCompClasses() {
             
             let compClasses = serverData.compClasses;
-            const areaId = parseInt($("#SelectedAreaId").val());
-
+            const contestAreaId = parseInt($("#SelectedContestAreaId").val());
+            const selectedContestArea = serverData.contestAreas.find(ca => ca.Value === contestAreaId);
+            const areaId = selectedContestArea.AreaId;
+            
             const compClassesSelect = $("#SelectedCompClassIds");
             compClassesSelect.empty();
             compClassesSelect.select2({
                 data: compClasses
                     .filter(c => c.AreaId === areaId)
                     .map(c => ({
-                        id: c.Id,
-                        text: c.Name,
-                        selected: c.Selected,
+                        id: c.Value,
+                        text: c.Text,
+                        selected: c.Selected
                     }))
             });
+
+            $("#SortingResults").text(selectedContestArea.SortingResults);
         }
 
         $(document).ready(function () {
+
+            const contestAreaSelect = $("#SelectedContestAreaId");
+            contestAreaSelect.select2({
+                data: serverData.contestAreas
+                    .map(c => ({
+                        id: c.Value,
+                        text: c.Text,
+                        selected: c.Selected
+                    }))
+            });
+
             filterCompClasses();
         });
 

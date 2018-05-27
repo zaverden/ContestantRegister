@@ -6,9 +6,7 @@
 
         public string Name { get; set; }
 
-        public string SortingResults { get; set; }
-
-        public int SelectedAreaId { get; set; }
+        public int SelectedContestAreaId { get; set; }
 
         public int[] SelectedCompClassIds { get; set; }        
     }

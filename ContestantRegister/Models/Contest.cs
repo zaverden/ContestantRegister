@@ -81,11 +81,7 @@ namespace ContestantRegister.Models
         [Display(Name = "Зарегистрировано")]
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
-
-        [Display(Name = "Комп. классы")]
-        [MaxLength(1000)]
-        public string SortingResults { get; set; }
-
+        
         //TODO можно вынести это во ViewModel
         [NotMapped]
         [Required]
