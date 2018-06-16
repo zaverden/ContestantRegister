@@ -45,7 +45,14 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    @if (item.ContestType == ContestType.Individual)
+                    {
+                        <a asp-controller="IndividualContest" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="TeamContest" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RegistrationEnd)

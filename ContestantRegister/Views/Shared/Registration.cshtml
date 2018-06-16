@@ -1,4 +1,4 @@
-﻿@model IndividualContestRegistration
+﻿@model ContestRegistration
 
 @{
     ViewData["Title"] = "Вы зарегистрированы на соревнование";
@@ -15,6 +15,14 @@
     Ссылка для входа: @Html.DisplayFor(model => model.Contest.YaContestLink)<br>
 </p>
     
-<form asp-controller="Home" asp-action="Details" asp-route-id="@Model.ContestId" method="get">
+@*<form asp-controller="Home" asp-action="Details" asp-route-id="@Model.ContestId" method="get">
     <input type="submit" value="OK" class="btn btn-default" />
-</form>
+</form>*@
+@if (Model.Contest.ContestType == ContestType.Collegiate)
+{
+    <a asp-controller="TeamContest" asp-action="Details" asp-route-id="@Model.ContestId">Назад к соревнованию</a>
+}
+else
+{
+    <a asp-controller="IndividualContest" asp-action="Details" asp-route-id="@Model.ContestId">Назад к соревнованию</a>
+}

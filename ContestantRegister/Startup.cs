@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
@@ -106,5 +108,6 @@ namespace ContestantRegister
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+        
     }
 }

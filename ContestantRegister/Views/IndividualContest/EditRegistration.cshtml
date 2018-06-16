@@ -1,4 +1,4 @@
-﻿@model ContestantRegister.ViewModels.HomeViewModels.EditIndividualContestRegistrationViewModel
+﻿@model ContestantRegister.ViewModels.Contest.Registration.EditIndividualContestRegistrationViewModel
 
 @{
     ViewData["Title"] = "Изменить регистрационные данные";
@@ -31,7 +31,7 @@
                 <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ContestRegistrationStatus>()"></select>
             </div>
 
-            @await Html.PartialAsync("_RegistrationPartial")
+            @await Html.PartialAsync("_IndividualRegistrationPartial")
 
             @if (User.IsInRole(Roles.Admin))
             {

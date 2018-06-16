@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels.HomeViewModels
+namespace ContestantRegister.ViewModels.Contest
 {
     public class ImportParticipantsViewModel
     {

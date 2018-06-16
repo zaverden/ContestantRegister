@@ -6,6 +6,12 @@ namespace ContestantRegister.Models
 {
     public abstract class ContestRegistration : DomainObject
     {
+        [Display(Name = "Участник")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        public string Participant1Id { get; set; }
+
+        public ApplicationUser Participant1 { get; set; }
+        
         [Display(Name = "Data регистрации")]
         public DateTime? RegistrationDateTime { get; set; }
 
@@ -14,13 +20,7 @@ namespace ContestantRegister.Models
 
         [Display(Name = "Статус регистрации")]
         public ContestRegistrationStatus Status { get; set; }
-
-        [Display(Name = "Участник")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        public string Participant1Id { get; set; }
-
-        public ApplicationUser Participant1 { get; set; }
-
+        
         [Display(Name = "Тренер")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string TrainerId { get; set; }
@@ -68,16 +68,6 @@ namespace ContestantRegister.Models
         [Display(Name = "№")]
         [Range(1, int.MaxValue)]
         public int Number { get; set; }
-
-        [Display(Name = "Курс")]
-        [Range(1, 6)]
-        public int? Course { get; set; }
-
-        [Display(Name = "Класс")]
-        [Range(1, 11)]
-        public int? Class { get; set; }
-
-        [Display(Name = "Категория")]
-        public StudentType? StudentType { get; set; }
+        
     }
 }

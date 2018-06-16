@@ -1,20 +1,6 @@
 ﻿namespace ContestantRegister.Utils
 {
-    public class IndividualRegistrationDTO : RegistrationDTO
-    {
-        //Эти поля маппятся из связанных объектов с регистрацией и их импортировать нельзя
-        public string Email { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Patronymic { get; set; }
-    }
-
-    public class TeamRegistrationDTO : RegistrationDTO
-    {
-        
-    }
-
-    public class RegistrationDTO
+    public class ContestRegistrationDTO
     {
         //Эти поля маппятся из связанных объектов с регистрацией и их импортировать нельзя
         public string TrainerEmail { get; set; }

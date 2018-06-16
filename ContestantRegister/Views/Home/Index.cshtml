@@ -1,5 +1,4 @@
-﻿@using ContestantRegister.Services
-@using ContestantRegister.Utils
+﻿@using ContestantRegister.Utils
 
 @inject UserManager<ApplicationUser> UserManager
 
@@ -46,7 +45,14 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    @if (item.ContestType == ContestType.Individual)
+                    {
+                        <a asp-controller="IndividualContest" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="TeamContest" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RegistrationEnd)
@@ -72,15 +78,31 @@
                 <td>
                     @if (User.Identity.IsAuthenticated && item.ParticipantType == ParticipantType.Student && UserManager.GetUser(User).UserType == UserType.Pupil)
                     {
-                        <label>Школьники не могут участвовать в студенческих соревнованиях</label>
+                        <label>Школьники не участвют в студенческих соревнованиях</label>
                     }
                     else if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
-                        <a asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
+                        if (item.ContestType == ContestType.Individual)
+                        {
+                            <a asp-controller="IndividualContest" asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="TeamContest" asp-action="Register" asp-route-id="@item.Id">Зарегистрироваться</a>
+                        }
+
                     }
                     else if (item.ContestStatus == ContestStatus.ConfirmParticipation)
                     {
-                        <a asp-action="Details" asp-route-id="@item.Id">Подтвердить участие</a>
+                        if (item.ContestType == ContestType.Individual)
+                        {
+                            <a asp-controller="IndividualContest" asp-action="Details" asp-route-id="@item.Id">Подтвердить участие</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="TeamContest" asp-action="Details" asp-route-id="@item.Id">Подтвердить участие</a>
+                        }
+
                     }
                 </td>
             </tr>

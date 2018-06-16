@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.ViewModels.Home
+﻿namespace ContestantRegister.ViewModels.Contest
 {
     public class SortingViewModel
     {

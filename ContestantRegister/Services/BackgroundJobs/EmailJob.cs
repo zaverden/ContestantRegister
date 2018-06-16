@@ -5,11 +5,8 @@ using System.Text;
 using ContestantRegister.Data;
 using ContestantRegister.Utils;
 using FluentScheduler;
-using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit;
-using MimeKit.Text;
 using Newtonsoft.Json.Linq;
 using Extensions = ContestantRegister.Utils.Extensions;
 

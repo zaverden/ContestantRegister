@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels.HomeViewModels
+namespace ContestantRegister.ViewModels.Contest
 {
-    public class SuggectStudyPlaceViewModel
+    public abstract class SuggectStudyPlaceViewModel
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]

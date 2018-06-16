@@ -88,7 +88,7 @@
 
 
         function checkUserType() {
-            const userType = parseInt($("#userType").val());
+            const userType = parseInt($("#UserType").val());
             const userTypeName = serverData.userTypeMapping.get(userType);
             $('.conditional').hide();
             $(`.conditional.${userTypeName}`).show();
@@ -97,7 +97,7 @@
 
         function filterStudyPlaces() {
             let studyPlaces = serverData.studyPlaces;
-            const userType = parseInt($("#userType").val());
+            const userType = parseInt($("#UserType").val());
             const cityId = parseInt($("#CityId").val());
 
             switch (userType) {

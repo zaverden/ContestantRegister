@@ -3,38 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
 
-namespace ContestantRegister.ViewModels.HomeViewModels
+namespace ContestantRegister.ViewModels.Contest.Registration
 {
-    public class EditIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
-    {
-        [Display(Name = "Логин в ЯКонтесте")]
-        public string YaContestLogin { get; set; }
-
-        [Display(Name = "Пароль в ЯКонтесте")]
-        public string YaContestPassword { get; set; }
-
-        [Display(Name = "Data регистрации")]
-        public DateTime? RegistrationDateTime { get; set; }
-
-        [Display(Name = "Кем зарегистрирован")]
-        public string RegistredByName { get; set; }
-
-        [Display(Name = "Участник")]
-        public string ParticipantName { get; set; }
-
-        [Display(Name = "№")]
-        [Range(1, int.MaxValue)]
-        public int Number { get; set; }
-
-        [Display(Name = "Статус регистрации")]
-        public ContestRegistrationStatus Status { get; set; }
-    }
-
-    public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
-    {
-    }
-
-    public abstract class IndividualContestRegistrationViewModel
+    public abstract class ContestRegistrationViewModel
     {
         [Display(Name = "Участник")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
@@ -70,24 +41,31 @@ namespace ContestantRegister.ViewModels.HomeViewModels
         [MaxLength(50)]
         public string ComputerName { get; set; }
 
-        [Display(Name = "Курс")]
-        [Range(1, 6)]
-        public int? Course { get; set; }
+        [Display(Name = "Логин в ЯКонтесте")]
+        public string YaContestLogin { get; set; }
 
-        [Display(Name = "Класс")]
-        [Range(1, 11)]
-        public int? Class { get; set; }
+        [Display(Name = "Пароль в ЯКонтесте")]
+        public string YaContestPassword { get; set; }
 
-        [Display(Name = "Категория")]
-        public StudentType? StudentType { get; set; }
+        [Display(Name = "Data регистрации")]
+        public DateTime? RegistrationDateTime { get; set; }
+
+        [Display(Name = "Кем зарегистрирован")]
+        public string RegistredByName { get; set; }
+
+        [Display(Name = "№")]
+        [Range(1, int.MaxValue)]
+        public int? Number { get; set; }
+
+        [Display(Name = "Статус регистрации")]
+        public ContestRegistrationStatus Status { get; set; }
 
         public ParticipantType ParticipantType { get; set; }
 
         public int RegistrationId { get; set; }
-        
+
         public string ContestName { get; set; }
 
         public int ContestId { get; set; }
-        
     }
 }

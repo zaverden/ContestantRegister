@@ -1,0 +1,102 @@
+﻿@model ContestantRegister.ViewModels.Contest.Registration.ContestRegistrationViewModel
+
+<div class="form-group">
+    <label asp-for="CityId" class="control-label"></label>
+    <select asp-for="CityId" class="form-control apply-select2" asp-items="ViewBag.CityId" onchange="filterStudyPlaces()"></select>
+    <span asp-validation-for="CityId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="StudyPlaceId" class="control-label"></label>
+    <select asp-for="StudyPlaceId" class="form-control"></select>
+    <span asp-validation-for="StudyPlaceId" class="text-danger"></span>
+    @if (Model.ParticipantType == ParticipantType.Pupil)
+    {
+        <p>Если вашей школы нет в списке учебных заведений, вы можете <a asp-action="SuggestSchool" asp-controller="Home">создать новую школу</a></p>
+    }
+    else
+    {
+        <p>Если вашего учебного заведения нет в списке, вы можете <a asp-action="SuggestInstitution" asp-controller="Home">создать его</a></p>
+    }
+</div>
+<div class="form-group">
+    <label asp-for="TrainerId" class="control-label"></label>
+    <select asp-for="TrainerId"
+            class="form-control apply-select2"
+            asp-items="ViewBag.TrainerId">
+        <option></option>
+    </select>
+    <span asp-validation-for="TrainerId" class="text-danger"></span>
+    <p>Если вашего тренера нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterTrainer">зарегистрировать его</a></p>
+</div>
+<div class="form-group">
+    <label asp-for="ManagerId" class="control-label"></label>
+    <select asp-for="ManagerId"
+            asp-items="ViewBag.ManagerId"
+            class="form-control apply-select2">
+        <option></option>
+    </select>
+    <span asp-validation-for="ManagerId" class="text-danger"></span>
+    <p>Если вашего руководителя нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterTrainer">зарегистрировать его</a></p>
+</div>
+@if (Model.IsProgrammingLanguageNeeded)
+{
+    <div class="form-group">
+        <label asp-for="ProgrammingLanguage" class="control-label"></label>
+        <input asp-for="ProgrammingLanguage" class="form-control" />
+        <span asp-validation-for="ProgrammingLanguage" class="text-danger"></span>
+    </div>
+}
+@if (Model.IsAreaRequired)
+{
+    <div class="form-group">
+        <label asp-for="ContestAreaId" class="control-label"></label>
+        <select asp-for="ContestAreaId" class="form-control" asp-items="ViewBag.Area"></select>
+        <span asp-validation-for="ContestAreaId" class="text-danger"></span>
+    </div>
+}
+
+@if (User.IsInRole(Roles.Admin))
+{
+    <div class="form-group">
+        <label asp-for="ComputerName" class="control-label"></label>
+        <input asp-for="ComputerName" class="form-control" />
+        <span asp-validation-for="ComputerName" class="text-danger"></span>
+    </div>
+}
+
+<input type="hidden" asp-for="ContestId" />
+<input type="hidden" asp-for="ParticipantType" />
+<input type="hidden" asp-for="IsAreaRequired" />
+<input type="hidden" asp-for="ContestAreaId" />
+<input type="hidden" asp-for="ComputerName" />
+<input type="hidden" asp-for="IsProgrammingLanguageNeeded" />
+<input type="hidden" asp-for="ProgrammingLanguage" />
+
+<partial-script>
+    <script type="text/javascript">
+        const serverData = {};
+        serverData.studyPlaces = @Html.RawJson(ViewData["StudyPlaces"]);
+
+        function filterStudyPlaces() {
+            const cityId = parseInt($('#CityId').val());
+            const studyPlaceIdSelect = $("#StudyPlaceId");
+            const studyPlaceId = parseInt(studyPlaceIdSelect.val() || '@Model.StudyPlaceId');
+            studyPlaceIdSelect.empty();
+            studyPlaceIdSelect.select2({
+                data: serverData.studyPlaces
+                    .filter(sp => sp.CityId === cityId)
+                    .map(sp => ({
+                        id: sp.Id,
+                        text: sp.ShortName,
+                        selected: sp.Id === studyPlaceId,
+                        studyPlace: sp
+                    }))
+            });
+        }
+
+        $(document).ready(function () {
+            filterStudyPlaces();
+        });
+
+    </script>
+</partial-script>

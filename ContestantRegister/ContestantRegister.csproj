@@ -47,6 +47,14 @@
     <Compile Remove="Data\Migrations\20180523151058_CompClass.Designer.cs" />
     <Compile Remove="Data\Migrations\20180523151442_CompClass.cs" />
     <Compile Remove="Data\Migrations\20180523151442_CompClass.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180601152241_ParticipantRegistration.cs" />
+    <Compile Remove="Data\Migrations\20180601152241_ParticipantRegistration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180601152546_ParticipantRegistration1.cs" />
+    <Compile Remove="Data\Migrations\20180601152546_ParticipantRegistration1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180604150211_test.cs" />
+    <Compile Remove="Data\Migrations\20180604150211_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20180604150257_test.cs" />
+    <Compile Remove="Data\Migrations\20180604150257_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +81,9 @@
   <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Views\TeamContest\Register.cshtml">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Compile Update="Properties\Resource.Designer.cs">
       <DesignTime>True</DesignTime>

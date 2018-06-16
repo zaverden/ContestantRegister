@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.ViewModels.HomeViewModels
+﻿namespace ContestantRegister.ViewModels.Contest
 {
     public class RegisterContestParticipantViewModel : UserViewModelBase
     {

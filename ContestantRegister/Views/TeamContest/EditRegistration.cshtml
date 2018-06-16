@@ -1,0 +1,116 @@
+﻿@model ContestantRegister.ViewModels.Contest.Registration.EditTeamContestRegistrationViewModel
+
+@{
+    ViewData["Title"] = "Изменить регистрационные данные";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<h4>@Html.DisplayFor(model => model.ContestName)</h4>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <h4></h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" disabled="@(User.IsInRole(Roles.Admin) ? null : "disabled")" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TeamName" class="control-label"></label>
+                <input asp-for="TeamName" class="form-control" />
+                <span asp-validation-for="TeamName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ContestRegistrationStatus>()"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Участник 1</label>
+                <select asp-for="Participant1Id" class="form-control apply-select2" asp-items="ViewBag.Participant1Id"><option></option></select>
+                <span asp-validation-for="Participant1Id" class="text-danger"></span>
+                @if (Model.ParticipantType == ParticipantType.Pupil)
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+                else
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Участник 2</label>
+                <select asp-for="Participant2Id" class="form-control apply-select2" asp-items="ViewBag.Participant2Id"><option></option></select>
+                <span asp-validation-for="Participant2Id" class="text-danger"></span>
+                @if (Model.ParticipantType == ParticipantType.Pupil)
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+                else
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Участник 3</label>
+                <select asp-for="Participant3Id" class="form-control apply-select2" asp-items="ViewBag.Participant3Id"><option></option></select>
+                <span asp-validation-for="Participant3Id" class="text-danger"></span>
+                @if (Model.ParticipantType == ParticipantType.Pupil)
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+                else
+                {
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                }
+            </div>
+
+            @await Html.PartialAsync("_TeamRegistrationPartial")
+
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <div class="form-group">
+                    <label asp-for="YaContestLogin" class="control-label"></label>
+                    <input asp-for="YaContestLogin" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="YaContestPassword" class="control-label"></label>
+                    <input asp-for="YaContestPassword" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RegistrationDateTime" class="control-label"></label>
+                    <input asp-for="RegistrationDateTime" class="form-control" disabled />
+                </div>
+                <div class="form-group">
+                    <label asp-for="RegistredByName" class="control-label"></label>
+                    <input asp-for="RegistredByName" class="form-control" disabled />
+                </div>
+            }
+
+            <input type="hidden" asp-for="YaContestLogin" />
+            <input type="hidden" asp-for="YaContestPassword" />
+            <input type="hidden" asp-for="RegistrationDateTime" />
+            <input type="hidden" asp-for="RegistredByName" />
+            <input type="hidden" asp-for="RegistrationId" />
+            <input type="hidden" asp-for="Participant1Id" />
+            <input type="hidden" asp-for="Participant2Id" />
+            <input type="hidden" asp-for="Participant3Id" />
+
+            <button type="submit" class="btn btn-default">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

@@ -1,4 +1,4 @@
-﻿@model ContestantRegister.ViewModels.HomeViewModels.CreateIndividualContestRegistrationViewModel
+﻿@model ContestantRegister.ViewModels.Contest.Registration.CreateIndividualContestRegistrationViewModel
 
 @{
     ViewData["Title"] = "Регистрация на соревнование";
@@ -16,20 +16,20 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             
             <div class="form-group">
-                <label asp-for="Participant1Id" class="control-label"></label>
+                <label class="control-label">Участник</label>
                 <select asp-for="Participant1Id" class="form-control apply-select2" asp-items="ViewBag.Participant1Id"><option></option></select>
                 <span asp-validation-for="Participant1Id" class="text-danger"></span>
                 @if (Model.ParticipantType == ParticipantType.Pupil)
                 {
-                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
                 }
                 else
                 {
-                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-action="RegisterPupil">зарегистрировать его</a></p>
+                    <p>Если участника нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterPupil">зарегистрировать его</a></p>
                 }
             </div>
 
-            @await Html.PartialAsync("_RegistrationPartial")
+            @await Html.PartialAsync("_IndividualRegistrationPartial")
 
             <button type="submit" class="btn btn-default">Зарегистрироваться</button>
         </form>
