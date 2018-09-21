@@ -106,7 +106,7 @@
     <h4>Мои регистрации</h4>
     <table class="table">
         <thead>
-            <tr>            
+            <tr>
                 <th>
                     Команда
                 </th>
@@ -125,6 +125,12 @@
                 <th>
                     Руководитель
                 </th>
+                @if (Model.Contest.IsOutOfCompetitionAllowed)
+                {
+                    <th>
+                        Вне конкурса
+                    </th>
+                }
                 <th>
                     Учебное заведение
                 </th>
@@ -160,6 +166,12 @@
                 <td>
                     <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
                 </td>
+                @if (Model.Contest.IsOutOfCompetitionAllowed)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsOutOfCompetition)
+                    </td>
+                }
                 <td>
                     @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
                 </td>
@@ -250,6 +262,12 @@
             <th>
                 Руководитель
             </th>
+            @if (Model.Contest.IsOutOfCompetitionAllowed)
+            {
+                <th>
+                    Вне конкурса
+                </th>
+            }
             <th>
                 Учебное заведение
             </th>
@@ -305,6 +323,12 @@
             <td>
                 <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
             </td>
+            @if (Model.Contest.IsOutOfCompetitionAllowed)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsOutOfCompetition)
+                </td>
+            }
             <td>
                 @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
             </td>

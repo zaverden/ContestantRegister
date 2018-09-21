@@ -26,5 +26,9 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         [Display(Name = "Неофициальное название команды")]
         [MaxLength(128)]
         public string TeamName { get; set; }
+
+        [Display(Name = "Официальное название команды")]
+        [MaxLength(128)]
+        public string OfficialTeamName { get; set; }
     }
 }

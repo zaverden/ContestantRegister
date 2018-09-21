@@ -172,7 +172,7 @@ namespace ContestantRegister.Controllers
             viewModel.ParticipantType = contest.ParticipantType;
             viewModel.IsAreaRequired = contest.IsAreaRequired;
             viewModel.IsProgrammingLanguageNeeded = contest.IsProgrammingLanguageNeeded;
-        
+            viewModel.IsOutOfCompetitionAllowed = contest.IsOutOfCompetitionAllowed;
 
             var user = await _userManager.GetUserAsync(User);
             user.StudyPlace = _context.StudyPlaces.Find(user.StudyPlaceId);
@@ -295,6 +295,7 @@ namespace ContestantRegister.Controllers
             viewModel.ContestName = registration.Contest.Name;
             viewModel.IsAreaRequired = registration.Contest.IsAreaRequired;
             viewModel.IsProgrammingLanguageNeeded = registration.Contest.IsProgrammingLanguageNeeded;
+            viewModel.IsOutOfCompetitionAllowed = registration.Contest.IsOutOfCompetitionAllowed;
             viewModel.RegistrationId = registration.Id;
             viewModel.ParticipantType = registration.Contest.ParticipantType;
             viewModel.CityId = registration.StudyPlace.CityId;

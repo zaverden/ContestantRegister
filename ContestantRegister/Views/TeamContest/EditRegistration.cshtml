@@ -22,9 +22,16 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="OfficialTeamName" class="control-label"></label>
+                <input asp-for="OfficialTeamName" class="form-control" disabled="@(User.IsInRole(Roles.Admin) ? null : "disabled")" />
+                <span asp-validation-for="OfficialTeamName" class="text-danger"></span>                
+            </div>
+
+            <div class="form-group">
                 <label asp-for="TeamName" class="control-label"></label>
                 <input asp-for="TeamName" class="form-control" />
                 <span asp-validation-for="TeamName" class="text-danger"></span>
+                <p>Например, Бизоны</p>
             </div>
 
             <div class="form-group">

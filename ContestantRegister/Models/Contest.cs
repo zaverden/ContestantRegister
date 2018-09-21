@@ -51,6 +51,9 @@ namespace ContestantRegister.Models
         [Display(Name = "Указывать язык программирования при регистрации")]
         public bool IsProgrammingLanguageNeeded { get; set; }
 
+        [Display(Name = "Допускать внеконкурсных участников")]
+        public bool IsOutOfCompetitionAllowed { get; set; }
+
         [MaxLength(100)]
         [Display(Name = "Ссылка на контест на ЯКонтесте")]
         [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]

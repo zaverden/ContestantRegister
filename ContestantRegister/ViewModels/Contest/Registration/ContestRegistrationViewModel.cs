@@ -62,6 +62,11 @@ namespace ContestantRegister.ViewModels.Contest.Registration
 
         public ParticipantType ParticipantType { get; set; }
 
+        [Display(Name = "Вне конкурса")]
+        public bool IsOutOfCompetition { get; set; }
+
+        public bool IsOutOfCompetitionAllowed { get; set; }
+
         public int RegistrationId { get; set; }
 
         public string ContestName { get; set; }
