@@ -17,10 +17,31 @@ namespace ContestantRegister.Models
 
         public ApplicationUser Participant3 { get; set; }
 
-        //[Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
+        /// <summary>
+        /// Например, Bizons
+        /// </summary>
         [Display(Name = "Название команды")]
         [MaxLength(128)]
         public string TeamName { get; set; }
+
+        /// <summary>
+        /// ISIT SFU 1
+        /// </summary>
+        [Display(Name = "Официальное название команды")]
+        [MaxLength(128)]
+        public string OfficialTeamName { get; set; }
+
+
+        public string DisplayTeamName
+        {
+            get
+            {
+                return
+                    string.IsNullOrEmpty(TeamName) ?
+                    OfficialTeamName :
+                    $"{OfficialTeamName}: {TeamName}";
+            }
+        }
 
     }
 }

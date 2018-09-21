@@ -23,7 +23,7 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string Participant3Id { get; set; }
 
-        [Display(Name = "Название команды")]
+        [Display(Name = "Неофициальное название команды")]
         [MaxLength(128)]
         public string TeamName { get; set; }
     }

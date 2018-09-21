@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +7,7 @@ using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Utils;
-using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
-using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -171,6 +168,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["X1"].Value = "Class";
             worksheet.Cells["Y1"].Value = "Course";
             worksheet.Cells["Z1"].Value = "StudentType";
+            worksheet.Cells["AA1"].Value = "StudyPlace_FullName";
 
             int row = 1;
             foreach (var registration in registrations)
@@ -207,7 +205,9 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 23].Value = registration.Participant1.DateOfBirth;
                 worksheet.Cells[row, 24].Value = registration.Class;
                 worksheet.Cells[row, 25].Value = registration.Course;
-                worksheet.Cells[row, 25].Value = registration.StudentType;
+                worksheet.Cells[row, 26].Value = registration.StudentType;
+                worksheet.Cells[row, 27].Value = registration.StudyPlace.FullName;
+
             }
 
             var ms = new MemoryStream();
@@ -215,11 +215,6 @@ namespace ContestantRegister.Controllers
             ms.Position = 0;
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
         }
-
-        
-
-        
-        
 
         protected override Task<List<ContestRegistration>> GetContestRegistrationsAsync(int id)
         {

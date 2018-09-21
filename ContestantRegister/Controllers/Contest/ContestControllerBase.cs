@@ -273,7 +273,7 @@ namespace ContestantRegister.Controllers
             return RedirectToAction(nameof(Details), new { contest.Id });
         }
 
-        protected async Task<Contest> GetContestForRegistration(int contestId)
+        protected virtual async Task<Contest> GetContestForRegistration(int contestId)
         {
             return await _context.Contests
                 .Include(c => c.ContestAreas)

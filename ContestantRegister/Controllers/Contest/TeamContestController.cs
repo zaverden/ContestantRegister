@@ -60,7 +60,31 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, registration);
 
+            var registreledForStudyPlaceCount = contest.ContestRegistrations.Where(r => r.StudyPlaceId == registration.StudyPlaceId).Count();
+            string studyPlaceName = string.Empty;
+            var studyPlace = await _context.StudyPlaces.FindAsync(registration.StudyPlaceId);
+
+            if (contest.ParticipantType == ParticipantType.Student && contest.IsEnglishLanguage)
+            {
+                studyPlaceName = ((Institution)studyPlace).ShortNameEnglish;
+            }
+            else
+            {
+                studyPlaceName = studyPlace.ShortName;
+            }
+
+            registration.OfficialTeamName = $"{studyPlaceName} {registreledForStudyPlaceCount + 1}";
+
             return await RegisterInternalAsync(viewModel, registration, contest);
+        }
+
+        protected override async Task<Contest> GetContestForRegistration(int contestId)
+        {
+            return await _context.Contests
+                .Include(c => c.ContestAreas)
+                .Include(c => c.ContestRegistrations)
+                .Include("ContestAreas.Area")
+                .SingleOrDefaultAsync(c => c.Id == contestId);
         }
 
         protected override ContestRegistrationViewModel CreateEditContestRegistrationViewModel()
@@ -172,6 +196,11 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["AC1"].Value = "Number";
             worksheet.Cells["AD1"].Value = "ComputerName";
             worksheet.Cells["AE1"].Value = "ProgrammingLanguage";
+            worksheet.Cells["AF1"].Value = "OfficialTeamName";
+            worksheet.Cells["AG1"].Value = "DisplayTeamName";
+            worksheet.Cells["AH1"].Value = "StudyPlace_FullName";
+            worksheet.Cells["AI1"].Value = "StudyPlace_ShortName_En";
+            worksheet.Cells["AJ1"].Value = "StudyPlace_FullName_En";
 
             int row = 1;
             foreach (var registration in registrations)
@@ -219,7 +248,14 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 29].Value = registration.Number;
                 worksheet.Cells[row, 30].Value = registration.ComputerName;
                 worksheet.Cells[row, 31].Value = registration.ProgrammingLanguage;
-                
+                worksheet.Cells[row, 32].Value = registration.OfficialTeamName;
+                worksheet.Cells[row, 33].Value = registration.DisplayTeamName;
+                worksheet.Cells[row, 34].Value = registration.StudyPlace.FullName;
+                if (registration.StudyPlace is Institution institution)
+                {
+                    worksheet.Cells[row, 35].Value = institution.ShortNameEnglish;
+                    worksheet.Cells[row, 36].Value = institution.FullNameEnglish;
+                }
             }
 
             var ms = new MemoryStream();
