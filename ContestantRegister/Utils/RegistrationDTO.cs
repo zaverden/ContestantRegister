@@ -21,5 +21,10 @@
         public int? Number { get; set; }
         public string ComputerName { get; set; }
         public string ProgrammingLanguage { get; set; }
+        public string IsOutOfCompetition { get; set; }
+
+        public string TeamName { get; set; }
+        public string OfficialTeamName { get; set; }
+        
     }
 }

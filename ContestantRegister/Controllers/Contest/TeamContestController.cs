@@ -201,6 +201,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["AH1"].Value = "StudyPlace_FullName";
             worksheet.Cells["AI1"].Value = "StudyPlace_ShortName_En";
             worksheet.Cells["AJ1"].Value = "StudyPlace_FullName_En";
+            worksheet.Cells["AK1"].Value = "IsOutOfCompetition";
 
             int row = 1;
             foreach (var registration in registrations)
@@ -256,6 +257,8 @@ namespace ContestantRegister.Controllers
                     worksheet.Cells[row, 35].Value = institution.ShortNameEnglish;
                     worksheet.Cells[row, 36].Value = institution.FullNameEnglish;
                 }
+
+                worksheet.Cells[row, 37].Value = registration.IsOutOfCompetition;
             }
 
             var ms = new MemoryStream();
@@ -293,6 +296,8 @@ namespace ContestantRegister.Controllers
             {
                 Participant2Id = source.Participant2Id,
                 Participant3Id = source.Participant3Id,
+                TeamName = source.TeamName,
+                OfficialTeamName = source.OfficialTeamName,
             };
 
             return res;
