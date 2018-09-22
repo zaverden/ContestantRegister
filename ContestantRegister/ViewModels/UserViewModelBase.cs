@@ -34,17 +34,19 @@ namespace ContestantRegister.ViewModels
         public string Patronymic { get; set; }
 
         /// <summary>
-        /// Поле необязательно для школьника итренера школьников, но обязаьельно для студента и тренера студентов
+        /// Поле необязательно для школьника и тренера школьников, но обязаьельно для студента и тренера студентов
         /// </summary>
         [MaxLength(50)]
         [Display(Name = "First name")]
+        [RegularExpression(@"^[a-zA-Z]{0,50}$", ErrorMessage = "Допустимы заглавные и строчные английские буквы")]
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Поле необязательно для школьника итренера школьников, но обязаьельно для студента и тренера студентов
+        /// Поле необязательно для школьника и тренера школьников, но обязаьельно для студента и тренера студентов
         /// </summary>
         [MaxLength(50)]
         [Display(Name = "Last name")]
+        [RegularExpression(@"^[a-zA-Z]{0,50}$", ErrorMessage = "Допустимы заглавные и строчные английские буквы")]
         public string LastName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]

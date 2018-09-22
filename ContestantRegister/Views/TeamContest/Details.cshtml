@@ -240,13 +240,7 @@
             </th>
             <th>
                 Команда
-            </th>
-            @*@if (User.IsInRole(Roles.Admin))
-            {
-                <th>
-                    Email
-                </th>
-            }*@
+            </th>            
             <th>
                 Участник 1
             </th>
@@ -301,13 +295,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DisplayTeamName)
-            </td>
-            @*@if (User.IsInRole(Roles.Admin))
-            {
-                <td>
-                    @Html.DisplayFor(modelItem => item.Participant1.Email)
-                </td>
-            }*@
+            </td>            
             <td>
                 <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
             </td>
