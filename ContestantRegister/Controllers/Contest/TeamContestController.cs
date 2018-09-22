@@ -203,6 +203,21 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["AJ1"].Value = "StudyPlace_FullName_En";
             worksheet.Cells["AK1"].Value = "IsOutOfCompetition";
 
+            worksheet.Cells["AL1"].Value = "FirstName1";
+            worksheet.Cells["AM1"].Value = "LastName1";
+
+            worksheet.Cells["AN1"].Value = "FirstName2";
+            worksheet.Cells["AO1"].Value = "LastName2";
+
+            worksheet.Cells["AP1"].Value = "FirstName3";
+            worksheet.Cells["AQ1"].Value = "LastName3";
+
+            worksheet.Cells["AR1"].Value = "TrainerFirstName";
+            worksheet.Cells["AS1"].Value = "TrainerLastName";
+
+            worksheet.Cells["AT1"].Value = "ManagerFirstName";
+            worksheet.Cells["AU1"].Value = "ManagerLastName";
+
             int row = 1;
             foreach (var registration in registrations)
             {
@@ -259,6 +274,25 @@ namespace ContestantRegister.Controllers
                 }
 
                 worksheet.Cells[row, 37].Value = registration.IsOutOfCompetition;
+
+                if (registration.Contest.ParticipantType == ParticipantType.Student && registration.Contest.IsEnglishLanguage)
+                {
+                    worksheet.Cells[row, 38].Value = registration.Participant1.FirstName;
+                    worksheet.Cells[row, 39].Value = registration.Participant1.LastName;
+
+                    worksheet.Cells[row, 40].Value = registration.Participant2.FirstName;
+                    worksheet.Cells[row, 41].Value = registration.Participant2.LastName;
+
+                    worksheet.Cells[row, 42].Value = registration.Participant3.FirstName;
+                    worksheet.Cells[row, 43].Value = registration.Participant3.LastName;
+
+                    worksheet.Cells[row, 44].Value = registration.Trainer.FirstName;
+                    worksheet.Cells[row, 45].Value = registration.Trainer.LastName;
+                    
+                    worksheet.Cells[row, 46].Value = registration.Manager?.FirstName;
+                    worksheet.Cells[row, 47].Value = registration.Manager?.LastName;
+
+                }
             }
 
             var ms = new MemoryStream();
