@@ -45,8 +45,10 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.ProgrammingLanguage), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.ProgrammingLanguage))));
 
             var studyPlace = await _context.StudyPlaces.SingleAsync(s => s.Id == viewModel.StudyPlaceId);
-            if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
-                contest.ParticipantType == ParticipantType.Student && studyPlace is School)
+            if (!viewModel.IsOutOfCompetition &&
+                    (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
+                     contest.ParticipantType == ParticipantType.Student && studyPlace is School)
+                )
                 result.Add(KeyValuePair.Create(nameof(viewModel.StudyPlaceId), "Тип учебного заведения не соответствует типу контеста"));
             if (viewModel.CityId != studyPlace.CityId)
                 result.Add(KeyValuePair.Create(nameof(viewModel.CityId), "Выбранный город не соответствует городу учебного заведения"));
@@ -74,17 +76,19 @@ namespace ContestantRegister.Services
             var trainer = await _context.Users.SingleAsync(u => u.Id == viewModel.TrainerId);
             var manager = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
 
-            if (contest.ParticipantType == ParticipantType.Pupil)
+            if (contest.ParticipantType == ParticipantType.Pupil && !viewModel.IsOutOfCompetition)
             {
                 if (participant.UserType != UserType.Pupil)
                 {
                     result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста"));
                 }
                 if (!viewModel.Class.HasValue)
+                {
                     result.Add(KeyValuePair.Create(nameof(viewModel.Class), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Class))));
+                }
             }
 
-            if (contest.ParticipantType == ParticipantType.Student)
+            if (contest.ParticipantType == ParticipantType.Student && !viewModel.IsOutOfCompetition)
             {
                 if (participant.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста"));
                 if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
@@ -133,8 +137,10 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.ProgrammingLanguage), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.ProgrammingLanguage))));
 
             var studyPlace = await _context.StudyPlaces.SingleAsync(s => s.Id == viewModel.StudyPlaceId);
-            if (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
-                contest.ParticipantType == ParticipantType.Student && studyPlace is School)
+            if (!viewModel.IsOutOfCompetition && 
+                    (contest.ParticipantType == ParticipantType.Pupil && studyPlace is Institution ||
+                     contest.ParticipantType == ParticipantType.Student && studyPlace is School) 
+                )
                 result.Add(KeyValuePair.Create(nameof(viewModel.StudyPlaceId), "Тип учебного заведения не соответствует типу контеста"));
             if (viewModel.CityId != studyPlace.CityId)
                 result.Add(KeyValuePair.Create(nameof(viewModel.CityId), "Выбранный город не соответствует городу учебного заведения"));
@@ -195,27 +201,20 @@ namespace ContestantRegister.Services
             var trainer = await _context.Users.SingleAsync(u => u.Id == viewModel.TrainerId);
             var manager = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
 
-            if (contest.ParticipantType == ParticipantType.Pupil)
+            if (contest.ParticipantType == ParticipantType.Pupil && !viewModel.IsOutOfCompetition)
             {
-                if (participant1.UserType != UserType.Pupil)
-                {
-                    result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только школьник может быть участником школьного контеста"));
-                }
-                if (participant2.UserType != UserType.Pupil)
-                {
-                    result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Только школьник может быть участником школьного контеста"));
-                }
-                if (participant3.UserType != UserType.Pupil)
-                {
-                    result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Только школьник может быть участником школьного контеста"));
-                }
+                var message = "Только школьник может быть участником школьного контеста";
+                if (participant1.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
+                if (participant2.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
+                if (participant3.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));                
             }
 
-            if (contest.ParticipantType == ParticipantType.Student)
+            if (contest.ParticipantType == ParticipantType.Student && !viewModel.IsOutOfCompetition)
             {
-                if (participant1.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Только студент может быть участником студенческого контеста"));
-                if (participant2.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Только студент может быть участником студенческого контеста"));
-                if (participant3.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Только студент может быть участником студенческого контеста"));
+                var message = "Чтобы зарегистрировать участника - не студента, поставьте флаг 'Вне конкурса'";
+                if (participant1.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
+                if (participant2.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
+                if (participant3.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
                 if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
                 if (manager != null && manager.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
             }

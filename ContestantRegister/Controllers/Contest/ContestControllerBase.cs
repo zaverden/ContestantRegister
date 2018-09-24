@@ -324,43 +324,44 @@ namespace ContestantRegister.Controllers
             ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
             var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
             users = users.OrderBy(u => u.DisplayName).ToList();
+            var studyPlaces = await GetListItemsAsync<StudyPlace, StudyPlaceListItemViewModel>(_context, _mapper);
+            studyPlaces = studyPlaces.OrderBy(sp => sp.ShortName).ToList();
             var creatIndividualVM = viewModel as IndividualContestRegistrationViewModel;
             var creatTeamVM = viewModel as TeamContestRegistrationViewModel;
+            
 
             if (viewModel.ParticipantType == ParticipantType.Pupil)
             {
                 if (creatIndividualVM != null)
                 {
-                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", creatIndividualVM.Participant1Id);
+                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatIndividualVM.Participant1Id);
                 }
 
                 if (creatTeamVM != null)
                 {
-                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", creatTeamVM.Participant1Id);
-                    ViewData["Participant2Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", creatTeamVM.Participant2Id);
-                    ViewData["Participant3Id"] = new SelectList(users.Where(u => u.UserType == UserType.Pupil), "Id", "DisplayName", creatTeamVM.Participant3Id);
+                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant1Id);
+                    ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
+                    ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
                 }
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
-                var schools = await GetListItemsAsync<School, StudyPlaceListItemViewModel>(_context, _mapper);
-                ViewData["StudyPlaces"] = schools.OrderBy(s => s.ShortName);
+                ViewData["StudyPlaces"] = studyPlaces;
             }
             else
             {
                 if (creatIndividualVM != null)
                 {
-                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", creatIndividualVM.Participant1Id);
+                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatIndividualVM.Participant1Id);
                 }
                 if (creatTeamVM != null)
                 {
-                    ViewData["Participant1Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", creatTeamVM.Participant1Id);
-                    ViewData["Participant2Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", creatTeamVM.Participant2Id);
-                    ViewData["Participant3Id"] = new SelectList(users.Where(u => u.UserType == UserType.Student), "Id", "DisplayName", creatTeamVM.Participant3Id);
+                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant1Id);
+                    ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
+                    ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
                 }
                 ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
                 ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
-                var institutions = await GetListItemsAsync<Institution, StudyPlaceListItemViewModel>(_context, _mapper);
-                ViewData["StudyPlaces"] = institutions.OrderBy(inst => inst.ShortName);
+                ViewData["StudyPlaces"] = studyPlaces;
             }
 
             if (contest.IsAreaRequired)
