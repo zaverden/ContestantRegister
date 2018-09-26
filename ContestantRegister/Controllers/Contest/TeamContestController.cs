@@ -133,6 +133,12 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, dbRedistration);
 
+            if (dbRedistration.Status == ContestRegistrationStatus.Completed && dbRedistration.RegistrationDateTime == null)
+            {
+                dbRedistration.RegistrationDateTime = Extensions.SfuServerNow;
+                dbRedistration.RegistredBy = await _userManager.GetUserAsync(User);
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = dbRedistration.ContestId });

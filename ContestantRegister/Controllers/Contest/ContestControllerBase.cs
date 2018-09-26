@@ -282,7 +282,7 @@ namespace ContestantRegister.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> EditRegistration(int id)
+        public async Task<IActionResult> EditRegistration(int id, ContestRegistrationStatus? registrationStatus)
         {
             var registration = await GetContestRegistrationForEditAsync(id);
 
@@ -299,11 +299,13 @@ namespace ContestantRegister.Controllers
             viewModel.RegistrationId = registration.Id;
             viewModel.ParticipantType = registration.Contest.ParticipantType;
             viewModel.CityId = registration.StudyPlace.CityId;
-
+            
             IniteEditContestRegistrationViewModel(viewModel, registration);
 
             _mapper.Map(registration, viewModel);
 
+            if (registrationStatus.HasValue) viewModel.Status = registrationStatus.Value;
+            
             //Выставлять RegistredBy надо после маппинга, а то шибко умный маппер в поле RegistredByName кладет значение RegistredBy.Name, фамилия и email пропадают
             if (registration.RegistredBy != null)
             {
@@ -538,7 +540,7 @@ namespace ContestantRegister.Controllers
                         //Здесь не нужно выставлять время регистрации и зарегистрировавшего, т.к. эти данные подставляются при подтверждении регистрации
 
                         var newRegistration = CreateContestRegistrationForImportFromContest(registration);
-                        newRegistration.Status = ContestRegistrationStatus.ConfirmParticipation;
+                        newRegistration.Status = ContestRegistrationStatus.NotCompleted;
                         newRegistration.ProgrammingLanguage = registration.ProgrammingLanguage;
                         newRegistration.Participant1Id = registration.Participant1Id;
                         newRegistration.TrainerId = registration.TrainerId;
@@ -583,52 +585,25 @@ namespace ContestantRegister.Controllers
         //TODO стоит ли делать POST вместо GET?
         public async Task<IActionResult> CancelRegistration(int id)
         {
-            //TODO На UI переспросить "Вы точно уверены, что хотите отменить регистрацию?"
-
-            return await ChangeRegistrationStatus(id, ContestRegistrationStatus.Canceled);
-        }
-
-        [Authorize]
-        //TODO стоит ли делать POST вместо GET?
-        public async Task<IActionResult> ConfirmParticipation(int id)
-        {
-            return await ChangeRegistrationStatus(id, ContestRegistrationStatus.Completed, OnConfirmParticipation);
-        }
-
-        private async Task OnConfirmParticipation(ContestRegistration registration)
-        {
-            registration.RegistrationDateTime = Extensions.SfuServerNow;
-            registration.RegistredBy = await _userManager.GetUserAsync(User);
-        }
-
-        [Authorize]
-        //TODO стоит ли делать POST вместо GET?
-        public async Task<IActionResult> StatusToConfirmParticipation(int id)
-        {
-            return await ChangeRegistrationStatus(id, ContestRegistrationStatus.ConfirmParticipation);
-        }
-
-        private async Task<IActionResult> ChangeRegistrationStatus(int registrationId, ContestRegistrationStatus status, Func<ContestRegistration, Task> onConfirmParticipation = null)
-        {
-            var registration = await _context.ContestRegistrations.SingleOrDefaultAsync(r => r.Id == registrationId);
+            var registration = await _context.ContestRegistrations.SingleOrDefaultAsync(r => r.Id == id);
             if (registration == null)
             {
                 return NotFound();
             }
 
-            registration.Status = status;
-
-            if (onConfirmParticipation != null)
-            {
-                await onConfirmParticipation(registration);
-            }
+            registration.Status = ContestRegistrationStatus.NotCompleted;
 
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = registration.ContestId });
         }
 
-        
+        [Authorize]
+        //TODO стоит ли делать POST вместо GET?
+        public IActionResult CompleteRegistration(int id)
+        {
+            return RedirectToAction(nameof(EditRegistration), new { id = id, registrationstatus = ContestRegistrationStatus.Completed });
+        }
 
         private async Task FillSortingViewData(Contest contest, int selectedContestAreaId = 0, int[] selectedCompClassIds = null)
         {

@@ -138,7 +138,7 @@
                     Город
                 </th>
                 <th>
-                    Статус
+                    Регистрация
                 </th>
                 <th>
                 </th>
@@ -179,27 +179,28 @@
                     @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
+                    @if (item.Status == ContestRegistrationStatus.Completed)
+                    {
+                        <span style="color:green">@Html.DisplayFor(modelItem => item.Status)</span>
+                    }
+                    else
+                    {
+                        <span style="color:red">@Html.DisplayFor(modelItem => item.Status)</span>
+                    }
                 </td>
                 <td>
-                    @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened)
+                    @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened ||
+                        item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
+                        item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
                         <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                        @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
-                    }
-                    else if (item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
-                             item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
-                    {
-                        if (item.Status == ContestRegistrationStatus.ConfirmParticipation)
+                        if (item.Status == ContestRegistrationStatus.NotCompleted)
                         {
-                            <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
-                            <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                            @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
+                            <a asp-action="CompleteRegistration" asp-route-id="@item.Id">Завершить регистрацию</a>
                         }
                         else // ContestRegistrationStatus.Completed
                         {
-                            <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
-                            @*<a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>*@
+                            <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить регистрацию</a>
                         }
                     }
                 </td>
@@ -275,7 +276,7 @@
                 </th>
             }
             <th>
-                Статус
+                Регистрация
             </th>
             @if (User.IsInRole(Roles.Admin))
             {
@@ -330,7 +331,14 @@
                 </td>
             }
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @if (item.Status == ContestRegistrationStatus.Completed)
+                {
+                    <span style="color:green">@Html.DisplayFor(modelItem => item.Status)</span>
+                }
+                else
+                {
+                    <span style="color:red">@Html.DisplayFor(modelItem => item.Status)</span>
+                }
             </td>
             @if (User.IsInRole(Roles.Admin))
             {
@@ -341,9 +349,8 @@
             <td>
                 @if (User.IsInRole(Roles.Admin))
                 {
-                    <a asp-action="ConfirmParticipation" asp-route-id="@item.Id">Подтвердить участие</a>
-                    <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить</a>
-                    <a asp-action="StatusToConfirmParticipation" asp-route-id="@item.Id">Статус = Подтверждение</a>
+                    <a asp-action="CompleteRegistration" asp-route-id="@item.Id">Завершить регистрацию</a>
+                    <a asp-action="CancelRegistration" asp-route-id="@item.Id">Отменить регистрацию</a>
                     <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
                     <a asp-action="DeleteRegistration" asp-route-id="@item.Id">Удалить</a>
                 }

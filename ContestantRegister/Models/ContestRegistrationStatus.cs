@@ -7,10 +7,7 @@ namespace ContestantRegister.Models
         [Display(Name = "Завершена")]
         Completed = 1,
 
-        [Display(Name = "Подтверждение участия")]
-        ConfirmParticipation = 2,
-
-        [Display(Name = "Отменена")]
-        Canceled = 3,
+        [Display(Name = "Не завершена")]
+        NotCompleted = 2,
     }
 }
