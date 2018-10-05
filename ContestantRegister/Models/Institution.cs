@@ -16,8 +16,7 @@ namespace ContestantRegister.Models
         public string FullNameEnglish { get; set; }
         
         [MaxLength(200, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
-        [Display(Name = "Ссылка на страницу на бейлоре")]
-        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
+        [Display(Name = "Название на бейлоре")]        
         public string BaylorLink { get; set; }
     }
 }
