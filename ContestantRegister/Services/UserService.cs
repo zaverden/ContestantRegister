@@ -48,6 +48,8 @@ namespace ContestantRegister.Services
                         result.Add(KeyValuePair.Create(string.Empty, "Дата начала обучения должна быть позже даты конца обучения"));
                     if (viewModel.DateOfBirth.HasValue && DateTime.Now.Year - viewModel.DateOfBirth.Value.Year < 16)
                         result.Add(KeyValuePair.Create(nameof(viewModel.DateOfBirth), "Возраст слишком маленький, чтобы быть студентом"));
+                    if (string.IsNullOrEmpty(viewModel.VkProfile))
+                        result.Add(KeyValuePair.Create(nameof(viewModel.VkProfile), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.VkProfile))));
                     break;
             }
 

@@ -15,6 +15,11 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Email подтвержден")]
         public bool EmailConfirmed { get; set; }
 
+        [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]
+        [Display(Name = "Baylor email")]
+        [MaxLength(100)]
+        public string BaylorEmail { get; set; }
+
         [Display(Name = "Роль")]
         public UserType UserType { get; set; }
 
@@ -70,7 +75,12 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Дата завершения обучения")]
         [DataType(DataType.Date)]
         public DateTime? EducationEndDate { get; set; }
-        
+
+        [Display(Name = "Ссылка на профиль вконтакте")]
+        [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
+        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
+        public string VkProfile { get; set; }
+
         //Trainer
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }

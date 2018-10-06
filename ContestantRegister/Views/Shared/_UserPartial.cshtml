@@ -3,7 +3,14 @@
 @{
     bool isUserTypeDisabled = Model.IsUserTypeDisabled;
 }
-
+@if (User.IsInRole(Roles.Admin))
+{
+    <div class="form-group">
+        <label asp-for="BaylorEmail" class="control-label"></label>
+        <input asp-for="BaylorEmail" class="form-control" />
+        <span asp-validation-for="BaylorEmail" class="text-danger"></span>
+    </div>
+}
 <div class="form-group">
     <label asp-for="UserType" class="control-label"></label>
     <select onchange="checkUserType()"
@@ -70,6 +77,11 @@
     <input asp-for="DateOfBirth" class="form-control apply-datetimepicker-date" type="text" />
     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 </div>
+<div class="form-group">
+    <label asp-for="VkProfile"></label>
+    <input asp-for="VkProfile" class="form-control" type="text" />
+    <span asp-validation-for="VkProfile" class="text-danger"></span>
+</div>
 
 @*Trainer*@
 <div class="form-group">
@@ -79,6 +91,7 @@
 </div>
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />
+<input type="hidden" asp-for="BaylorEmail" />
 
 <partial-script>
     <script type="text/javascript">

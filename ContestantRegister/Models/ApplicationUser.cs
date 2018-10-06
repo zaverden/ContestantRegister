@@ -64,6 +64,20 @@ namespace ContestantRegister.Models
         [Display(Name = "Дата рождения")]
         public DateTime? DateOfBirth { get; set; }
 
+        /// <summary>
+        /// Когда студент не завершил регистрацию, но нужно срочно ее завершить, заводим аналогичного с фейковым email 
+        /// Поле видно только для админа
+        /// </summary>
+        [Display(Name = "Baylor email")]
+        [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
+        public string BaylorEmail { get; set; }
+
+        [Display(Name = "Ссылка на профиль вконтакте")]
+        [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
+        [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
+        public string VkProfile { get; set; }
+
+
         public ICollection<ContestRegistration> ContestRegistrationsRegistredBy { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsParticipant1 { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsTrainer { get; set; }
