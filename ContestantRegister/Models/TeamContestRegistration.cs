@@ -17,6 +17,11 @@ namespace ContestantRegister.Models
 
         public ApplicationUser Participant3 { get; set; }
 
+        [Display(Name = "Участник 3")]
+        public string ReserveParticipantId { get; set; }
+
+        public ApplicationUser ReserveParticipant { get; set; }
+
         /// <summary>
         /// Например, Bizons
         /// </summary>

@@ -331,41 +331,22 @@ namespace ContestantRegister.Controllers
             var creatIndividualVM = viewModel as IndividualContestRegistrationViewModel;
             var creatTeamVM = viewModel as TeamContestRegistrationViewModel;
             
-
-            if (viewModel.ParticipantType == ParticipantType.Pupil)
+            if (creatIndividualVM != null)
             {
-                if (creatIndividualVM != null)
-                {
-                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatIndividualVM.Participant1Id);
-                }
-
-                if (creatTeamVM != null)
-                {
-                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant1Id);
-                    ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
-                    ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
-                }
-                ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
-                ViewData["StudyPlaces"] = studyPlaces;
-            }
-            else
-            {
-                if (creatIndividualVM != null)
-                {
-                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatIndividualVM.Participant1Id);
-                }
-                if (creatTeamVM != null)
-                {
-                    ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant1Id);
-                    ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
-                    ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
-                }
-                ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
-                ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
-                ViewData["StudyPlaces"] = studyPlaces;
+                ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatIndividualVM.Participant1Id);
             }
 
+            if (creatTeamVM != null)
+            {
+                ViewData["Participant1Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant1Id);
+                ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
+                ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
+                ViewData["ReserveParticipantId"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.ReserveParticipantId);
+            }
+            ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+            ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
+            ViewData["StudyPlaces"] = studyPlaces;
+            
             if (contest.IsAreaRequired)
             {
                 ViewData["Area"] = new SelectList(contest.ContestAreas.OrderBy(a => a.Area.Name), "Id", "Area.Name", viewModel.ContestAreaId);

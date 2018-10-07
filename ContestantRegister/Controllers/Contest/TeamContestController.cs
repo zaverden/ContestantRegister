@@ -103,6 +103,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant1)
                 .Include(r => r.Participant2)
                 .Include(r => r.Participant3)
+                .Include(r => r.ReserveParticipant)
                 .SingleOrDefaultAsync(r => r.Id == registrationId);
 
             return registration;
@@ -313,6 +314,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant1)
                 .Include(r => r.Participant2)
                 .Include(r => r.Participant3)
+                .Include(r => r.ReserveParticipant)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
                 .Include(r => r.StudyPlace)

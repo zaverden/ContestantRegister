@@ -154,32 +154,54 @@ namespace ContestantRegister.Services
             var participant3Registred = await ParticitantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant3Id);
             if (participant3Registred) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник уже зарегистрирован в другой команде"));
 
-            if (viewModel.Participant1Id == viewModel.Participant2Id)
+            var reservePerticipantExists = !string.IsNullOrEmpty(viewModel.ReserveParticipantId);
+            if (reservePerticipantExists)
             {
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Участник указан дважды"));
+                var reserveParticipantRegistred = await ParticitantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.ReserveParticipantId);
+                if (reserveParticipantRegistred) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник уже зарегистрирован в другой команде"));
+            }
+
+            var idNameDictionary = new Dictionary<string, string> { { viewModel.Participant1Id, nameof(viewModel.Participant1Id) } };
+
+            string propertyName;
+            if (idNameDictionary.TryGetValue(viewModel.Participant2Id, out propertyName))
+            {
+                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
                 result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник указан дважды"));
             }
-            if (viewModel.Participant1Id == viewModel.Participant3Id)
+            else
             {
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Участник указан дважды"));
+                idNameDictionary.Add(viewModel.Participant2Id, nameof(viewModel.Participant2Id));
+            }
+
+            if (idNameDictionary.TryGetValue(viewModel.Participant3Id, out propertyName))
+            {
+                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
                 result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник указан дважды"));
             }
-            if (viewModel.Participant2Id == viewModel.Participant3Id)
+            else
             {
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник указан дважды"));
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник указан дважды"));
+                idNameDictionary.Add(viewModel.Participant3Id, nameof(viewModel.Participant3Id));
             }
+
+            if (reservePerticipantExists && idNameDictionary.TryGetValue(viewModel.ReserveParticipantId, out propertyName))
+            {
+                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
+                result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник указан дважды"));
+            }            
 
             if (viewModel.Participant1Id == viewModel.TrainerId ||
                 viewModel.Participant2Id == viewModel.TrainerId ||
-                viewModel.Participant3Id == viewModel.TrainerId)
+                viewModel.Participant3Id == viewModel.TrainerId ||
+                (reservePerticipantExists && viewModel.ReserveParticipantId == viewModel.TrainerId))
             {
                 result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Участник не может быть тренером"));
             }
 
             if (viewModel.Participant1Id == viewModel.ManagerId ||
                 viewModel.Participant2Id == viewModel.ManagerId ||
-                viewModel.Participant3Id == viewModel.ManagerId)
+                viewModel.Participant3Id == viewModel.ManagerId ||
+                (reservePerticipantExists && viewModel.ReserveParticipantId == viewModel.ManagerId))
             {
                 result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть руководителем"));
             }
@@ -189,6 +211,7 @@ namespace ContestantRegister.Services
                 viewModel.Participant1Id != currentUser.Id &&
                 viewModel.Participant2Id != currentUser.Id &&
                 viewModel.Participant3Id != currentUser.Id &&
+                viewModel.ReserveParticipantId != currentUser.Id &&
                 viewModel.TrainerId != currentUser.Id && 
                 viewModel.ManagerId != currentUser.Id)
             {
@@ -200,13 +223,17 @@ namespace ContestantRegister.Services
             var participant3 = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant3Id);
             var trainer = await _context.Users.SingleAsync(u => u.Id == viewModel.TrainerId);
             var manager = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
+            ApplicationUser reservePartcipant = null;
+            if (reservePerticipantExists)
+                reservePartcipant = await _context.Users.SingleAsync(u => u.Id == viewModel.ReserveParticipantId);
 
             if (contest.ParticipantType == ParticipantType.Pupil && !viewModel.IsOutOfCompetition)
             {
                 var message = "Только школьник может быть участником школьного контеста";
                 if (participant1.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
                 if (participant2.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
-                if (participant3.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));                
+                if (participant3.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
+                if (reservePartcipant != null && reservePartcipant.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), message));
             }
 
             if (contest.ParticipantType == ParticipantType.Student && !viewModel.IsOutOfCompetition)
@@ -215,6 +242,7 @@ namespace ContestantRegister.Services
                 if (participant1.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
                 if (participant2.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
                 if (participant3.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
+                if (reservePartcipant != null && reservePartcipant.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), message));
                 if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
                 if (manager != null && manager.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
             }

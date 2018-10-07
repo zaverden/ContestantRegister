@@ -114,6 +114,10 @@ namespace ContestantRegister.Data
                 entity.HasOne(e => e.Participant3)
                     .WithMany(p => p.ContestRegistrationsParticipant3)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.ReserveParticipant)
+                    .WithMany(p => p.ContestRegistrationsReserveParticipant)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }
