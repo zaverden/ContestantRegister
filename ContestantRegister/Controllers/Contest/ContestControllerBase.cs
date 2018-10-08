@@ -71,13 +71,28 @@ namespace ContestantRegister.Controllers
             ViewData["Status"] = filter.Status;
 
             var user = await _userManager.GetUserAsync(User);
-            ICollection<ContestRegistration> userRegistrations = new List<ContestRegistration>();
+            ICollection<IndividualContestRegistration> userIndividualRegistrations = new List<IndividualContestRegistration>();
+            ICollection<TeamContestRegistration> userTeamRegistrations = new List<TeamContestRegistration>();
             if (User.Identity.IsAuthenticated)
             {
-                userRegistrations = await _context.ContestRegistrations
-                    .Where(r => r.ContestId == id &&
-                                (r.Participant1Id == user.Id || r.TrainerId == user.Id || r.ManagerId == user.Id))
-                    .ToListAsync();
+                if (contest.ContestType == ContestType.Individual)
+                {
+                    userIndividualRegistrations = await _context.IndividualContestRegistrations
+                        .Where(r => r.ContestId == id &&
+                                    (r.Participant1Id == user.Id || r.TrainerId == user.Id || r.ManagerId == user.Id))
+                        .ToListAsync();
+                }
+                else
+                {
+                    userTeamRegistrations = await _context.TeamContestRegistrations
+                        .Where(r => r.ContestId == id &&
+                                    (r.Participant1Id == user.Id ||
+                                     r.Participant2Id == user.Id ||
+                                     r.Participant3Id == user.Id ||
+                                     r.TrainerId == user.Id || 
+                                     r.ManagerId == user.Id))
+                        .ToListAsync();
+                }
             }
 
             IEnumerable<ContestRegistration> contestRegistrations = contest.ContestRegistrations;
@@ -134,8 +149,8 @@ namespace ContestantRegister.Controllers
                 {
                     Contest = contest,
                     ContestRegistrations = contestRegistrations.Cast<IndividualContestRegistration>().ToList(),
-                    UserRegistrations = userRegistrations.Cast<IndividualContestRegistration>().ToList(),
-                    ParticipantRegistration = (IndividualContestRegistration)userRegistrations.SingleOrDefault(r => r.Participant1Id == user.Id),
+                    UserRegistrations = userIndividualRegistrations.ToList(),
+                    ParticipantRegistration = userIndividualRegistrations.SingleOrDefault(r => r.Participant1Id == user.Id),
                 };
             }
             else
@@ -144,8 +159,8 @@ namespace ContestantRegister.Controllers
                 {
                     Contest = contest,
                     ContestRegistrations = contestRegistrations.Cast<TeamContestRegistration>().ToList(),
-                    UserRegistrations = userRegistrations.Cast<TeamContestRegistration>().ToList(),
-                    ParticipantRegistration = (TeamContestRegistration)userRegistrations.SingleOrDefault(r => r.Participant1Id == user.Id),
+                    UserRegistrations = userTeamRegistrations.ToList(),
+                    ParticipantRegistration = userTeamRegistrations.SingleOrDefault(r => (r.Participant1Id == user.Id || r.Participant2Id == user.Id || r.Participant3Id == user.Id) && r.Status == ContestRegistrationStatus.Completed),
                 };
             }
 
