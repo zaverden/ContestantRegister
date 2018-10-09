@@ -245,7 +245,7 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 11].Value = registration.Participant2.Name;
                 worksheet.Cells[row, 12].Value = registration.Participant2.Patronymic;
 
-                worksheet.Cells[row, 12].Value = registration.Participant3.Email;
+                worksheet.Cells[row, 13].Value = registration.Participant3.Email;
                 worksheet.Cells[row, 14].Value = registration.Participant3.Surname;
                 worksheet.Cells[row, 15].Value = registration.Participant3.Name;
                 worksheet.Cells[row, 16].Value = registration.Participant3.Patronymic;
