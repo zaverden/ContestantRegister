@@ -47,7 +47,7 @@ namespace ContestantRegister.ViewModels
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Поле необязательно для школьника и тренера школьников, но обязаьельно для студента и тренера студентов
+        /// Поле необязательно для школьника и тренера школьников, но обязательно для студента и тренера студентов
         /// </summary>
         [MaxLength(50)]
         [Display(Name = "Last name")]
@@ -80,6 +80,9 @@ namespace ContestantRegister.ViewModels
         [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
         public string VkProfile { get; set; }
+
+        [Display(Name = "Зарегистрирован на бейлоре")]
+        public bool IsBaylorRegistered { get; set; }
 
         //Trainer
         [Display(Name = "Номер мобильного телефона")]

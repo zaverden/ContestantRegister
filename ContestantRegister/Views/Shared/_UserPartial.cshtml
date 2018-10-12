@@ -11,6 +11,15 @@
         <span asp-validation-for="BaylorEmail" class="text-danger"></span>
     </div>
 }
+@if (User.IsInRole(Roles.Admin))
+{
+    <div class="checkbox">
+        <label>
+            <input asp-for="IsBaylorRegistered" /> @Html.DisplayNameFor(model => model.IsBaylorRegistered)
+        </label>
+    </div>
+}
+
 <div class="form-group">
     <label asp-for="UserType" class="control-label"></label>
     <select onchange="checkUserType()"
@@ -39,11 +48,13 @@
     <label asp-for="FirstName" class="control-label"></label>
     <input asp-for="FirstName" class="form-control" />
     <span asp-validation-for="FirstName" class="text-danger"></span>
+    <p>Имя на английском языке</p>
 </div>
 <div class="form-group conditional @UserType.Student @UserType.Trainer">
     <label asp-for="LastName" class="control-label"></label>
     <input asp-for="LastName" class="form-control" />
     <span asp-validation-for="LastName" class="text-danger"></span>
+    <p>Фамилия на английском языке</p>
 </div>
 <div class="form-group">
     <label asp-for="CityId" class="control-label"></label>
@@ -92,6 +103,7 @@
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />
 <input type="hidden" asp-for="BaylorEmail" />
+<input type="hidden" asp-for="IsBaylorRegistered" />
 
 <partial-script>
     <script type="text/javascript">

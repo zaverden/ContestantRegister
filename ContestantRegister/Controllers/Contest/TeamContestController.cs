@@ -148,6 +148,84 @@ namespace ContestantRegister.Controllers
         [Authorize(Roles = Roles.Admin)]
         public FileResult ExportParticipants(int id)
         {
+            var package = new ExcelPackage();
+            var worksheet = package.Workbook.Worksheets.Add("Participants");
+
+            var registrations = _context.TeamContestRegistrations
+                .Include(r => r.Participant1)
+                .Include(r => r.Participant2)
+                .Include(r => r.Participant3)
+                .Include(r => r.ReserveParticipant)
+                .Include(r => r.Trainer)
+                .Include(r => r.Manager)
+                .Include(r => r.StudyPlace);
+
+            worksheet.Cells["A1"].Value = "Email";
+            worksheet.Cells["B1"].Value = "IsBaylorRegistered";
+            worksheet.Cells["C1"].Value = "FirstName";
+            worksheet.Cells["D1"].Value = "LastName";
+            worksheet.Cells["E1"].Value = "Surname";
+            worksheet.Cells["F1"].Value = "Name";
+            worksheet.Cells["G1"].Value = "Patronymic";
+            worksheet.Cells["H1"].Value = "StudyPlace_FullName";
+            worksheet.Cells["I1"].Value = "StudyPlace_FullName_En";
+            worksheet.Cells["J1"].Value = "StudyPlace_BaylorFullName";
+            worksheet.Cells["K1"].Value = "IsOutOfCompetition";
+            worksheet.Cells["L1"].Value = "DateOfBirth";
+            worksheet.Cells["M1"].Value = "EducationStartDate";
+            worksheet.Cells["N1"].Value = "EducationEndDate";
+
+            var usedEmails = new HashSet<string>();
+            var row = 2;
+            foreach (var registration in registrations)
+            {
+                row = AddTeamMember(worksheet, registration.Participant1, row, registration, usedEmails);
+                row = AddTeamMember(worksheet, registration.Participant2, row, registration, usedEmails);
+                row = AddTeamMember(worksheet, registration.Participant3, row, registration, usedEmails);
+                if (registration.ReserveParticipant != null)
+                {
+                    row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, usedEmails);
+                }
+                row = AddTeamMember(worksheet, registration.Trainer, row, registration, usedEmails);
+            }
+
+            var ms = new MemoryStream();
+            package.SaveAs(ms);
+            ms.Position = 0;
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
+        }
+
+        private int AddTeamMember(ExcelWorksheet worksheet, ApplicationUser user, int row, TeamContestRegistration registration, HashSet<string> usedEmails)
+        {
+            if (usedEmails.Contains(user.Email)) return row;
+
+            usedEmails.Add(user.Email);
+
+            worksheet.Cells[row, 1].Value = user.Email; ;
+            worksheet.Cells[row, 2].Value = user.IsBaylorRegistered;
+            worksheet.Cells[row, 3].Value = user.FirstName;
+            worksheet.Cells[row, 4].Value = user.LastName;
+            worksheet.Cells[row, 5].Value = user.Surname;
+            worksheet.Cells[row, 6].Value = user.Name;
+            worksheet.Cells[row, 7].Value = user.Patronymic;
+            worksheet.Cells[row, 8].Value = registration.StudyPlace.FullName;
+            if (registration.StudyPlace is Institution institution)
+            {
+                worksheet.Cells[row, 9].Value = institution.FullNameEnglish;
+                worksheet.Cells[row, 10].Value = institution.BaylorLink;
+            }
+            worksheet.Cells[row, 11].Value = registration.IsOutOfCompetition;
+            worksheet.Cells[row, 12].Value = user.DateOfBirth;
+            worksheet.Cells[row, 13].Value = user.EducationStartDate;
+            worksheet.Cells[row, 14].Value = user.EducationEndDate;
+
+            return row + 1;
+        }
+
+
+        [Authorize(Roles = Roles.Admin)]
+        public FileResult ExportTeams(int id)
+        {
             var registrations = _context.TeamContestRegistrations
                 .Include(r => r.Contest)
                 .Include(r => r.StudyPlace)
@@ -163,8 +241,8 @@ namespace ContestantRegister.Controllers
                 .OrderBy(r => r.Number);
 
             var package = new ExcelPackage();
+            var worksheet = package.Workbook.Worksheets.Add("Teams");
 
-            var worksheet = package.Workbook.Worksheets.Add("Participants");
             worksheet.Cells["A1"].Value = "Area";
             worksheet.Cells["B1"].Value = "StudyPlace";
             worksheet.Cells["C1"].Value = "TeamName";
@@ -310,7 +388,7 @@ namespace ContestantRegister.Controllers
             var ms = new MemoryStream();
             package.SaveAs(ms);
             ms.Position = 0;
-            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Teams.xlsx");
         }
 
         protected override Task<List<ContestRegistration>> GetContestRegistrationsAsync(int id)
@@ -351,3 +429,5 @@ namespace ContestantRegister.Controllers
         }
     }
 }
+
+
