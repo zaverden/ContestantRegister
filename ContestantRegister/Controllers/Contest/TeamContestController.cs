@@ -303,7 +303,7 @@ namespace ContestantRegister.Controllers
                     worksheet.Cells[row, 47].Value = registration.Manager?.LastName;
 
                 }
-
+                //48 колонка занята
                 
             }
 
