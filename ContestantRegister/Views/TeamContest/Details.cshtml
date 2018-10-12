@@ -152,20 +152,57 @@
                     @Html.DisplayFor(modelItem => item.DisplayTeamName)
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
+                    @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant1.FirstName))
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
+                    }
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.Surname) @Html.DisplayFor(modelItem => item.Participant2.Name) @Html.DisplayFor(modelItem => item.Participant2.Patronymic)</a>
+                    @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant2.FirstName))
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.FirstName) @Html.DisplayFor(modelItem => item.Participant2.LastName)</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.Surname) @Html.DisplayFor(modelItem => item.Participant2.Name) @Html.DisplayFor(modelItem => item.Participant2.Patronymic)</a>
+                    }
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.Surname) @Html.DisplayFor(modelItem => item.Participant3.Name) @Html.DisplayFor(modelItem => item.Participant3.Patronymic)</a>
+                    @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant3.FirstName))
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.FirstName) @Html.DisplayFor(modelItem => item.Participant3.LastName)</a>
+
+                    }
+                    else
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.Surname) @Html.DisplayFor(modelItem => item.Participant3.Name) @Html.DisplayFor(modelItem => item.Participant3.Patronymic)</a>
+                    }
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                    @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Trainer.FirstName))
+                    {
+                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.FirstName) @Html.DisplayFor(modelItem => item.Trainer.LastName)</a>
+                    }
+                     else
+                     {
+                         <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                     }
                 </td>
                 <td>
-                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                     @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Manager?.FirstName))
+                     {
+                         <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)</a>
+                     }
+                     else
+                     {
+                         <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                     }
                 </td>
+               
                 @if (Model.Contest.IsOutOfCompetitionAllowed)
                 {
                     <td>
@@ -173,7 +210,14 @@
                     </td>
                 }
                 <td>
-                    @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                    @if (Model.Contest.IsEnglishLanguage && item.StudyPlace is Institution institution)
+                    {
+                        @Html.DisplayFor(modelItem => institution.ShortNameEnglish)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
@@ -190,8 +234,8 @@
                 </td>
                 <td>
                     @if (item.Contest.ContestStatus == ContestStatus.RegistrationOpened ||
-                        item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
-                        item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
+                       item.Contest.ContestStatus == ContestStatus.ConfirmParticipation ||
+                       item.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
                         <a asp-action="EditRegistration" asp-route-id="@item.Id">Изменить</a>
                         if (item.Status == ContestRegistrationStatus.NotCompleted)
@@ -296,21 +340,57 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DisplayTeamName)
-            </td>            
-            <td>
-                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
             </td>
             <td>
-                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.Surname) @Html.DisplayFor(modelItem => item.Participant2.Name) @Html.DisplayFor(modelItem => item.Participant2.Patronymic)</a>
+                @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant1.FirstName))
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a>
+                }
             </td>
             <td>
-                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.Surname) @Html.DisplayFor(modelItem => item.Participant3.Name) @Html.DisplayFor(modelItem => item.Participant3.Patronymic)</a>
+                @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant2.FirstName))
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.FirstName) @Html.DisplayFor(modelItem => item.Participant2.LastName)</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant2Id">@Html.DisplayFor(modelItem => item.Participant2.Surname) @Html.DisplayFor(modelItem => item.Participant2.Name) @Html.DisplayFor(modelItem => item.Participant2.Patronymic)</a>
+                }
             </td>
             <td>
-                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Participant3.FirstName))
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.FirstName) @Html.DisplayFor(modelItem => item.Participant3.LastName)</a>
+
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant3Id">@Html.DisplayFor(modelItem => item.Participant3.Surname) @Html.DisplayFor(modelItem => item.Participant3.Name) @Html.DisplayFor(modelItem => item.Participant3.Patronymic)</a>
+                }
             </td>
             <td>
-                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Trainer.FirstName))
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.FirstName) @Html.DisplayFor(modelItem => item.Trainer.LastName)</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.TrainerId">@Html.DisplayFor(modelItem => item.Trainer.Surname) @Html.DisplayFor(modelItem => item.Trainer.Name) @Html.DisplayFor(modelItem => item.Trainer.Patronymic)</a>
+                }
+            </td>
+            <td>
+                @if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Manager?.FirstName))
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>
+                }
             </td>
             @if (Model.Contest.IsOutOfCompetitionAllowed)
             {
@@ -319,7 +399,14 @@
                 </td>
             }
             <td>
-                @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                @if (Model.Contest.IsEnglishLanguage && item.StudyPlace is Institution institution)
+                {
+                    @Html.DisplayFor(modelItem => institution.ShortNameEnglish)
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.StudyPlace.ShortName)
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.StudyPlace.City.Name)
