@@ -225,6 +225,8 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["AT1"].Value = "ManagerFirstName";
             worksheet.Cells["AU1"].Value = "ManagerLastName";
 
+            worksheet.Cells["AV1"].Value = "StudyPlace_BaylorFullName";
+
             int row = 1;
             foreach (var registration in registrations)
             {
@@ -278,6 +280,7 @@ namespace ContestantRegister.Controllers
                 {
                     worksheet.Cells[row, 35].Value = institution.ShortNameEnglish;
                     worksheet.Cells[row, 36].Value = institution.FullNameEnglish;
+                    worksheet.Cells[row, 48].Value = institution.BaylorLink;
                 }
 
                 worksheet.Cells[row, 37].Value = registration.IsOutOfCompetition;
@@ -300,6 +303,8 @@ namespace ContestantRegister.Controllers
                     worksheet.Cells[row, 47].Value = registration.Manager?.LastName;
 
                 }
+
+                
             }
 
             var ms = new MemoryStream();
