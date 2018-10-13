@@ -13,10 +13,10 @@
 }
 @if (User.IsInRole(Roles.Admin))
 {
-    <div class="checkbox">
-        <label>
-            <input asp-for="IsBaylorRegistered" /> @Html.DisplayNameFor(model => model.IsBaylorRegistered)
-        </label>
+    <div class="form-group">
+        <label asp-for="BaylorId" class="control-label"></label>
+        <input asp-for="BaylorId" class="form-control" />
+        <span asp-validation-for="BaylorId" class="text-danger"></span>
     </div>
 }
 
@@ -103,7 +103,7 @@
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />
 <input type="hidden" asp-for="BaylorEmail" />
-<input type="hidden" asp-for="IsBaylorRegistered" />
+<input type="hidden" asp-for="BaylorId" />
 
 <partial-script>
     <script type="text/javascript">
