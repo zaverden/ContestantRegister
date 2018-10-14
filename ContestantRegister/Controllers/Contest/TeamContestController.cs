@@ -161,7 +161,6 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.StudyPlace);
 
             worksheet.Cells["A1"].Value = "Email";
-            worksheet.Cells["B1"].Value = "BaylorId";
             worksheet.Cells["C1"].Value = "FirstName";
             worksheet.Cells["D1"].Value = "LastName";
             worksheet.Cells["E1"].Value = "Surname";
@@ -203,7 +202,6 @@ namespace ContestantRegister.Controllers
             usedEmails.Add(user.Email);
 
             worksheet.Cells[row, 1].Value = user.Email;
-            worksheet.Cells[row, 2].Value = user.BaylorId;
             worksheet.Cells[row, 3].Value = user.FirstName;
             worksheet.Cells[row, 4].Value = user.LastName;
             worksheet.Cells[row, 5].Value = user.Surname;

@@ -81,9 +81,6 @@ namespace ContestantRegister.ViewModels
         [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
         public string VkProfile { get; set; }
 
-        [Display(Name = "Baylor Id")]
-        public int? BaylorId { get; set; }
-
         //Trainer
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }

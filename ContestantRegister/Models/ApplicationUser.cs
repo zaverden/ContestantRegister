@@ -77,9 +77,6 @@ namespace ContestantRegister.Models
         [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]
         public string VkProfile { get; set; }
 
-        [Display(Name = "Baylor Id")]
-        public int? BaylorId { get; set; }
-
         public ICollection<ContestRegistration> ContestRegistrationsRegistredBy { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsParticipant1 { get; set; }
         public ICollection<ContestRegistration> ContestRegistrationsTrainer { get; set; }
