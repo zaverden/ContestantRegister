@@ -158,7 +158,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.ReserveParticipant)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
-                .Include(r => r.StudyPlace);
+                .Include(r => r.StudyPlace)
+                .Include(r => r.StudyPlace.City);
 
             worksheet.Cells["A1"].Value = "Email";
             worksheet.Cells["C1"].Value = "FirstName";
