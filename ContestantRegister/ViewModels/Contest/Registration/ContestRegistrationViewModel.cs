@@ -67,6 +67,9 @@ namespace ContestantRegister.ViewModels.Contest.Registration
 
         public bool IsOutOfCompetitionAllowed { get; set; }
 
+        [Display(Name = "Английский язык")]
+        public bool IsEnglishLanguage { get; set; }
+
         public int RegistrationId { get; set; }
 
         public string ContestName { get; set; }

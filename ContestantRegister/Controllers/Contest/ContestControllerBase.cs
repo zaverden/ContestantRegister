@@ -188,6 +188,7 @@ namespace ContestantRegister.Controllers
             viewModel.IsAreaRequired = contest.IsAreaRequired;
             viewModel.IsProgrammingLanguageNeeded = contest.IsProgrammingLanguageNeeded;
             viewModel.IsOutOfCompetitionAllowed = contest.IsOutOfCompetitionAllowed;
+            viewModel.IsEnglishLanguage = contest.IsEnglishLanguage;
 
             var user = await _userManager.GetUserAsync(User);
             user.StudyPlace = _context.StudyPlaces.Find(user.StudyPlaceId);
@@ -314,7 +315,8 @@ namespace ContestantRegister.Controllers
             viewModel.RegistrationId = registration.Id;
             viewModel.ParticipantType = registration.Contest.ParticipantType;
             viewModel.CityId = registration.StudyPlace.CityId;
-            
+            viewModel.IsEnglishLanguage = registration.Contest.IsEnglishLanguage;
+
             IniteEditContestRegistrationViewModel(viewModel, registration);
 
             _mapper.Map(registration, viewModel);

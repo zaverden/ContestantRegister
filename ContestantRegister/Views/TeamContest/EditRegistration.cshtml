@@ -31,7 +31,14 @@
                 <label asp-for="TeamName" class="control-label"></label>
                 <input asp-for="TeamName" class="form-control" />
                 <span asp-validation-for="TeamName" class="text-danger"></span>
-                <p>Например, Бизоны</p>
+                @if (Model.IsEnglishLanguage)
+                {
+                    <p>На английском языке, например, Bisons</p>
+                }
+                else
+                {
+                    <p>Например, Бизоны</p>
+                }
             </div>
 
             <div class="form-group">
@@ -127,6 +134,7 @@
             <input type="hidden" asp-for="Participant3Id" />
             <input type="hidden" asp-for="Number" />
             <input type="hidden" asp-for="OfficialTeamName" />
+            <input type="hidden" asp-for="IsEnglishLanguage" />
 
             <button type="submit" class="btn btn-default">Сохранить</button>
         </form>
