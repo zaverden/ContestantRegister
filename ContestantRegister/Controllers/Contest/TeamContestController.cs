@@ -175,20 +175,21 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["L1"].Value = "DateOfBirth";
             worksheet.Cells["M1"].Value = "EducationStartDate";
             worksheet.Cells["N1"].Value = "EducationEndDate";
-            worksheet.Cells["N1"].Value = "City";
+            worksheet.Cells["O1"].Value = "City";
+            worksheet.Cells["P1"].Value = "Role";
 
             var usedEmails = new HashSet<string>();
             var row = 2;
             foreach (var registration in registrations)
             {
-                row = AddTeamMember(worksheet, registration.Participant1, row, registration, usedEmails);
-                row = AddTeamMember(worksheet, registration.Participant2, row, registration, usedEmails);
-                row = AddTeamMember(worksheet, registration.Participant3, row, registration, usedEmails);
+                row = AddTeamMember(worksheet, registration.Participant1, row, registration, usedEmails, "Contestant");
+                row = AddTeamMember(worksheet, registration.Participant2, row, registration, usedEmails, "Contestant");
+                row = AddTeamMember(worksheet, registration.Participant3, row, registration, usedEmails, "Contestant");
                 if (registration.ReserveParticipant != null)
                 {
-                    row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, usedEmails);
+                    row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, usedEmails, "Reserve");
                 }
-                row = AddTeamMember(worksheet, registration.Trainer, row, registration, usedEmails);
+                row = AddTeamMember(worksheet, registration.Trainer, row, registration, usedEmails, "Coach");
             }
 
             var ms = new MemoryStream();
@@ -197,7 +198,7 @@ namespace ContestantRegister.Controllers
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
         }
 
-        private int AddTeamMember(ExcelWorksheet worksheet, ApplicationUser user, int row, TeamContestRegistration registration, HashSet<string> usedEmails)
+        private int AddTeamMember(ExcelWorksheet worksheet, ApplicationUser user, int row, TeamContestRegistration registration, HashSet<string> usedEmails, string role)
         {
             if (usedEmails.Contains(user.Email)) return row;
 
@@ -221,6 +222,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells[row, 13].Value = user.EducationStartDate;
             worksheet.Cells[row, 14].Value = user.EducationEndDate;
             worksheet.Cells[row, 15].Value = registration.StudyPlace.City.Name;
+            worksheet.Cells[row, 16].Value = role;
 
 
             return row + 1;
