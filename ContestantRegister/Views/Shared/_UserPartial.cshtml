@@ -10,6 +10,15 @@
         <input asp-for="BaylorEmail" class="form-control" />
         <span asp-validation-for="BaylorEmail" class="text-danger"></span>
     </div>
+
+    <div class="form-group">
+        <div class="checkbox">
+            <label>
+                <input asp-for="IsBaylorRegistrationCompleted" /> @Html.DisplayNameFor(model => model.IsBaylorRegistrationCompleted)
+            </label>
+        </div>
+    </div>
+
 }
 
 <div class="form-group">
@@ -95,6 +104,7 @@
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />
 <input type="hidden" asp-for="BaylorEmail" />
+<input type="hidden" asp-for="IsBaylorRegistrationCompleted" />
 
 <partial-script>
     <script type="text/javascript">

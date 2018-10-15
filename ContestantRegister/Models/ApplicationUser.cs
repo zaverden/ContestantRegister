@@ -72,6 +72,9 @@ namespace ContestantRegister.Models
         [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         public string BaylorEmail { get; set; }
 
+        [Display(Name = "Регистрация на бейлоре завершена")]
+        public bool IsBaylorRegistrationCompleted { get; set; }
+
         [Display(Name = "Ссылка на профиль вконтакте")]
         [MaxLength(100, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         [DataType(DataType.Url, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidUrlErrorMessage")]

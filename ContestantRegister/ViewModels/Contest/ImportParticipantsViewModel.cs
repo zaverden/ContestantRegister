@@ -3,6 +3,11 @@ using ContestantRegister.Properties;
 
 namespace ContestantRegister.ViewModels.Contest
 {
+    public class ImportBaylorRegistrationViewModel : ImportParticipantsViewModel
+    {
+
+    }
+
     public class ImportParticipantsViewModel
     {
         public string ContestName { get; set; }

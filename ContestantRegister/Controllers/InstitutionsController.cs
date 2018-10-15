@@ -43,7 +43,7 @@ namespace ContestantRegister.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ShortNameEnglish,FullNameEnglish,BaylorLink,CityId,ShortName,FullName,Site,Id")] Institution institution)
+        public async Task<IActionResult> Create(Institution institution)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +77,7 @@ namespace ContestantRegister.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ShortNameEnglish,FullNameEnglish,BaylorLink,CityId,ShortName,FullName,Site,Id")] Institution institution)
+        public async Task<IActionResult> Edit(int id, Institution institution)
         {
             if (id != institution.Id)
             {

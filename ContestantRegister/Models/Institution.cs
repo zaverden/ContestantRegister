@@ -17,6 +17,6 @@ namespace ContestantRegister.Models
         
         [MaxLength(200, ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "MaxlenFieldErrorMessage")]
         [Display(Name = "Название на бейлоре")]        
-        public string BaylorLink { get; set; }
+        public string BaylorFullName { get; set; }
     }
 }

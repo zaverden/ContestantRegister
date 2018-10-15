@@ -9,6 +9,7 @@ namespace ContestantRegister.ViewModels.Contest
 
     public class TeamContestDetailsViewModel : ContestDetailsViewModel<TeamContestRegistration>
     {
+        public ApplicationUser User { get; set; }
     }
 
     public abstract class ContestDetailsViewModel<TContestRegistration>

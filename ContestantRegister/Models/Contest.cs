@@ -65,6 +65,9 @@ namespace ContestantRegister.Models
         [Display(Name = "Показывать на сайте логин/пароль от ЯКонтест")]
         public bool ShowRegistrationInfo { get; set; }
 
+        [Display(Name = "Показывать статус регистрации на бейлоре")]
+        public bool ShowBaylorRegistrationStatus { get; set; }
+
         [Display(Name = "CSV с яконтест аккаунтами")]
         [DataType(DataType.MultilineText)]
         public string YaContestAccountsCSV { get; set; }

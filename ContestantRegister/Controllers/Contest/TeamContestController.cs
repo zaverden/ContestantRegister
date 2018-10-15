@@ -8,7 +8,9 @@ using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Utils;
+using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
+using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -177,6 +179,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["N1"].Value = "EducationEndDate";
             worksheet.Cells["O1"].Value = "City";
             worksheet.Cells["P1"].Value = "Role";
+            worksheet.Cells["Q1"].Value = "PhoneNumber";
 
             var usedEmails = new HashSet<string>();
             var row = 2;
@@ -215,16 +218,15 @@ namespace ContestantRegister.Controllers
             if (registration.StudyPlace is Institution institution)
             {
                 worksheet.Cells[row, 9].Value = institution.FullNameEnglish;
-                worksheet.Cells[row, 10].Value = institution.BaylorLink;
+                worksheet.Cells[row, 10].Value = string.IsNullOrEmpty(institution.BaylorFullName) ? institution.FullNameEnglish : institution.BaylorFullName;
             }
             worksheet.Cells[row, 11].Value = registration.IsOutOfCompetition;
-            worksheet.Cells[row, 12].Value = user.DateOfBirth;
-            worksheet.Cells[row, 13].Value = user.EducationStartDate;
-            worksheet.Cells[row, 14].Value = user.EducationEndDate;
+            worksheet.Cells[row, 12].Value = user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToShortDateString() : string.Empty;
+            worksheet.Cells[row, 13].Value = user.EducationStartDate.HasValue ? user.EducationStartDate.Value.ToShortDateString() : string.Empty;
+            worksheet.Cells[row, 14].Value = user.EducationEndDate.HasValue ? user.EducationEndDate.Value.ToShortDateString() : string.Empty;
             worksheet.Cells[row, 15].Value = registration.StudyPlace.City.Name;
             worksheet.Cells[row, 16].Value = role;
-
-
+            worksheet.Cells[row, 17].Value = user.PhoneNumber;
             return row + 1;
         }
 
@@ -311,6 +313,18 @@ namespace ContestantRegister.Controllers
 
             worksheet.Cells["AV1"].Value = "StudyPlace_BaylorFullName";
 
+            worksheet.Cells["AW1"].Value = "DateOfBirth1";  
+            worksheet.Cells["AX1"].Value = "EducationStartDate1";
+            worksheet.Cells["AY1"].Value = "EducationEndDate1";
+
+            worksheet.Cells["AZ1"].Value = "DateOfBirth2";
+            worksheet.Cells["BA1"].Value = "EducationStartDate2";
+            worksheet.Cells["BB1"].Value = "EducationEndDate2";
+
+            worksheet.Cells["BC1"].Value = "DateOfBirth3";
+            worksheet.Cells["BD1"].Value = "EducationStartDate3";
+            worksheet.Cells["BE1"].Value = "EducationEndDate3";
+
             int row = 1;
             foreach (var registration in registrations)
             {
@@ -364,7 +378,7 @@ namespace ContestantRegister.Controllers
                 {
                     worksheet.Cells[row, 35].Value = institution.ShortNameEnglish;
                     worksheet.Cells[row, 36].Value = institution.FullNameEnglish;
-                    worksheet.Cells[row, 48].Value = institution.BaylorLink;
+                    worksheet.Cells[row, 48].Value = string.IsNullOrEmpty(institution.BaylorFullName) ? institution.FullNameEnglish : institution.BaylorFullName;
                 }
 
                 worksheet.Cells[row, 37].Value = registration.IsOutOfCompetition;
@@ -387,8 +401,21 @@ namespace ContestantRegister.Controllers
                     worksheet.Cells[row, 47].Value = registration.Manager?.LastName;
 
                 }
-                //48 колонка занята
                 
+                //48 колонка занята
+
+                worksheet.Cells[row, 49].Value = registration.Participant1.DateOfBirth.HasValue ? registration.Participant1.DateOfBirth.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 50].Value = registration.Participant1.EducationStartDate.HasValue ? registration.Participant1.EducationStartDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 51].Value = registration.Participant1.EducationEndDate.HasValue ? registration.Participant1.EducationEndDate.Value.ToShortDateString() : string.Empty;
+
+                worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 53].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToShortDateString() : string.Empty;
+
+                worksheet.Cells[row, 54].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 55].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 56].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToShortDateString() : string.Empty;
+
             }
 
             var ms = new MemoryStream();
@@ -432,6 +459,58 @@ namespace ContestantRegister.Controllers
             };
 
             return res;
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> ImportBaylorRegistration(int id)
+        {
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new ImportBaylorRegistrationViewModel
+            {
+                ContestName = contest.Name
+            };
+
+            return View(vm);
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> ImportBaylorRegistration(int id, ImportParticipantsViewModel viewModel)
+        {
+            var contest = await _context.Contests
+                .SingleOrDefaultAsync(c => c.Id == id);
+            if (contest == null)
+            {
+                return NotFound();
+            }
+
+            var sr = new StringReader(viewModel.Data);
+            var csv = new CsvReader(sr);
+            csv.Configuration.MissingFieldFound = null;
+            if (viewModel.TabDelimeter)
+            {
+                csv.Configuration.Delimiter = "\t";
+            }
+            csv.Read();
+            csv.ReadHeader();
+            while (csv.Read())
+            {
+                var email = csv.GetField("Username");
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null) continue;
+
+                var completed = csv.GetField("Registration complete"); //yes or no
+                user.IsBaylorRegistrationCompleted = (completed == "yes");
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }
