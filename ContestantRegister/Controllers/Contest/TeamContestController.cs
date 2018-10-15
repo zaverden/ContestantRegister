@@ -161,7 +161,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
                 .Include(r => r.StudyPlace)
-                .Include(r => r.StudyPlace.City);
+                .Include(r => r.StudyPlace.City)
+                .Where(r => r.ContestId == id);
 
             worksheet.Cells["A1"].Value = "Email";
             worksheet.Cells["B1"].Value = "DisplayTeamName";
