@@ -180,9 +180,10 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["N1"].Value = "EducationEndDate";
             worksheet.Cells["O1"].Value = "City";
             worksheet.Cells["P1"].Value = "Role";
-            worksheet.Cells["Q1"].Value = "PhoneNumber";
+            worksheet.Cells["Q1"].Value = "PhoneNumber"; 
+            worksheet.Cells["R1"].Value = "IsBaylorRegistrationCompleted"; 
 
-            var usedEmails = new HashSet<string>();
+             var usedEmails = new HashSet<string>();
             var row = 2;
             foreach (var registration in registrations)
             {
@@ -228,6 +229,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells[row, 15].Value = registration.StudyPlace.City.Name;
             worksheet.Cells[row, 16].Value = role;
             worksheet.Cells[row, 17].Value = user.PhoneNumber;
+            worksheet.Cells[row, 18].Value = user.IsBaylorRegistrationCompleted;
             return row + 1;
         }
 
