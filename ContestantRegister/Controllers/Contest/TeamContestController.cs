@@ -410,11 +410,11 @@ namespace ContestantRegister.Controllers
 
                 worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
                 worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 53].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 54].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
 
-                worksheet.Cells[row, 54].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 55].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 56].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 55].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 56].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 57].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
 
             }
 
