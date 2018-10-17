@@ -48,8 +48,6 @@ namespace ContestantRegister.Services
                         result.Add(KeyValuePair.Create(string.Empty, "Дата начала обучения должна быть позже даты конца обучения"));
                     if (viewModel.DateOfBirth.HasValue && DateTime.Now.Year - viewModel.DateOfBirth.Value.Year < 16)
                         result.Add(KeyValuePair.Create(nameof(viewModel.DateOfBirth), "Возраст слишком маленький, чтобы быть студентом"));
-                    if (string.IsNullOrEmpty(viewModel.VkProfile))
-                        result.Add(KeyValuePair.Create(nameof(viewModel.VkProfile), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.VkProfile))));
                     break;
             }
 
@@ -59,14 +57,10 @@ namespace ContestantRegister.Services
                     result.Add(KeyValuePair.Create(nameof(viewModel.FirstName), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.FirstName))));
                 if (string.IsNullOrEmpty(viewModel.LastName))
                     result.Add(KeyValuePair.Create(nameof(viewModel.LastName), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.LastName))));
-            }
-
-            if (viewModel.UserType == UserType.Trainer)
-            {
                 if (string.IsNullOrEmpty(viewModel.PhoneNumber))
                     result.Add(KeyValuePair.Create(nameof(viewModel.PhoneNumber), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.PhoneNumber))));
             }
-
+            
             return result;
         }
     }

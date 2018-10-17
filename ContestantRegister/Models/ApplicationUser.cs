@@ -62,6 +62,7 @@ namespace ContestantRegister.Models
         public DateTime? EducationEndDate { get; set; }
 
         [Display(Name = "Дата рождения")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")] 
         public DateTime? DateOfBirth { get; set; }
 
         /// <summary>

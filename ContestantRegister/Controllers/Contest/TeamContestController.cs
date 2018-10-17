@@ -183,18 +183,17 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["Q1"].Value = "PhoneNumber"; 
             worksheet.Cells["R1"].Value = "IsBaylorRegistrationCompleted"; 
 
-             var usedEmails = new HashSet<string>();
             var row = 2;
             foreach (var registration in registrations)
             {
-                row = AddTeamMember(worksheet, registration.Participant1, row, registration, usedEmails, "Contestant");
-                row = AddTeamMember(worksheet, registration.Participant2, row, registration, usedEmails, "Contestant");
-                row = AddTeamMember(worksheet, registration.Participant3, row, registration, usedEmails, "Contestant");
+                row = AddTeamMember(worksheet, registration.Participant1, row, registration, "Contestant");
+                row = AddTeamMember(worksheet, registration.Participant2, row, registration, "Contestant");
+                row = AddTeamMember(worksheet, registration.Participant3, row, registration, "Contestant");
                 if (registration.ReserveParticipant != null)
                 {
-                    row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, usedEmails, "Reserve");
+                    row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, "Reserve");
                 }
-                row = AddTeamMember(worksheet, registration.Trainer, row, registration, usedEmails, "Coach");
+                row = AddTeamMember(worksheet, registration.Trainer, row, registration, "Coach");
             }
 
             var ms = new MemoryStream();
@@ -203,12 +202,8 @@ namespace ContestantRegister.Controllers
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
         }
 
-        private int AddTeamMember(ExcelWorksheet worksheet, ApplicationUser user, int row, TeamContestRegistration registration, HashSet<string> usedEmails, string role)
+        private int AddTeamMember(ExcelWorksheet worksheet, ApplicationUser user, int row, TeamContestRegistration registration, string role)
         {
-            if (usedEmails.Contains(user.Email)) return row;
-
-            usedEmails.Add(user.Email);
-
             worksheet.Cells[row, 1].Value = user.Email;
             worksheet.Cells[row, 2].Value = registration.DisplayTeamName;
             worksheet.Cells[row, 3].Value = user.FirstName;
@@ -223,9 +218,9 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 10].Value = string.IsNullOrEmpty(institution.BaylorFullName) ? institution.FullNameEnglish : institution.BaylorFullName;
             }
             worksheet.Cells[row, 11].Value = registration.IsOutOfCompetition;
-            worksheet.Cells[row, 12].Value = user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToShortDateString() : string.Empty;
-            worksheet.Cells[row, 13].Value = user.EducationStartDate.HasValue ? user.EducationStartDate.Value.ToShortDateString() : string.Empty;
-            worksheet.Cells[row, 14].Value = user.EducationEndDate.HasValue ? user.EducationEndDate.Value.ToShortDateString() : string.Empty;
+            worksheet.Cells[row, 12].Value = user.DateOfBirth.HasValue ? user.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+            worksheet.Cells[row, 13].Value = user.EducationStartDate.HasValue ? user.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+            worksheet.Cells[row, 14].Value = user.EducationEndDate.HasValue ? user.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
             worksheet.Cells[row, 15].Value = registration.StudyPlace.City.Name;
             worksheet.Cells[row, 16].Value = role;
             worksheet.Cells[row, 17].Value = user.PhoneNumber;
@@ -407,17 +402,17 @@ namespace ContestantRegister.Controllers
                 
                 //48 колонка занята
 
-                worksheet.Cells[row, 49].Value = registration.Participant1.DateOfBirth.HasValue ? registration.Participant1.DateOfBirth.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 50].Value = registration.Participant1.EducationStartDate.HasValue ? registration.Participant1.EducationStartDate.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 51].Value = registration.Participant1.EducationEndDate.HasValue ? registration.Participant1.EducationEndDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 49].Value = registration.Participant1.DateOfBirth.HasValue ? registration.Participant1.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 50].Value = registration.Participant1.EducationStartDate.HasValue ? registration.Participant1.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 51].Value = registration.Participant1.EducationEndDate.HasValue ? registration.Participant1.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
 
-                worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 53].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 53].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
 
-                worksheet.Cells[row, 54].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 55].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToShortDateString() : string.Empty;
-                worksheet.Cells[row, 56].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToShortDateString() : string.Empty;
+                worksheet.Cells[row, 54].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 55].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                worksheet.Cells[row, 56].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
 
             }
 

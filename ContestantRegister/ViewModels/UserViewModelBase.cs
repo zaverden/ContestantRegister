@@ -84,9 +84,11 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Регистрация на бейлоре завершена")]
         public bool IsBaylorRegistrationCompleted { get; set; }
 
-        //Trainer
+        // для студента обязательное поле
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }
+
+        //Trainer
 
         public bool IsUserTypeDisabled { get; set; }
 
