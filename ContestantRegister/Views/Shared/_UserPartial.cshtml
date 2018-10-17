@@ -75,6 +75,13 @@
 }
 @*Student*@
 <div class="form-group conditional @UserType.Student">
+    <label asp-for="StudentType" class="control-label"></label>
+    <select asp-for="StudentType"
+            asp-items="Html.GetEnumSelectList<StudentType>()"
+            class="form-control"></select>
+    <span asp-validation-for="StudentType" class="text-danger"></span>
+</div>
+<div class="form-group conditional @UserType.Student">
     <label asp-for="EducationStartDate"></label>
     <input asp-for="EducationStartDate" class="form-control apply-datetimepicker-date" type="text" />
     <span asp-validation-for="EducationStartDate" class="text-danger"></span>
@@ -90,16 +97,14 @@
     <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 </div>
 <div class="form-group">
-    <label asp-for="VkProfile"></label>
-    <input asp-for="VkProfile" class="form-control" type="text" />
-    <span asp-validation-for="VkProfile" class="text-danger"></span>
-</div>
-
-@*Trainer*@
-<div class="form-group">
     <label asp-for="PhoneNumber"></label>
     <input asp-for="PhoneNumber" class="form-control" />
     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="VkProfile"></label>
+    <input asp-for="VkProfile" class="form-control" type="text" />
+    <span asp-validation-for="VkProfile" class="text-danger"></span>
 </div>
 
 <input type="hidden" asp-for="IsUserTypeDisabled" />

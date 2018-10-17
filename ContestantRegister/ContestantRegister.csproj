@@ -55,6 +55,10 @@
     <Compile Remove="Data\Migrations\20180604150211_test.Designer.cs" />
     <Compile Remove="Data\Migrations\20180604150257_test.cs" />
     <Compile Remove="Data\Migrations\20180604150257_test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181017142112_User_StudentType.cs" />
+    <Compile Remove="Data\Migrations\20181017142112_User_StudentType.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181017142331_User_StudentType.cs" />
+    <Compile Remove="Data\Migrations\20181017142331_User_StudentType.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

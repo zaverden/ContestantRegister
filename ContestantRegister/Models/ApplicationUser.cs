@@ -62,8 +62,11 @@ namespace ContestantRegister.Models
         public DateTime? EducationEndDate { get; set; }
 
         [Display(Name = "Дата рождения")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")] 
         public DateTime? DateOfBirth { get; set; }
+
+        //обязательное для студента 
+        [Display(Name = "Категория")]
+        public StudentType? StudentType { get; set; }
 
         /// <summary>
         /// Когда студент не завершил регистрацию, но нужно срочно ее завершить, заводим аналогичного с фейковым email 

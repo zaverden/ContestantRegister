@@ -88,6 +88,10 @@ namespace ContestantRegister.ViewModels
         [Display(Name = "Номер мобильного телефона")]
         public string PhoneNumber { get; set; }
 
+        //обязательное для студента 
+        [Display(Name = "Категория")]
+        public StudentType? StudentType { get; set; }
+
         //Trainer
 
         public bool IsUserTypeDisabled { get; set; }

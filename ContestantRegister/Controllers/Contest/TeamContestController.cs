@@ -181,7 +181,8 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["O1"].Value = "City";
             worksheet.Cells["P1"].Value = "Role";
             worksheet.Cells["Q1"].Value = "PhoneNumber"; 
-            worksheet.Cells["R1"].Value = "IsBaylorRegistrationCompleted"; 
+            worksheet.Cells["R1"].Value = "IsBaylorRegistrationCompleted";
+            worksheet.Cells["S1"].Value = "StudentType";
 
             var row = 2;
             foreach (var registration in registrations)
@@ -225,6 +226,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells[row, 16].Value = role;
             worksheet.Cells[row, 17].Value = user.PhoneNumber;
             worksheet.Cells[row, 18].Value = user.IsBaylorRegistrationCompleted;
+            worksheet.Cells[row, 19].Value = user.StudentType ?? StudentType.Student;
             return row + 1;
         }
 

@@ -14,7 +14,5 @@ namespace ContestantRegister.Models
 
         [Display(Name = "Категория")]
         public StudentType? StudentType { get; set; }
-
-
     }
 }
