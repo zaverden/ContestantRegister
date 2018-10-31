@@ -243,6 +243,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant2)
                 .Include(r => r.Participant3)
                 .Include(r => r.Trainer)
+                .Include(r => r.Trainer2)
+                .Include(r => r.Trainer3)
                 .Include(r => r.Manager)
                 .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id)
@@ -324,6 +326,20 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["BC1"].Value = "DateOfBirth3";
             worksheet.Cells["BD1"].Value = "EducationStartDate3";
             worksheet.Cells["BE1"].Value = "EducationEndDate3";
+
+            worksheet.Cells["BF1"].Value = "Trainer2Email";
+            worksheet.Cells["BG1"].Value = "Trainer2Surname";
+            worksheet.Cells["BH1"].Value = "Trainer2Name";
+            worksheet.Cells["BI1"].Value = "Trainer2Patronymic";
+            worksheet.Cells["BJ1"].Value = "Trainer2FirstName";
+            worksheet.Cells["BK1"].Value = "Trainer2LastName";
+
+            worksheet.Cells["BL1"].Value = "Trainer3Email";
+            worksheet.Cells["BM1"].Value = "Trainer3Surname";
+            worksheet.Cells["BN1"].Value = "Trainer3Name";
+            worksheet.Cells["BO1"].Value = "Trainer3Patronymic";
+            worksheet.Cells["BP1"].Value = "Trainer3FirstName";
+            worksheet.Cells["BQ1"].Value = "Trainer3LastName";
 
             int row = 1;
             foreach (var registration in registrations)
@@ -415,7 +431,20 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 55].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
                 worksheet.Cells[row, 56].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
                 worksheet.Cells[row, 57].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                
+                worksheet.Cells[row, 58].Value = registration.Trainer2?.Email;
+                worksheet.Cells[row, 59].Value = registration.Trainer2?.Surname;
+                worksheet.Cells[row, 60].Value = registration.Trainer2?.Name;
+                worksheet.Cells[row, 61].Value = registration.Trainer2?.Patronymic;
+                worksheet.Cells[row, 62].Value = registration.Trainer2?.FirstName;
+                worksheet.Cells[row, 63].Value = registration.Trainer2?.LastName;
 
+                worksheet.Cells[row, 64].Value = registration.Trainer3?.Email;
+                worksheet.Cells[row, 65].Value = registration.Trainer3?.Surname;
+                worksheet.Cells[row, 66].Value = registration.Trainer3?.Name;
+                worksheet.Cells[row, 67].Value = registration.Trainer3?.Patronymic;
+                worksheet.Cells[row, 68].Value = registration.Trainer3?.FirstName;
+                worksheet.Cells[row, 69].Value = registration.Trainer3?.LastName;
             }
 
             var ms = new MemoryStream();
