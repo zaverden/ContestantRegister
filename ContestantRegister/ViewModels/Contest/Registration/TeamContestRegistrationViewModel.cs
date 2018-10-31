@@ -26,6 +26,12 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         [Display(Name = "Запасной участник")]
         public string ReserveParticipantId { get; set; }
 
+        [Display(Name = "Тренер 2")]
+        public string Trainer2Id { get; set; }
+
+        [Display(Name = "Тренер 3")]
+        public string Trainer3Id { get; set; }
+
         [Display(Name = "Неофициальное название команды")]
         [MaxLength(128)]
         public string TeamName { get; set; }

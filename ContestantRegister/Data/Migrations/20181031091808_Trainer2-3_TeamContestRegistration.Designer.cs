@@ -13,9 +13,10 @@ using System;
 namespace ContestantRegister.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181031091808_Trainer2-3_TeamContestRegistration")]
+    partial class Trainer23_TeamContestRegistration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -216,8 +217,6 @@ namespace ContestantRegister.Data.Migrations
                     b.Property<bool>("ShowRegistrationInfo");
 
                     b.Property<DateTime>("Start");
-
-                    b.Property<int>("TrainerCount");
 
                     b.Property<int>("UsedAccountsCount");
 

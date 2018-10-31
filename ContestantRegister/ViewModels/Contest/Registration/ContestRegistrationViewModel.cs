@@ -75,5 +75,8 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         public string ContestName { get; set; }
 
         public int ContestId { get; set; }
+
+        public int ContestTrainerCont { get; set; }
+
     }
 }

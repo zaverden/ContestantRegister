@@ -174,6 +174,8 @@ namespace ContestantRegister.Services
                 if (reserveTrainer) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник уже зарегистрирован в другой команде как тренер"));
             }
 
+            //TODO валидация для тренера 2 и 3 
+
             var trainerParticipant = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.TrainerId);
             if (trainerParticipant) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Тренер уже зарегистрирован в другой команде как участник"));
 

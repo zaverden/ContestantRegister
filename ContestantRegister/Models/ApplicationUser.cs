@@ -92,6 +92,8 @@ namespace ContestantRegister.Models
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant2 { get; set; }
         public ICollection<TeamContestRegistration> ContestRegistrationsParticipant3 { get; set; }
         public ICollection<TeamContestRegistration> ContestRegistrationsReserveParticipant { get; set; }
+        public ICollection<TeamContestRegistration> ContestRegistrationsTrainer2 { get; set; }
+        public ICollection<TeamContestRegistration> ContestRegistrationsTrainer3 { get; set; }
 
         public ICollection<ApplicationUser> RegistredByThisUser { get; set; }
     }

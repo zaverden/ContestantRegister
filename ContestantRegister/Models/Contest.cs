@@ -87,7 +87,11 @@ namespace ContestantRegister.Models
         [Display(Name = "Зарегистрировано")]
         [Range(0, int.MaxValue)]
         public int RegistrationsCount { get; set; }
-        
+
+        [Display(Name = "Количество тренеров")]
+        [Range(1, 3)]
+        public int TrainerCount { get; set; }
+
         //TODO можно вынести это во ViewModel
         [NotMapped]
         [Required]

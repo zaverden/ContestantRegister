@@ -17,10 +17,20 @@ namespace ContestantRegister.Models
 
         public ApplicationUser Participant3 { get; set; }
 
-        [Display(Name = "Участник 3")]
+        [Display(Name = "Запасной")]
         public string ReserveParticipantId { get; set; }
 
         public ApplicationUser ReserveParticipant { get; set; }
+
+        [Display(Name = "Тренер 2")]
+        public string Trainer2Id { get; set; }
+
+        public ApplicationUser Trainer2 { get; set; }
+
+        [Display(Name = "Тренер 3")]
+        public string Trainer3Id { get; set; }
+
+        public ApplicationUser Trainer3 { get; set; }
 
         /// <summary>
         /// Например, Bizons

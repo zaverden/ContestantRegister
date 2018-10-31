@@ -184,6 +184,7 @@ namespace ContestantRegister.Controllers
             var viewModel = CreateContestRegistrationViewModel();
             viewModel.ContestName = contest.Name;
             viewModel.ContestId = contest.Id;
+            viewModel.ContestTrainerCont = contest.TrainerCount;
             viewModel.ParticipantType = contest.ParticipantType;
             viewModel.IsAreaRequired = contest.IsAreaRequired;
             viewModel.IsProgrammingLanguageNeeded = contest.IsProgrammingLanguageNeeded;
@@ -309,6 +310,7 @@ namespace ContestantRegister.Controllers
 
             var viewModel = CreateEditContestRegistrationViewModel();
             viewModel.ContestName = registration.Contest.Name;
+            viewModel.ContestTrainerCont = registration.Contest.TrainerCount;
             viewModel.IsAreaRequired = registration.Contest.IsAreaRequired;
             viewModel.IsProgrammingLanguageNeeded = registration.Contest.IsProgrammingLanguageNeeded;
             viewModel.IsOutOfCompetitionAllowed = registration.Contest.IsOutOfCompetitionAllowed;
@@ -359,8 +361,18 @@ namespace ContestantRegister.Controllers
                 ViewData["Participant2Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant2Id);
                 ViewData["Participant3Id"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.Participant3Id);
                 ViewData["ReserveParticipantId"] = new SelectList(users, "Id", "DisplayName", creatTeamVM.ReserveParticipantId);
+
+                if (contest.TrainerCount > 1)
+                {
+                    ViewData["Trainer2Id"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", creatTeamVM.Trainer2Id);
+                }
+                if (contest.TrainerCount > 2)
+                {
+                    ViewData["Trainer3Id"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", creatTeamVM.Trainer3Id);
+                }
             }
             ViewData["TrainerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.TrainerId);
+
             ViewData["ManagerId"] = new SelectList(users.Where(u => u.UserType != UserType.Pupil), "Id", "DisplayName", viewModel.ManagerId);
             ViewData["StudyPlaces"] = studyPlaces;
             
