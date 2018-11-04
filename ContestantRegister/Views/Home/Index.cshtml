@@ -76,11 +76,7 @@
                     @Html.DisplayFor(modelItem => item.ContestStatus)
                 </td>
                 <td>
-                    @if (User.Identity.IsAuthenticated && item.ParticipantType == ParticipantType.Student && UserManager.GetUser(User).UserType == UserType.Pupil)
-                    {
-                        <label>Школьники не участвют в студенческих соревнованиях</label>
-                    }
-                    else if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
+                    if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
                         if (item.ContestType == ContestType.Individual)
                         {

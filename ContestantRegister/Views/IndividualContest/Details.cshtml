@@ -68,11 +68,7 @@
 </div>
 
 <p>
-    @if (User.Identity.IsAuthenticated && Model.Contest.ParticipantType == ParticipantType.Student && UserManager.GetUser(User).UserType == UserType.Pupil)
-    {
-        <label>Школьники не могут участвовать в студенческих соревнованиях</label>
-    }
-    else if (Model.Contest.ContestStatus == ContestStatus.RegistrationOpened || Model.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
+    if (Model.Contest.ContestStatus == ContestStatus.RegistrationOpened || Model.Contest.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
     {
         <a asp-action="Register" asp-route-id="@Model.Contest.Id">Зарегистрироваться</a>
     }
