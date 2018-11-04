@@ -200,14 +200,7 @@ namespace ContestantRegister.Controllers
                     break;
 
                 case UserType.Pupil:
-                    if (contest.ParticipantType == ParticipantType.Pupil)
-                    {
-                        viewModel.Participant1Id = user.Id;
-                    }
-                    else //Школьник пытается зарегаться на студенческое соревнование, этого делать нельзя
-                    {
-                        return RedirectToAction(nameof(HomeController.Index), "Home");
-                    }
+                    viewModel.Participant1Id = user.Id;                    
                     break;
 
                 case UserType.Student:
