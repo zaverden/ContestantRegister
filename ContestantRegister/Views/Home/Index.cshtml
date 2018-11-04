@@ -76,7 +76,7 @@
                     @Html.DisplayFor(modelItem => item.ContestStatus)
                 </td>
                 <td>
-                    if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
+                    @if (item.ContestStatus == ContestStatus.RegistrationOpened || item.ContestStatus == ContestStatus.ConfirmParticipationOrRegister)
                     {
                         if (item.ContestType == ContestType.Individual)
                         {
