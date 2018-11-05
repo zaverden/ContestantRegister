@@ -127,6 +127,7 @@ namespace ContestantRegister.Services
         {
             var result = new List<KeyValuePair<string, string>>();
 
+            
             if (editRegistration && !viewModel.Number.HasValue)
                 result.Add(KeyValuePair.Create(nameof(viewModel.Number), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.Number))));
 
@@ -149,64 +150,88 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.CityId), "Выбранный город не соответствует городу учебного заведения"));
             }
 
-            var participant1Registered = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant1Id);
-            if (participant1Registered) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Участник уже зарегистрирован в другой команде"));
-            var participant1Trainer = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant1Id);
-            if (participant1Trainer) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Участник уже зарегистрирован в другой команде как тренер"));
+            if (!string.IsNullOrEmpty(viewModel.Participant1Id))
+            {
+                var participant1Team = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant1Id);
+                if (participant1Team != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), $"Участник уже зарегистрирован в команде '{participant1Team.DisplayTeamName}'"));
+                var participant1TrainerTeam = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant1Id);
+                if (participant1TrainerTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), $"Участник уже зарегистрирован как тренер в команде '{participant1TrainerTeam.DisplayTeamName}'"));
+            }
+            var participant2Exists = !string.IsNullOrEmpty(viewModel.Participant2Id);
+            if (participant2Exists)
+            {
+                var participant2Team = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant2Id);
+                if (participant2Team != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), $"Участник уже зарегистрирован в команде '{participant2Team.DisplayTeamName}'"));
+                var participant2TrainerTeam = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant2Id);
+                if (participant2TrainerTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), $"Участник уже зарегистрирован как тренер в команде '{participant2TrainerTeam.DisplayTeamName}'"));
+            }
 
-            var participant2Registered = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant2Id);
-            if (participant2Registered) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник уже зарегистрирован в другой команде"));
-            var participant2Trainer = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant2Id);
-            if (participant2Trainer) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник уже зарегистрирован в другой команде как тренер"));
-
-            var participant3Registered = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant3Id);
-            if (participant3Registered) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник уже зарегистрирован в другой команде"));
-            var participant3Trainer = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant3Id);
-            if (participant3Trainer) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник уже зарегистрирован в другой команде как тренер"));
-
+            var participant3Exists = !string.IsNullOrEmpty(viewModel.Participant3Id);
+            if (participant3Exists)
+            {
+                var participant3Team = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant3Id);
+                if (participant3Team != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), $"Участник уже зарегистрирован в команде '{participant3Team.DisplayTeamName}'"));
+                var participant3TrainerTeam = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.Participant3Id);
+                if (participant3TrainerTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), $"Участник уже зарегистрирован как тренер в команде '{participant3TrainerTeam.DisplayTeamName}'"));
+            }
+            
             var reserveParticipantExists = !string.IsNullOrEmpty(viewModel.ReserveParticipantId);
             if (reserveParticipantExists)
             {
-                var reserveParticipantRegistered = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.ReserveParticipantId);
-                if (reserveParticipantRegistered) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник уже зарегистрирован в другой команде"));
+                var reserveParticipantTeam = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.ReserveParticipantId);
+                if (reserveParticipantTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), $"Участник уже зарегистрирован в команде '{reserveParticipantTeam.DisplayTeamName}'"));
 
-                var reserveTrainer = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.ReserveParticipantId);
-                if (reserveTrainer) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник уже зарегистрирован в другой команде как тренер"));
+                var reserveTrainerTeam = await TrainerExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.ReserveParticipantId);
+                if (reserveTrainerTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), $"Участник уже зарегистрирован как тренер в кманде '{reserveTrainerTeam.DisplayTeamName}'"));
             }
 
             //TODO валидация для тренера 2 и 3 
 
-            var trainerParticipant = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.TrainerId);
-            if (trainerParticipant) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Тренер уже зарегистрирован в другой команде как участник"));
+            var trainerParticipantTeam = await ParticipantExistsInOtherTeams(viewModel.RegistrationId, contest, viewModel.TrainerId);
+            if (trainerParticipantTeam != null) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), $"Тренер уже зарегистрирован как участник в команде {trainerParticipantTeam.DisplayTeamName}"));
 
             var idNameDictionary = new Dictionary<string, string> { { viewModel.Participant1Id, nameof(viewModel.Participant1Id) } };
 
             string propertyName;
-            if (idNameDictionary.TryGetValue(viewModel.Participant2Id, out propertyName))
+
+            if (participant2Exists)
             {
-                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник указан дважды"));
-            }
-            else
-            {
-                idNameDictionary.Add(viewModel.Participant2Id, nameof(viewModel.Participant2Id));
+                if (idNameDictionary.TryGetValue(viewModel.Participant2Id, out propertyName))
+                {
+                    result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
+                    result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), "Участник указан дважды"));
+                }
+                else
+                {
+                    idNameDictionary.Add(viewModel.Participant2Id, nameof(viewModel.Participant2Id));
+                }
             }
 
-            if (idNameDictionary.TryGetValue(viewModel.Participant3Id, out propertyName))
+            if (participant3Exists)
             {
-                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
-                result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник указан дважды"));
-            }
-            else
-            {
-                idNameDictionary.Add(viewModel.Participant3Id, nameof(viewModel.Participant3Id));
+                if (idNameDictionary.TryGetValue(viewModel.Participant3Id, out propertyName))
+                {
+                    result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
+                    result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), "Участник указан дважды"));
+                }
+                else
+                {
+                    idNameDictionary.Add(viewModel.Participant3Id, nameof(viewModel.Participant3Id));
+                }
             }
 
-            if (reserveParticipantExists && idNameDictionary.TryGetValue(viewModel.ReserveParticipantId, out propertyName))
+            if (reserveParticipantExists)
             {
-                result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
-                result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник указан дважды"));
-            }            
+                if (idNameDictionary.TryGetValue(viewModel.ReserveParticipantId, out propertyName))
+                {
+                    result.Add(KeyValuePair.Create(propertyName, "Участник указан дважды"));
+                    result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), "Участник указан дважды"));
+                }
+                else
+                {
+                    idNameDictionary.Add(viewModel.ReserveParticipantId, nameof(viewModel.ReserveParticipantId));
+                }
+            }
 
             if (viewModel.Participant1Id == viewModel.TrainerId ||
                 viewModel.Participant2Id == viewModel.TrainerId ||
@@ -216,15 +241,17 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Участник не может быть тренером"));
             }
 
-            if (viewModel.Participant1Id == viewModel.ManagerId ||
-                viewModel.Participant2Id == viewModel.ManagerId ||
-                viewModel.Participant3Id == viewModel.ManagerId ||
-                (reserveParticipantExists && viewModel.ReserveParticipantId == viewModel.ManagerId))
+            if (!string.IsNullOrEmpty(viewModel.ManagerId) &&
+                    (
+                        viewModel.Participant1Id == viewModel.ManagerId ||
+                        viewModel.Participant2Id == viewModel.ManagerId ||
+                        viewModel.Participant3Id == viewModel.ManagerId ||
+                        (reserveParticipantExists && viewModel.ReserveParticipantId == viewModel.ManagerId)
+                    )
+                )
             {
                 result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть руководителем"));
             }
-
-
 
             var currentUser = await _userManager.GetUserAsync(user);
             if (!user.IsInRole(Roles.Admin) && 
@@ -239,8 +266,8 @@ namespace ContestantRegister.Services
             }
 
             var participant1 = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant1Id);
-            var participant2 = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant2Id);
-            var participant3 = await _context.Users.SingleAsync(u => u.Id == viewModel.Participant3Id);
+            var participant2 = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.Participant2Id);
+            var participant3 = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.Participant3Id);
             var trainer = await _context.Users.SingleAsync(u => u.Id == viewModel.TrainerId);
             var manager = await _context.Users.SingleOrDefaultAsync(u => u.Id == viewModel.ManagerId);
             ApplicationUser reserveParticipant = null;
@@ -251,8 +278,8 @@ namespace ContestantRegister.Services
             {
                 var message = "Только школьник может быть участником школьного контеста";
                 if (participant1.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
-                if (participant2.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
-                if (participant3.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
+                if (participant2 != null && participant2.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
+                if (participant3 != null && participant3.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
                 if (reserveParticipant != null && reserveParticipant.UserType != UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), message));
             }
 
@@ -260,8 +287,8 @@ namespace ContestantRegister.Services
             {
                 var message = "Чтобы зарегистрировать участника - не студента, поставьте флаг 'Вне конкурса'";
                 if (participant1.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), message));
-                if (participant2.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
-                if (participant3.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
+                if (participant2 != null && participant2.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), message));
+                if (participant3 != null && participant3.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), message));
                 if (reserveParticipant != null && reserveParticipant.UserType != UserType.Student) result.Add(KeyValuePair.Create(nameof(viewModel.ReserveParticipantId), message));
                 if (trainer.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Школьник не может быть тренером на студенческом контесте"));
                 if (manager != null && manager.UserType == UserType.Pupil) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Школьник не может быть руководителем на студенческом контесте"));
@@ -278,26 +305,30 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.TeamName), "Только английские буквы, цифры и пробел"));
             }
 
+            if (viewModel.Status == ContestRegistrationStatus.Completed)
+            {
+                if (!participant2Exists) result.Add(KeyValuePair.Create(nameof(viewModel.Participant2Id), $"Заполните 'Участник 2' для завершения регистрации"));
+                if (!participant3Exists) result.Add(KeyValuePair.Create(nameof(viewModel.Participant3Id), $"Заполните 'Участник 3' для завершения регистрации"));
+            }
+
             return result;
         }
 
-        private Task<bool> ParticipantExistsInOtherTeams(int registrationId, Contest contest, string participantId)
+        private Task<TeamContestRegistration> ParticipantExistsInOtherTeams(int registrationId, Contest contest, string participantId)
         {
-            return _context.TeamContestRegistrations.AnyAsync(r =>
+            return _context.TeamContestRegistrations.FirstOrDefaultAsync(r =>
                 r.Id != registrationId &&
-                r.ContestId == contest.Id &&
-                r.Status == ContestRegistrationStatus.Completed &&
+                r.ContestId == contest.Id &&                
                 (r.Participant1Id == participantId ||
                  r.Participant2Id == participantId ||
                  r.Participant3Id == participantId));
         }
 
-        private Task<bool> TrainerExistsInOtherTeams(int registrationId, Contest contest, string trainerId)
+        private Task<TeamContestRegistration> TrainerExistsInOtherTeams(int registrationId, Contest contest, string trainerId)
         {
-            return _context.TeamContestRegistrations.AnyAsync(r =>
+            return _context.TeamContestRegistrations.FirstOrDefaultAsync(r =>
                 r.Id != registrationId &&
-                r.ContestId == contest.Id &&
-                r.Status == ContestRegistrationStatus.Completed &&
+                r.ContestId == contest.Id &&                
                 r.TrainerId == trainerId);
         }
     }

@@ -211,84 +211,92 @@
                 <td>
                     @{
                         user = item.Participant2;
-                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+
+                        if (user != null)
                         {
 
-                            var name = $"{user.FirstName} {user.LastName}";
-                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                            if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                             {
-                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                @Html.DisplayFor(modelItem => name)
-                            }
-                            else
-                            {
-                                if (user.IsBaylorRegistrationCompleted)
+
+                                var name = $"{user.FirstName} {user.LastName}";
+                                if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
                                 {
-                                    <span style="color: green">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
+                                    //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                                    @Html.DisplayFor(modelItem => name)
                                 }
                                 else
                                 {
-                                    <span style="color: red">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
+                                    if (user.IsBaylorRegistrationCompleted)
+                                    {
+                                        <span style="color: green">
+                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                            @Html.DisplayFor(modelItem => name)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: red">
+                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                            @Html.DisplayFor(modelItem => name)
+                                        </span>
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                            @Html.DisplayFor(modelItem => name)
-                        }
-                        if (User.IsInRole(Roles.Admin))
-                        {
-                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                            else
+                            {
+                                <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
+                                var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                                @Html.DisplayFor(modelItem => name)
+                            }
+                            if (User.IsInRole(Roles.Admin))
+                            {
+                                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                            }
                         }
                     }
                 </td>
                 <td>
                     @{
                         user = item.Participant3;
-                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                        if (user != null)
                         {
+                            if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                            {
 
-                            var name = $"{user.FirstName} {user.LastName}";
-                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                            {
-                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                @Html.DisplayFor(modelItem => name)
-                            }
-                            else
-                            {
-                                if (user.IsBaylorRegistrationCompleted)
+                                var name = $"{user.FirstName} {user.LastName}";
+                                if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
                                 {
-                                    <span style="color: green">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
+                                    //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                                    @Html.DisplayFor(modelItem => name)
                                 }
                                 else
                                 {
-                                    <span style="color: red">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
+                                    if (user.IsBaylorRegistrationCompleted)
+                                    {
+                                        <span style="color: green">
+                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                            @Html.DisplayFor(modelItem => name)
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: red">
+                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                            @Html.DisplayFor(modelItem => name)
+                                        </span>
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                            @Html.DisplayFor(modelItem => name)
-                        }
-                        if (User.IsInRole(Roles.Admin))
-                        {
-                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                            else
+                            {
+                                <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
+                                var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                                @Html.DisplayFor(modelItem => name)
+                            }
+                            if (User.IsInRole(Roles.Admin))
+                            {
+                                <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                            }
                         }
                     }
                 </td>
@@ -560,84 +568,89 @@
             <td>
                 @{
                     user = item.Participant2;
-                    if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                    if (user != null)
                     {
-
-                        var name = $"{user.FirstName} {user.LastName}";
-                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-                            //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                            @Html.DisplayFor(modelItem => name)
-                        }
-                        else
-                        {
-                            if (user.IsBaylorRegistrationCompleted)
+                            var name = $"{user.FirstName} {user.LastName}";
+                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
                             {
-                                <span style="color: green">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
+                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                                @Html.DisplayFor(modelItem => name)
                             }
                             else
                             {
-                                <span style="color: red">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
+                                if (user.IsBaylorRegistrationCompleted)
+                                {
+                                    <span style="color: green">
+                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                        @Html.DisplayFor(modelItem => name)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: red">
+                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                        @Html.DisplayFor(modelItem => name)
+                                    </span>
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                        var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                        @Html.DisplayFor(modelItem => name)
-                    }
-                    if (User.IsInRole(Roles.Admin))
-                    {
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        else
+                        {
+                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
+                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                            @Html.DisplayFor(modelItem => name)
+                        }
+                        if (User.IsInRole(Roles.Admin))
+                        {
+                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        }
                     }
                 }
             </td>
             <td>
                 @{
                     user = item.Participant3;
-                    if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                    if (user != null)
                     {
+                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                        {
 
-                        var name = $"{user.FirstName} {user.LastName}";
-                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                        {
-                            //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                            @Html.DisplayFor(modelItem => name)
-                        }
-                        else
-                        {
-                            if (user.IsBaylorRegistrationCompleted)
+                            var name = $"{user.FirstName} {user.LastName}";
+                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
                             {
-                                <span style="color: green">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
+                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
+                                @Html.DisplayFor(modelItem => name)
                             }
                             else
                             {
-                                <span style="color: red">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
+                                if (user.IsBaylorRegistrationCompleted)
+                                {
+                                    <span style="color: green">
+                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                        @Html.DisplayFor(modelItem => name)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: red">
+                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
+                                        @Html.DisplayFor(modelItem => name)
+                                    </span>
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                        var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                        @Html.DisplayFor(modelItem => name)
-                    }
-                    if (User.IsInRole(Roles.Admin))
-                    {
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        else
+                        {
+                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
+                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                            @Html.DisplayFor(modelItem => name)
+                        }
+                        if (User.IsInRole(Roles.Admin))
+                        {
+                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        }
                     }
                 }
             </td>
