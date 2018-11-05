@@ -66,9 +66,9 @@ namespace ContestantRegister.Controllers
             string studyPlaceName = string.Empty;
             var studyPlace = await _context.StudyPlaces.FindAsync(registration.StudyPlaceId);
 
-            if (contest.ParticipantType == ParticipantType.Student && contest.IsEnglishLanguage)
+            if (contest.ParticipantType == ParticipantType.Student && contest.IsEnglishLanguage && studyPlace is Institution inst)
             {
-                studyPlaceName = ((Institution)studyPlace).ShortNameEnglish;
+                studyPlaceName = inst.ShortNameEnglish;
             }
             else
             {
