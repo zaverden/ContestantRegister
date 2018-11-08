@@ -187,13 +187,26 @@ namespace ContestantRegister.Controllers
             var row = 2;
             foreach (var registration in registrations)
             {
-                row = AddTeamMember(worksheet, registration.Participant1, row, registration, "Contestant");
-                row = AddTeamMember(worksheet, registration.Participant2, row, registration, "Contestant");
-                row = AddTeamMember(worksheet, registration.Participant3, row, registration, "Contestant");
+                if (registration.Participant1 != null)
+                {
+                    row = AddTeamMember(worksheet, registration.Participant1, row, registration, "Contestant");
+                }
+
+                if (registration.Participant2 != null)
+                {
+                    row = AddTeamMember(worksheet, registration.Participant2, row, registration, "Contestant");
+                }
+
+                if (registration.Participant3 != null)
+                {
+                    row = AddTeamMember(worksheet, registration.Participant3, row, registration, "Contestant");
+                }
+
                 if (registration.ReserveParticipant != null)
                 {
                     row = AddTeamMember(worksheet, registration.ReserveParticipant, row, registration, "Reserve");
                 }
+
                 row = AddTeamMember(worksheet, registration.Trainer, row, registration, "Coach");
             }
 
@@ -351,20 +364,41 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 3].Value = registration.TeamName;
                 worksheet.Cells[row, 4].Value = registration.Status;
 
-                worksheet.Cells[row, 5].Value = registration.Participant1.Email;
-                worksheet.Cells[row, 6].Value = registration.Participant1.Surname;
-                worksheet.Cells[row, 7].Value = registration.Participant1.Name;
-                worksheet.Cells[row, 8].Value = registration.Participant1.Patronymic;
+                if (registration.Participant1 != null)
+                {
+                    worksheet.Cells[row, 5].Value = registration.Participant1.Email;
+                    worksheet.Cells[row, 6].Value = registration.Participant1.Surname;
+                    worksheet.Cells[row, 7].Value = registration.Participant1.Name;
+                    worksheet.Cells[row, 8].Value = registration.Participant1.Patronymic;
 
-                worksheet.Cells[row, 9].Value = registration.Participant2.Email;
-                worksheet.Cells[row, 10].Value = registration.Participant2.Surname;
-                worksheet.Cells[row, 11].Value = registration.Participant2.Name;
-                worksheet.Cells[row, 12].Value = registration.Participant2.Patronymic;
+                    worksheet.Cells[row, 49].Value = registration.Participant1.DateOfBirth.HasValue ? registration.Participant1.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 50].Value = registration.Participant1.EducationStartDate.HasValue ? registration.Participant1.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 51].Value = registration.Participant1.EducationEndDate.HasValue ? registration.Participant1.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                }
 
-                worksheet.Cells[row, 13].Value = registration.Participant3.Email;
-                worksheet.Cells[row, 14].Value = registration.Participant3.Surname;
-                worksheet.Cells[row, 15].Value = registration.Participant3.Name;
-                worksheet.Cells[row, 16].Value = registration.Participant3.Patronymic;
+                if (registration.Participant2 != null)
+                {
+                    worksheet.Cells[row, 9].Value = registration.Participant2.Email;
+                    worksheet.Cells[row, 10].Value = registration.Participant2.Surname;
+                    worksheet.Cells[row, 11].Value = registration.Participant2.Name;
+                    worksheet.Cells[row, 12].Value = registration.Participant2.Patronymic;
+
+                    worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 54].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                }
+
+                if (registration.Participant3 != null)
+                {
+                    worksheet.Cells[row, 13].Value = registration.Participant3.Email;
+                    worksheet.Cells[row, 14].Value = registration.Participant3.Surname;
+                    worksheet.Cells[row, 15].Value = registration.Participant3.Name;
+                    worksheet.Cells[row, 16].Value = registration.Participant3.Patronymic;
+
+                    worksheet.Cells[row, 55].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 56].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                    worksheet.Cells[row, 57].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
+                }
 
                 worksheet.Cells[row, 17].Value = registration.Trainer.Email;
                 worksheet.Cells[row, 18].Value = registration.Trainer.Surname;
@@ -401,14 +435,14 @@ namespace ContestantRegister.Controllers
 
                 if (registration.Contest.ParticipantType == ParticipantType.Student && registration.Contest.IsEnglishLanguage)
                 {
-                    worksheet.Cells[row, 38].Value = registration.Participant1.FirstName;
-                    worksheet.Cells[row, 39].Value = registration.Participant1.LastName;
+                    worksheet.Cells[row, 38].Value = registration.Participant1?.FirstName;
+                    worksheet.Cells[row, 39].Value = registration.Participant1?.LastName;
 
-                    worksheet.Cells[row, 40].Value = registration.Participant2.FirstName;
-                    worksheet.Cells[row, 41].Value = registration.Participant2.LastName;
+                    worksheet.Cells[row, 40].Value = registration.Participant2?.FirstName;
+                    worksheet.Cells[row, 41].Value = registration.Participant2?.LastName;
 
-                    worksheet.Cells[row, 42].Value = registration.Participant3.FirstName;
-                    worksheet.Cells[row, 43].Value = registration.Participant3.LastName;
+                    worksheet.Cells[row, 42].Value = registration.Participant3?.FirstName;
+                    worksheet.Cells[row, 43].Value = registration.Participant3?.LastName;
 
                     worksheet.Cells[row, 44].Value = registration.Trainer.FirstName;
                     worksheet.Cells[row, 45].Value = registration.Trainer.LastName;
@@ -420,18 +454,6 @@ namespace ContestantRegister.Controllers
                 
                 //48 колонка занята
 
-                worksheet.Cells[row, 49].Value = registration.Participant1.DateOfBirth.HasValue ? registration.Participant1.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 50].Value = registration.Participant1.EducationStartDate.HasValue ? registration.Participant1.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 51].Value = registration.Participant1.EducationEndDate.HasValue ? registration.Participant1.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-
-                worksheet.Cells[row, 52].Value = registration.Participant2.DateOfBirth.HasValue ? registration.Participant2.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 53].Value = registration.Participant2.EducationStartDate.HasValue ? registration.Participant2.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 54].Value = registration.Participant2.EducationEndDate.HasValue ? registration.Participant2.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-
-                worksheet.Cells[row, 55].Value = registration.Participant3.DateOfBirth.HasValue ? registration.Participant3.DateOfBirth.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 56].Value = registration.Participant3.EducationStartDate.HasValue ? registration.Participant3.EducationStartDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                worksheet.Cells[row, 57].Value = registration.Participant3.EducationEndDate.HasValue ? registration.Participant3.EducationEndDate.Value.ToString("dd.MM.yyyy") : string.Empty;
-                
                 worksheet.Cells[row, 58].Value = registration.Trainer2?.Email;
                 worksheet.Cells[row, 59].Value = registration.Trainer2?.Surname;
                 worksheet.Cells[row, 60].Value = registration.Trainer2?.Name;
