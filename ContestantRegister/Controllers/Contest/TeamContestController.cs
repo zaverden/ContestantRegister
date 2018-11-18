@@ -162,6 +162,7 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Manager)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.StudyPlace.City)
+                .Include(r => r.StudyPlace.City.Region)
                 .Where(r => r.ContestId == id);
 
             worksheet.Cells["A1"].Value = "Email";
@@ -183,6 +184,7 @@ namespace ContestantRegister.Controllers
             worksheet.Cells["Q1"].Value = "PhoneNumber"; 
             worksheet.Cells["R1"].Value = "IsBaylorRegistrationCompleted";
             worksheet.Cells["S1"].Value = "StudentType";
+            worksheet.Cells["T1"].Value = "Region";
 
             var row = 2;
             foreach (var registration in registrations)
@@ -240,6 +242,8 @@ namespace ContestantRegister.Controllers
             worksheet.Cells[row, 17].Value = user.PhoneNumber;
             worksheet.Cells[row, 18].Value = user.IsBaylorRegistrationCompleted;
             worksheet.Cells[row, 19].Value = user.StudentType ?? StudentType.Student;
+            worksheet.Cells[row, 20].Value = registration.StudyPlace.City.Region?.Name;
+
             return row + 1;
         }
 
