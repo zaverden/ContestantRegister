@@ -169,42 +169,52 @@
                 <td>
                 @{
                     var user = item.Participant1;
-                    if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                    if (user != null)
                     {
-
-                        var name = $"{user.FirstName} {user.LastName}";
-                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        string name1;
+                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-                            //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                            @Html.DisplayFor(modelItem => name)
+                            name1 = $"{user.FirstName} {user.LastName}";
                         }
                         else
                         {
-                            if (user.IsBaylorRegistrationCompleted)
+                            name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
+                        }
+
+                        bool greenStatus;
+                        if (Model.Contest.ParticipantType == ParticipantType.Student)
+                        {
+                            greenStatus = user.IsBaylorRegistrationCompleted;
+                        }
+                        else //ParticipantType.Pupil
+                        {
+                            greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                        }
+
+                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        {
+                            @Html.DisplayFor(modelItem => name1)
+                        }
+                        else
+                        {
+                            if (greenStatus)
                             {
                                 <span style="color: green">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
+                                    @Html.DisplayFor(modelItem => name1)
                                 </span>
                             }
                             else
                             {
                                 <span style="color: red">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
+                                    @Html.DisplayFor(modelItem => name1)
                                 </span>
                             }
                         }
-                    }
-                    else
-                    {
-                        <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                        var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                        @Html.DisplayFor(modelItem => name)
-                    }
-                    if (User.IsInRole(Roles.Admin))
-                    {
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+
+                        if (User.IsInRole(Roles.Admin))
+                        {
+                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        }
                     }
                 }
                 </td>
@@ -214,40 +224,46 @@
 
                         if (user != null)
                         {
-
+                            string name1;
                             if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                             {
-
-                                var name = $"{user.FirstName} {user.LastName}";
-                                if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                                {
-                                    //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                    @Html.DisplayFor(modelItem => name)
-                                }
-                                else
-                                {
-                                    if (user.IsBaylorRegistrationCompleted)
-                                    {
-                                        <span style="color: green">
-                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                            @Html.DisplayFor(modelItem => name)
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span style="color: red">
-                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                            @Html.DisplayFor(modelItem => name)
-                                        </span>
-                                    }
-                                }
+                                name1 = $"{user.FirstName} {user.LastName}";
                             }
                             else
                             {
-                                <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                                var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                                @Html.DisplayFor(modelItem => name)
+                                name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
                             }
+
+                            bool greenStatus;
+                            if (Model.Contest.ParticipantType == ParticipantType.Student)
+                            {
+                                greenStatus = user.IsBaylorRegistrationCompleted;
+                            }
+                            else //ParticipantType.Pupil
+                            {
+                                greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                            }
+
+                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                            {
+                                @Html.DisplayFor(modelItem => name1)
+                            }
+                            else
+                            {
+                                if (greenStatus)
+                                {
+                                    <span style="color: green">
+                                        @Html.DisplayFor(modelItem => name1)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: red">
+                                        @Html.DisplayFor(modelItem => name1)
+                                    </span>
+                                }
+                            }
+
                             if (User.IsInRole(Roles.Admin))
                             {
                                 <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -260,39 +276,46 @@
                         user = item.Participant3;
                         if (user != null)
                         {
+                            string name1;
                             if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                             {
-
-                                var name = $"{user.FirstName} {user.LastName}";
-                                if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                                {
-                                    //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                    @Html.DisplayFor(modelItem => name)
-                                }
-                                else
-                                {
-                                    if (user.IsBaylorRegistrationCompleted)
-                                    {
-                                        <span style="color: green">
-                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                            @Html.DisplayFor(modelItem => name)
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span style="color: red">
-                                            <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                            @Html.DisplayFor(modelItem => name)
-                                        </span>
-                                    }
-                                }
+                                name1 = $"{user.FirstName} {user.LastName}";
                             }
                             else
                             {
-                                <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                                var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                                @Html.DisplayFor(modelItem => name)
+                                name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
                             }
+
+                            bool greenStatus;
+                            if (Model.Contest.ParticipantType == ParticipantType.Student)
+                            {
+                                greenStatus = user.IsBaylorRegistrationCompleted;
+                            }
+                            else //ParticipantType.Pupil
+                            {
+                                greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                            }
+
+                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                            {
+                                @Html.DisplayFor(modelItem => name1)
+                            }
+                            else
+                            {
+                                if (greenStatus)
+                                {
+                                    <span style="color: green">
+                                        @Html.DisplayFor(modelItem => name1)
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: red">
+                                        @Html.DisplayFor(modelItem => name1)
+                                    </span>
+                                }
+                            }
+
                             if (User.IsInRole(Roles.Admin))
                             {
                                 <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -303,39 +326,38 @@
                 <td>
                     @{
                         user = item.Trainer;
+                        
+                        string name;
                         if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-
-                            var name = $"{user.FirstName} {user.LastName}";
-                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                            {
-                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                @Html.DisplayFor(modelItem => name)
-                            }
-                            else
-                            {
-                                if (user.IsBaylorRegistrationCompleted)
-                                {
-                                    <span style="color: green">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span style="color: red">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                            }
+                            name = $"{user.FirstName} {user.LastName}";
                         }
                         else
                         {
-                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                            name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                        }
+
+                    
+                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition || Model.Contest.ParticipantType == ParticipantType.Pupil)
+                        {
                             @Html.DisplayFor(modelItem => name)
                         }
+                        else
+                        {
+                            if (user.IsBaylorRegistrationCompleted)
+                            {
+                                <span style="color: green">
+                                    @Html.DisplayFor(modelItem => name)
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: red">
+                                    @Html.DisplayFor(modelItem => name)
+                                </span>
+                            }
+                        }
+
                         if (User.IsInRole(Roles.Admin))
                         {
                             <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -351,13 +373,13 @@
                             if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Manager?.FirstName))
                             {
                                 @*<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)</a>*@
-                                var name = $"{user.FirstName} {user.LastName}";
+                                name = $"{user.FirstName} {user.LastName}";
                                 @Html.DisplayFor(modelItem => name)
                             }
                             else
                             {
                                 @*<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>*@
-                                var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                                name = $"{user.Surname} {user.Name} {user.Patronymic}";
                                 @Html.DisplayFor(modelItem => name)
                             }
                             if (User.IsInRole(Roles.Admin))
@@ -510,10 +532,44 @@
                 }
                 else
                 {
-                    if (item.Participant1.IsBaylorRegistrationCompleted &&
-                        item.Participant2.IsBaylorRegistrationCompleted &&
-                        item.Participant3.IsBaylorRegistrationCompleted &&
-                        item.Trainer.IsBaylorRegistrationCompleted)
+                    bool greenStatus = true;
+                    if (Model.Contest.ParticipantType == ParticipantType.Student)
+                    {
+                        if (item.Participant1 != null && !item.Participant1.IsBaylorRegistrationCompleted)
+                        {
+                            greenStatus = false;
+                        }
+                        if (item.Participant2 != null && !item.Participant2.IsBaylorRegistrationCompleted)
+                        {
+                            greenStatus = false;
+                        }
+                        if (item.Participant3 != null && !item.Participant3.IsBaylorRegistrationCompleted)
+                        {
+                            greenStatus = false;
+                        }
+                        if (!item.Trainer.IsBaylorRegistrationCompleted)
+                        {
+                            greenStatus = false;
+                        }
+
+                    }
+                    if (Model.Contest.ParticipantType == ParticipantType.Pupil)
+                    {
+                        if (item.Participant1 != null && !(item.Participant1.DateOfBirth.HasValue && item.Participant1.EducationStartDate.HasValue))
+                        {
+                            greenStatus = false;
+                        }
+                        if (item.Participant2 != null && !(item.Participant2.DateOfBirth.HasValue && item.Participant2.EducationStartDate.HasValue))
+                        {
+                            greenStatus = false;
+                        }
+                        if (item.Participant3 != null && !(item.Participant3.DateOfBirth.HasValue && item.Participant3.EducationStartDate.HasValue))
+                        {
+                            greenStatus = false;
+                        }
+                    }
+
+                    if (greenStatus)
                     {
                         <span style="color: green">@Html.DisplayFor(modelItem => item.DisplayTeamName)</span>
                     }
@@ -526,42 +582,52 @@
             <td>
                 @{
                     var user = item.Participant1;
-                    if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
+                    if (user != null)
                     {
-
-                        var name = $"{user.FirstName} {user.LastName}";
-                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        string name1;
+                        if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-                            //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                            @Html.DisplayFor(modelItem => name)
+                            name1 = $"{user.FirstName} {user.LastName}";
                         }
                         else
                         {
-                            if (user.IsBaylorRegistrationCompleted)
+                            name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
+                        }
+
+                        bool greenStatus;
+                        if (Model.Contest.ParticipantType == ParticipantType.Student)
+                        {
+                            greenStatus = user.IsBaylorRegistrationCompleted;
+                        }
+                        else //ParticipantType.Pupil
+                        {
+                            greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                        }
+
+                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        {
+                            @Html.DisplayFor(modelItem => name1)
+                        }
+                        else
+                        {
+                            if (greenStatus)
                             {
                                 <span style="color: green">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
+                                    @Html.DisplayFor(modelItem => name1)
                                 </span>
                             }
                             else
                             {
                                 <span style="color: red">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
+                                    @Html.DisplayFor(modelItem => name1)
                                 </span>
                             }
                         }
-                    }
-                    else
-                    {
-                        <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                        var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                        @Html.DisplayFor(modelItem => name)
-                    }
-                    if (User.IsInRole(Roles.Admin))
-                    {
-                        <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+
+                        if (User.IsInRole(Roles.Admin))
+                        {
+                            <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
+                        }
                     }
                 }
             </td>
@@ -570,38 +636,46 @@
                     user = item.Participant2;
                     if (user != null)
                     {
+                        string name1;
                         if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-                            var name = $"{user.FirstName} {user.LastName}";
-                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                            {
-                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                @Html.DisplayFor(modelItem => name)
-                            }
-                            else
-                            {
-                                if (user.IsBaylorRegistrationCompleted)
-                                {
-                                    <span style="color: green">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span style="color: red">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                            }
+                            name1 = $"{user.FirstName} {user.LastName}";
                         }
                         else
                         {
-                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                            @Html.DisplayFor(modelItem => name)
+                            name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
                         }
+
+                        bool greenStatus;
+                        if (Model.Contest.ParticipantType == ParticipantType.Student)
+                        {
+                            greenStatus = user.IsBaylorRegistrationCompleted;
+                        }
+                        else //ParticipantType.Pupil
+                        {
+                            greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                        }
+
+                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        {
+                            @Html.DisplayFor(modelItem => name1)
+                        }
+                        else
+                        {
+                            if (greenStatus)
+                            {
+                                <span style="color: green">
+                                    @Html.DisplayFor(modelItem => name1)
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: red">
+                                    @Html.DisplayFor(modelItem => name1)
+                                </span>
+                            }
+                        }
+
                         if (User.IsInRole(Roles.Admin))
                         {
                             <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -614,39 +688,46 @@
                     user = item.Participant3;
                     if (user != null)
                     {
+                        string name1;
                         if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                         {
-
-                            var name = $"{user.FirstName} {user.LastName}";
-                            if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                            {
-                                //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                                @Html.DisplayFor(modelItem => name)
-                            }
-                            else
-                            {
-                                if (user.IsBaylorRegistrationCompleted)
-                                {
-                                    <span style="color: green">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span style="color: red">
-                                        <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                        @Html.DisplayFor(modelItem => name)
-                                    </span>
-                                }
-                            }
+                            name1 = $"{user.FirstName} {user.LastName}";
                         }
                         else
                         {
-                            <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
-                            @Html.DisplayFor(modelItem => name)
+                            name1 = $"{user.Surname} {user.Name} {user.Patronymic}";
                         }
+
+                        bool greenStatus;
+                        if (Model.Contest.ParticipantType == ParticipantType.Student)
+                        {
+                            greenStatus = user.IsBaylorRegistrationCompleted;
+                        }
+                        else //ParticipantType.Pupil
+                        {
+                            greenStatus = user.DateOfBirth.HasValue && user.EducationStartDate.HasValue;
+                        }
+
+                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
+                        {
+                            @Html.DisplayFor(modelItem => name1)
+                        }
+                        else
+                        {
+                            if (greenStatus)
+                            {
+                                <span style="color: green">
+                                    @Html.DisplayFor(modelItem => name1)
+                                </span>
+                            }
+                            else
+                            {
+                                <span style="color: red">
+                                    @Html.DisplayFor(modelItem => name1)
+                                </span>
+                            }
+                        }
+
                         if (User.IsInRole(Roles.Admin))
                         {
                             <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -657,39 +738,38 @@
             <td>
                 @{
                     user = item.Trainer;
+
+                    string name;
                     if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(user.FirstName))
                     {
-
-                        var name = $"{user.FirstName} {user.LastName}";
-                        if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition)
-                        {
-                            //<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a>
-                            @Html.DisplayFor(modelItem => name)
-                        }
-                        else
-                        {
-                            if (user.IsBaylorRegistrationCompleted)
-                            {
-                                <span style="color: green">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
-                            }
-                            else
-                            {
-                                <span style="color: red">
-                                    <!-- <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.FirstName) @Html.DisplayFor(modelItem => item.Participant1.LastName)</a> -->
-                                    @Html.DisplayFor(modelItem => name)
-                                </span>
-                            }
-                        }
+                        name = $"{user.FirstName} {user.LastName}";
                     }
                     else
                     {
-                        <!--  <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.Participant1Id">@Html.DisplayFor(modelItem => item.Participant1.Surname) @Html.DisplayFor(modelItem => item.Participant1.Name) @Html.DisplayFor(modelItem => item.Participant1.Patronymic)</a> -->
-                        var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                        name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                    }
+
+                    
+                    if (!Model.Contest.ShowBaylorRegistrationStatus || item.IsOutOfCompetition || Model.Contest.ParticipantType == ParticipantType.Pupil)
+                    {
                         @Html.DisplayFor(modelItem => name)
                     }
+                    else
+                    {
+                        if (user.IsBaylorRegistrationCompleted)
+                        {
+                            <span style="color: green">
+                                @Html.DisplayFor(modelItem => name)
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="color: red">
+                                @Html.DisplayFor(modelItem => name)
+                            </span>
+                        }
+                    }
+                    
                     if (User.IsInRole(Roles.Admin))
                     {
                         <a asp-controller="Home" asp-action="UserDetails" asp-route-id="@user.Id">инфо</a>
@@ -705,13 +785,13 @@
                         if (Model.Contest.IsEnglishLanguage && !string.IsNullOrEmpty(item.Manager?.FirstName))
                         {
                             @*<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.FirstName) @Html.DisplayFor(modelItem => item.Manager.LastName)</a>*@
-                            var name = $"{user.FirstName} {user.LastName}";
+                            name = $"{user.FirstName} {user.LastName}";
                             @Html.DisplayFor(modelItem => name)
                         }
                         else
                         {
                             @*<a asp-controller="Home" asp-action="UserDetails" asp-route-id="@item.ManagerId">@Html.DisplayFor(modelItem => item.Manager.Surname) @Html.DisplayFor(modelItem => item.Manager.Name) @Html.DisplayFor(modelItem => item.Manager.Patronymic)</a>*@
-                            var name = $"{user.Surname} {user.Name} {user.Patronymic}";
+                            name = $"{user.Surname} {user.Name} {user.Patronymic}";
                             @Html.DisplayFor(modelItem => name)
                         }
                         if (User.IsInRole(Roles.Admin))
