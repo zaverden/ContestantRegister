@@ -67,7 +67,6 @@ namespace ContestantRegister.ViewModels
         [DataType(DataType.Date)]
         public DateTime? DateOfBirth { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [Display(Name = "Дата начала обучения")]
         [DataType(DataType.Date)]
         public DateTime? EducationStartDate { get; set; }

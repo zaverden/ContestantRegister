@@ -36,6 +36,8 @@ namespace ContestantRegister.Services
                 case UserType.Pupil:
                     if (studyPlace is Institution)
                         result.Add(KeyValuePair.Create(nameof(viewModel.StudyPlaceId), "У школьника не может быть указан вуз в качестве учебного заведения"));
+                    if (!viewModel.EducationStartDate.HasValue)
+                        result.Add(KeyValuePair.Create(nameof(viewModel.EducationStartDate), viewModel.GetRequredFieldErrorMessage(nameof(viewModel.EducationStartDate))));
                     break;
                 case UserType.Student:
                     if (studyPlace is School)
