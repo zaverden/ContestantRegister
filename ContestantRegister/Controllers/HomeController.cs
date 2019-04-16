@@ -26,7 +26,7 @@ namespace ContestantRegister.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly MailOptions _options;
+        private readonly SuggestStudyPlaceOptions _options;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
@@ -36,7 +36,7 @@ namespace ContestantRegister.Controllers
             IMapper mapper,
             IEmailSender emailSender,
             UserManager<ApplicationUser> userManager,
-            IOptions<MailOptions> options,
+            IOptions<SuggestStudyPlaceOptions> options,
             IUserService userService)
         {
             _context = context;

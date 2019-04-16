@@ -62,6 +62,7 @@ namespace ContestantRegister
         {
             services.AddOptions();
             services.Configure<MailOptions>(Configuration.GetSection("SendEmail"));
+            services.Configure<SuggestStudyPlaceOptions>(Configuration.GetSection("SuggestStudyPlace"));
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
