@@ -379,7 +379,7 @@ namespace ContestantRegister.Controllers
                 worksheet.Cells[row, 11].Value = user.StudyPlace.City.Name;
                 worksheet.Cells[row, 12].Value = user.StudyPlace.City.Region.Name;
                 worksheet.Cells[row, 13].Value = user.StudentType;
-            }
+            } 
 
             var ms = new MemoryStream();
             package.SaveAs(ms);
