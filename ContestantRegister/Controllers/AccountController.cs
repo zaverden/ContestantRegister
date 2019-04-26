@@ -308,12 +308,26 @@ namespace ContestantRegister.Controllers
 
             var code = model.Code.Replace(" ", "+");
             var result = await _userManager.ResetPasswordAsync(user, code, model.Password);
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return RedirectToAction(nameof(ResetPasswordConfirmation));
+                ModelState.AddErrors(result.Errors);
+                return View();                
             }
-            ModelState.AddErrors(result.Errors);
-            return View();
+
+            // Если пользователь был зареган преподом, у него может быть не подтвержден пароль. 
+            // Если это так, то при восстановлении пароля нужно подтвердить email? иначе пользователь потом не сможет войти в новым паролем, так как email не подтвержден
+            if (!user.EmailConfirmed) 
+            {
+                user.EmailConfirmed = true;                
+                result = await _userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    ModelState.AddErrors(result.Errors);
+                    return View();
+                }
+            }
+
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
         }
 
         [HttpGet]
