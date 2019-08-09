@@ -107,6 +107,13 @@
     </div>
 </div>
 <div class="form-group">
+    <div class="checkbox">
+        <label>
+            <input asp-for="ShowSharpTeamNumber" /> @Html.DisplayNameFor(model => model.ShowSharpTeamNumber)
+        </label>
+    </div>
+</div>
+<div class="form-group">
     <label asp-for="TrainerCount" class="control-label"></label>
     <input asp-for="TrainerCount" class="form-control" />
     <span asp-validation-for="TrainerCount" class="text-danger"></span>

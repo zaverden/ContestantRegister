@@ -97,5 +97,8 @@ namespace ContestantRegister.Models
         [Required]
         [Display(Name = "Площадки")]
         public int[] SelectedAreaIds { get; set; }
+
+        [Display(Name = "Показывать решетку перед номером команды")]
+        public bool ShowSharpTeamNumber { get; set; }
     }
 }

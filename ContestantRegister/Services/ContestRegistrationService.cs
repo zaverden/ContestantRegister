@@ -317,6 +317,9 @@ namespace ContestantRegister.Services
                 result.Add(KeyValuePair.Create(nameof(viewModel.TeamName), "Только английские буквы, цифры и пробел"));
             }
 
+            if (!participant1Exists && !participant2Exists && !participant3Exists)
+                result.Add(KeyValuePair.Create(nameof(viewModel), "Нельзя регистрировать команду без участников"));
+
             viewModel.Status = viewModel.CheckRegistrationStatus();
             
             return result;

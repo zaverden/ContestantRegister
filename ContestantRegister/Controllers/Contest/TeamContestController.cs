@@ -62,7 +62,7 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(viewModel, registration);
 
-            var registreledForStudyPlaceCount = contest.ContestRegistrations.Where(r => r.StudyPlaceId == registration.StudyPlaceId).Count();
+            var registredForStudyPlaceCount = contest.ContestRegistrations.Where(r => r.StudyPlaceId == registration.StudyPlaceId).Count();
             string studyPlaceName = string.Empty;
             var studyPlace = await _context.StudyPlaces.FindAsync(registration.StudyPlaceId);
 
@@ -75,7 +75,8 @@ namespace ContestantRegister.Controllers
                 studyPlaceName = studyPlace.ShortName;
             }
 
-            registration.OfficialTeamName = $"{studyPlaceName} {registreledForStudyPlaceCount + 1}";
+            string sharp = contest.ShowSharpTeamNumber ? "#" : "";
+            registration.OfficialTeamName = $"{studyPlaceName} {sharp}{registredForStudyPlaceCount + 1}";
 
             return await RegisterInternalAsync(viewModel, registration, contest);
         }
