@@ -8,8 +8,7 @@ namespace ContestantRegister.ViewModels.Contest.Registration
     public abstract class ContestRegistrationViewModel
     {
         [Display(Name = "Участник")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
-        public string Participant1Id { get; set; }
+        public virtual string Participant1Id { get; set; }
 
         [Display(Name = "Тренер")]
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
@@ -47,7 +46,7 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         [Display(Name = "Пароль в ЯКонтесте")]
         public string YaContestPassword { get; set; }
 
-        [Display(Name = "Data регистрации")]
+        [Display(Name = "Дата регистрации")]
         public DateTime? RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]
@@ -58,7 +57,7 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         public int? Number { get; set; }
 
         [Display(Name = "Статус регистрации")]
-        public ContestRegistrationStatus Status { get; set; }
+        public ContestRegistrationStatus Status { get; set; }        
 
         public ParticipantType ParticipantType { get; set; }
 
@@ -78,5 +77,11 @@ namespace ContestantRegister.ViewModels.Contest.Registration
 
         public int ContestTrainerCont { get; set; }
 
+        public virtual ContestRegistrationStatus CheckRegistrationStatus()
+        {
+            return string.IsNullOrEmpty(Participant1Id) ? 
+                ContestRegistrationStatus.NotCompleted : 
+                ContestRegistrationStatus.Completed;
+        }
     }
 }

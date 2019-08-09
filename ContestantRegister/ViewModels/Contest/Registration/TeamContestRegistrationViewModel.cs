@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
+using ContestantRegister.Models;
 using ContestantRegister.Properties;
 
 namespace ContestantRegister.ViewModels.Contest.Registration
@@ -37,5 +39,13 @@ namespace ContestantRegister.ViewModels.Contest.Registration
         [Display(Name = "Официальное название команды")]
         [MaxLength(128)]
         public string OfficialTeamName { get; set; }
+
+        public override ContestRegistrationStatus CheckRegistrationStatus()
+        {
+            if (string.IsNullOrEmpty(Participant1Id) || string.IsNullOrEmpty(Participant2Id) || string.IsNullOrEmpty(Participant3Id))
+                return ContestRegistrationStatus.NotCompleted;
+
+            return ContestRegistrationStatus.Completed;
+        }
     }
 }

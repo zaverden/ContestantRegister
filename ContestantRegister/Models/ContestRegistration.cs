@@ -7,12 +7,11 @@ namespace ContestantRegister.Models
     public abstract class ContestRegistration : DomainObject
     {
         [Display(Name = "Участник")]
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         public string Participant1Id { get; set; }
 
         public ApplicationUser Participant1 { get; set; }
         
-        [Display(Name = "Data регистрации")]
+        [Display(Name = "Дата регистрации")]
         public DateTime? RegistrationDateTime { get; set; }
 
         [Display(Name = "Кем зарегистрирован")]

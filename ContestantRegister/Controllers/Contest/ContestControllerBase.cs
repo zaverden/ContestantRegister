@@ -292,7 +292,7 @@ namespace ContestantRegister.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> EditRegistration(int id, ContestRegistrationStatus? registrationStatus)
+        public async Task<IActionResult> EditRegistration(int id)
         {
             var registration = await GetContestRegistrationForEditAsync(id);
 
@@ -316,7 +316,7 @@ namespace ContestantRegister.Controllers
 
             _mapper.Map(registration, viewModel);
 
-            if (registrationStatus.HasValue) viewModel.Status = registrationStatus.Value;
+            viewModel.Status = viewModel.CheckRegistrationStatus();
             
             //Выставлять RegistredBy надо после маппинга, а то шибко умный маппер в поле RegistredByName кладет значение RegistredBy.Name, фамилия и email пропадают
             if (registration.RegistredBy != null)
@@ -605,7 +605,7 @@ namespace ContestantRegister.Controllers
         //TODO стоит ли делать POST вместо GET?
         public IActionResult CompleteRegistration(int id)
         {
-            return RedirectToAction(nameof(EditRegistration), new { id = id, registrationstatus = ContestRegistrationStatus.Completed });
+            return RedirectToAction(nameof(EditRegistration), new { id = id });
         }
 
         private async Task FillSortingViewData(Contest contest, int selectedContestAreaId = 0, int[] selectedCompClassIds = null)
