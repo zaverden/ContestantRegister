@@ -72,6 +72,7 @@
     <span asp-validation-for="ManagerId" class="text-danger"></span>
     <p>Если вашего руководителя нет в списке, вы можете <a asp-route-id="@Model.ContestId" asp-controller="Home" asp-action="RegisterTrainer">зарегистрировать его</a></p>
 </div>
+
 @if (Model.IsProgrammingLanguageNeeded)
 {
     <div class="form-group">
@@ -84,7 +85,9 @@
 {
     <div class="form-group">
         <label asp-for="ContestAreaId" class="control-label"></label>
-        <select asp-for="ContestAreaId" class="form-control" asp-items="ViewBag.Area"></select>
+        <select asp-for="ContestAreaId" class="form-control" asp-items="ViewBag.Area">
+            <option></option>
+        </select>
         <span asp-validation-for="ContestAreaId" class="text-danger"></span>
     </div>
 }
