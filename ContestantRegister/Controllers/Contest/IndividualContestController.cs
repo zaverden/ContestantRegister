@@ -131,9 +131,12 @@ namespace ContestantRegister.Controllers
         }
         
         [Authorize(Roles = Roles.Admin)]
-        public FileResult ExportParticipants(int id)
+        public async Task<IActionResult> ExportParticipants(int id)
         {
-            var registrations = _context.IndividualContestRegistrations
+            var contest = await _context.Contests.FindAsync(id);
+            if (contest == null) return NotFound();
+
+            var registrations = await _context.IndividualContestRegistrations
                 .Include(r => r.Contest)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.StudyPlace.City)
@@ -143,7 +146,8 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Manager)
                 .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id)
-                .OrderBy(r => r.Number);
+                .OrderBy(r => r.Number)
+                .ToListAsync();
 
             var package = new ExcelPackage();
 
@@ -219,7 +223,7 @@ namespace ContestantRegister.Controllers
             var ms = new MemoryStream();
             package.SaveAs(ms);
             ms.Position = 0;
-            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Participants.xlsx");
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{contest.Name}.xlsx");
         }
 
         protected override Task<List<ContestRegistration>> GetContestRegistrationsAsync(int id)
