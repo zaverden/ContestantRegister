@@ -27,9 +27,9 @@ namespace ContestantRegister.Utils.Filter
             object res = null;
             foreach (var enumVal in Enum.GetValues(enumType))
             {
-                if (HtmlHelperExtensions.GetDisplayName(enumType, enumVal).ContainsIgnoreCase(value))
+                if (HtmlHelperExtensions.GetDisplayName(enumType, enumVal).StartsWith(value, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (res != null) return null; // two or more corresponding items found
+                    if (res != null) return null; // two or more corresponding items found. in this case filter will not work
                     res = enumVal;
                 }
             }                

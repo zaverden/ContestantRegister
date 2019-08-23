@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ContestantRegister.Utils;
+using ContestantRegister.Utils.Filter;
 
 namespace ContestantRegister.Controllers
 {
@@ -97,7 +97,7 @@ namespace ContestantRegister.Controllers
             }
 
             IEnumerable<ContestRegistration> contestRegistrations = contest.ContestRegistrations;
-
+                        
             contestRegistrations = contestRegistrations.AutoFilter(filter);
 
             object viewModel;

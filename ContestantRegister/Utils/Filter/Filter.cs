@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ContestantRegister.Utils.Filter;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,67 +7,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-namespace ContestantRegister.Utils
-{
-    public class ConvertFilterAttribute : Attribute
-    {
-        public ConvertFilterAttribute(Type destinationType)
-        {
-            if (destinationType.GetInterface(nameof(IFilverValueConverter)) == null)
-                throw new ArgumentException($"Not implemented {nameof(IFilverValueConverter)}");
-            
-            DestinationType = destinationType;
-        }
-
-        public Type DestinationType { get; set; }
-    }
-
-    public class PropertyNameAttribute : Attribute
-    {
-        public PropertyNameAttribute(string propertyName)
-        {
-            PropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
-        }
-
-        public string PropertyName { get; }
-    }
-
-    public class RelatedObjectAttribute : Attribute
-    {
-        public RelatedObjectAttribute(string objectName)
-        {
-            ObjectName = objectName ?? throw new ArgumentNullException(nameof(objectName));
-        }
-
-        public string ObjectName { get; }
-
-        public string PropertyName { get; set; }
-    }
-
-    public enum StringFilter
-    {
-        StartsWith,
-        Contains
-    }
-
-    public class StringFilterAttribute : Attribute
-    {
-        public StringFilterAttribute(StringFilter stringFilter)
-        {
-            StringFilter = stringFilter;
-        }
-
-        public StringFilter StringFilter { get; }
-
-        public bool IgnoreCase { get; set; }
-    }
-
+namespace ContestantRegister.Utils.Filter
+{    
     public enum ComposeKind
     {
         And, Or
     }
 
-    //Для IEnumerable тоже работает для скарярных свойств, но для навигационных, где нужно делать проверку на null, уже нет, наго строить другое Linq выражение. Можно добилить, если будет настроение :)
     public static class ConventionsExtensions
     {
         public static IQueryable<TSubject> AutoFilter<TSubject, TPredicate>(
@@ -121,10 +68,7 @@ namespace ContestantRegister.Utils
         }
     }
 
-    public interface IFilverValueConverter
-    {
-        object Convert(object value);
-    }
+    
 
     public static class Conventions<TSubject>
     {
@@ -162,13 +106,13 @@ namespace ContestantRegister.Utils
                 ? props.Aggregate((c, n) => c.And(n))
                 : props.Aggregate((c, n) => c.Or(n));
 
-            return query.Where(expr.Compile()); //можно сделать кеш компилированных Linq выражений
+            return query.Where(expr.AsFunc()); 
 
         }
 
         private static Expression<Func<TSubject, bool>>[] GetProps<TSubject, TPredicate>(TPredicate predicate, bool checkNullNavProperties)
         {
-            var filterProps = FastTypeInfo<TPredicate>
+            var filterProps = FastPropertyInfo<TPredicate>
                 .PublicProperties
                 .ToArray();
 
@@ -181,16 +125,16 @@ namespace ContestantRegister.Utils
                     PropertyNameAttribute = p.GetCustomAttribute<PropertyNameAttribute>(),
                     ConverAttribute = p.GetCustomAttribute<ConvertFilterAttribute>(),
                 })
-                .Where(obj => obj.Value != null)
                 .Select(obj => new
                 {
                     obj.FilterProperty,
-                    Value = obj.ConverAttribute != null ?
+                    Value = obj.ConverAttribute != null && obj.Value != null ?
                                 ((IFilverValueConverter)Activator.CreateInstance(obj.ConverAttribute.DestinationType)).Convert(obj.Value) : 
                                 obj.Value,
                     obj.RelatedObjectAttribute,
                     Name = obj.PropertyNameAttribute != null ? obj.PropertyNameAttribute.PropertyName : obj.FilterProperty.Name,
                 })
+                .Where(x => x.Value != null)
                 .ToArray();
 
             var modelType = typeof(TSubject);
@@ -200,7 +144,7 @@ namespace ContestantRegister.Utils
 
             var parameter = Expression.Parameter(modelType);
 
-            var subjectNotnavigationProps = FastTypeInfo<TSubject>
+            var subjectNotnavigationProps = FastPropertyInfo<TSubject>
                 .PublicProperties
                 .Join(filterPropsData.Where(x => x.RelatedObjectAttribute == null), fp => fp.Name, sp => sp.Name, (propInfo, filter) => new FilterPropertyInfo
                 {
@@ -213,10 +157,7 @@ namespace ContestantRegister.Utils
 
 
             var props = subjectNotnavigationProps
-                .Select(x =>
-                {
-                    return Calc<TSubject>(x, parameter, checkNullNavProperties);
-                })
+                .Select(x => Calc<TSubject>(x, parameter, checkNullNavProperties))
                 .ToList();
 
             var navigationProperties = filterPropsData
@@ -229,10 +170,7 @@ namespace ContestantRegister.Utils
                 });
 
             var props2 = navigationProperties
-                .Select(x =>
-                {
-                    return Calc<TSubject>(x, parameter, checkNullNavProperties);
-                })
+                .Select(x => Calc<TSubject>(x, parameter, checkNullNavProperties))
                 .ToArray();
 
             props.AddRange(props2);
@@ -330,7 +268,7 @@ namespace ContestantRegister.Utils
 
             Expression value = Expression.Constant(x.Value);
 
-            value = Expression.Convert(value, property.Type); // нужна ли эта конвертация?
+            value = Expression.Convert(value, property.Type); //например для конвертирования enum в object
             var func = property.Type == typeof(string) ?
                 stringFunc :
                 Conventions.Filters[property.Type];
@@ -352,251 +290,36 @@ namespace ContestantRegister.Utils
             return res;
         }
 
-    }
-
-    public delegate T ObjectActivator<out T>(params object[] args);
-
-    public static class FastTypeInfo<T>
-    {
-        private static Attribute[] _attributes;
-
-        private static PropertyInfo[] _properties;
-
-        private static MethodInfo[] _methods;
-
-        private static ConstructorInfo[] _constructors;
-
-        private static ConcurrentDictionary<string, ObjectActivator<T>> _activators;
-
-        static FastTypeInfo()
+        private static class FastPropertyInfo<T>
         {
-            var type = typeof(T);
-            _attributes = type.GetCustomAttributes().ToArray();
-
-            _properties = type
-                .GetProperties()
-                .Where(x => x.CanRead && x.CanWrite)
-                .ToArray();
-
-            _methods = type.GetMethods()
-                .Where(x => x.IsPublic && !x.IsAbstract)
-                .ToArray();
-
-            _constructors = typeof(T).GetConstructors();
-            _activators = new ConcurrentDictionary<string, ObjectActivator<T>>();
-        }
-
-        public static PropertyInfo[] PublicProperties => _properties;
-
-        public static MethodInfo[] PublicMethods => _methods;
-
-        public static Attribute[] Attributes => _attributes;
-
-        public static bool HasAttribute<TAttr>()
-            where TAttr : Attribute
-            => Attributes.Any(x => x.GetType() == typeof(TAttr));
-
-        public static TAttr GetCustomAttribute<TAttr>()
-            where TAttr : Attribute
-            => (TAttr)_attributes.FirstOrDefault(x => x.GetType() == typeof(TAttr));
-
-        #region Create
-
-        public static T Create(params object[] args)
-            => _activators.GetOrAdd(
-                GetSignature(args),
-                GetActivator(GetConstructorInfo(args)))
-                    .Invoke(args);
-
-        private static string GetSignature(object[] args)
-            => args
-                .Select(x => x.GetType().ToString())
-                .Join(",");
-
-        private static ConstructorInfo GetConstructorInfo(object[] args)
-        {
-            for (var i = 0; i < _constructors.Length; i++)
+            static FastPropertyInfo()
             {
-                var consturctor = _constructors[i];
-                var ctrParams = consturctor.GetParameters();
-                if (ctrParams.Length != args.Length)
-                {
-                    continue;
-                }
-
-                var flag = true;
-                for (var j = 0; j < args.Length; i++)
-                {
-                    if (ctrParams[j].ParameterType != args[j].GetType())
-                    {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if (!flag)
-                {
-                    continue;
-                }
-
-                return consturctor;
+                var type = typeof(T);
+                PublicProperties = type
+                    .GetProperties()
+                    .Where(x => x.CanRead && x.CanWrite)
+                    .ToArray();
             }
 
-            var signature = GetSignature(args);
+            public static PropertyInfo[] PublicProperties { get; }
 
-            throw new InvalidOperationException(
-                $"Constructor ({signature}) is not found for {typeof(T)}");
-        }
-
-        private static ObjectActivator<T> GetActivator(ConstructorInfo ctor)
-        {
-            var type = ctor.DeclaringType;
-            var paramsInfo = ctor.GetParameters();
-
-            //create a single param of type object[]
-            var param = Expression.Parameter(typeof(object[]), "args");
-
-            var argsExp = new Expression[paramsInfo.Length];
-
-            //pick each arg from the params array 
-            //and create a typed expression of them
-            for (var i = 0; i < paramsInfo.Length; i++)
-            {
-                var index = Expression.Constant(i);
-                var paramType = paramsInfo[i].ParameterType;
-
-                Expression paramAccessorExp = Expression.ArrayIndex(param, index);
-                Expression paramCastExp = Expression.Convert(paramAccessorExp, paramType);
-
-                argsExp[i] = paramCastExp;
-            }
-
-            //make a NewExpression that calls the
-            //ctor with the args we just created
-            var newExp = Expression.New(ctor, argsExp);
-
-            //create a lambda with the New
-            //Expression as body and our param object[] as arg
-            var lambda = Expression.Lambda(typeof(ObjectActivator<T>), newExp, param);
-
-            //compile it
-            var compiled = (ObjectActivator<T>)lambda.Compile();
-            return compiled;
-        }
-
-        public static Delegate CreateMethod(MethodInfo method)
-        {
-            if (method == null)
-            {
-                throw new ArgumentNullException(nameof(method));
-            }
-
-            if (!method.IsStatic)
-            {
-                throw new ArgumentException("The provided method must be static.", nameof(method));
-            }
-
-            if (method.IsGenericMethod)
-            {
-                throw new ArgumentException("The provided method must not be generic.", nameof(method));
-            }
-
-            var parameters = method.GetParameters()
-                .Select(p => Expression.Parameter(p.ParameterType, p.Name))
-                .ToArray();
-
-            var call = Expression.Call(null, method, parameters);
-            return Expression.Lambda(call, parameters).Compile();
-        }
-
-        #endregion
-
-        public static Func<TObject, TProperty> PropertyGetter<TObject, TProperty>(string propertyName)
-        {
-            var paramExpression = Expression.Parameter(typeof(TObject), "value");
-
-            var propertyGetterExpression = Expression.Property(paramExpression, propertyName);
-
-            var result = Expression.Lambda<Func<TObject, TProperty>>(propertyGetterExpression, paramExpression)
-                .Compile();
-
-            return result;
-        }
-
-        public static Action<TObject, TProperty> PropertySetter<TObject, TProperty>(string propertyName)
-        {
-            var paramExpression = Expression.Parameter(typeof(TObject));
-            var paramExpression2 = Expression.Parameter(typeof(TProperty), propertyName);
-            var propertyGetterExpression = Expression.Property(paramExpression, propertyName);
-            var result = Expression.Lambda<Action<TObject, TProperty>>
-            (
-                Expression.Assign(propertyGetterExpression, paramExpression2), paramExpression, paramExpression2
-            ).Compile();
-
-            return result;
         }
     }
 
-    public static class StringExtensions
+    internal class CompiledExpressions<TIn, TOut>
     {
-        /// <summary>
-        /// Indicates whether the specified string not null or an empty string.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static bool HasValue(this string value)
-        {
-            return !string.IsNullOrEmpty(value);
-        }
+        private static readonly ConcurrentDictionary<Expression<Func<TIn, TOut>>, Func<TIn, TOut>> Cache
+            = new ConcurrentDictionary<Expression<Func<TIn, TOut>>, Func<TIn, TOut>>();
 
-        public static string Join(this IEnumerable<string> source, string separator)
-        {
-            return string.Join(separator, source);
-        }
+        internal static Func<TIn, TOut> AsFunc(Expression<Func<TIn, TOut>> expr)
+            => Cache.GetOrAdd(expr, k => k.Compile());
+    }
 
-        public static bool Contains(this string input, string value, StringComparison comparisonType)
-        {
-            if (!string.IsNullOrEmpty(input))
-            {
-                return input.IndexOf(value, comparisonType) != -1;
-            }
+    public static class ExpressionExtensions
+    {
+        public static Func<TIn, TOut> AsFunc<TIn, TOut>(this Expression<Func<TIn, TOut>> expr)
+            => CompiledExpressions<TIn, TOut>.AsFunc(expr);
 
-            return false;
-        }
-
-        public static bool LikewiseContains(this string input, string value)
-        {
-            return Contains(input, value, StringComparison.CurrentCulture);
-        }
-
-        public static string ToString(this int value, string oneForm, string twoForm, string fiveForm)
-        {
-            var significantValue = value % 100;
-
-            if (significantValue >= 10 && significantValue <= 20)
-                return $"{value} {fiveForm}";
-
-            var lastDigit = value % 10;
-            switch (lastDigit)
-            {
-                case 1:
-                    return $"{oneForm}";
-                case 2:
-                case 3:
-                case 4:
-                    return $"{twoForm}";
-            }
-
-            return $"{fiveForm}";
-
-        }
-
-        public static string ToUnderscoreCase(this string str)
-        {
-            return string
-                .Concat(str.Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()))
-                .ToLower();
-        }
     }
 
     public static class PredicateBuilder
@@ -657,6 +380,7 @@ namespace ContestantRegister.Utils
 
             // create a merged lambda expression with parameters from the first expression
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+            
         }
 
         private class ParameterRebinder : ExpressionVisitor
