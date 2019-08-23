@@ -74,7 +74,14 @@ namespace ContestantRegister.Utils
         {
             var filtered = Conventions<TSubject>.Filter(query, predicate, composeKind);
             return filtered;            
-        }                
+        }
+
+        public static IEnumerable<TSubject> AutoFilter<TSubject, TPredicate>(
+            this IEnumerable<TSubject> query, TPredicate predicate, ComposeKind composeKind = ComposeKind.And)
+        {
+            var filtered = Conventions<TSubject>.Filter(query, predicate, composeKind);
+            return filtered;
+        }
     }
 
     public static class Conventions
@@ -125,6 +132,42 @@ namespace ContestantRegister.Utils
             TPredicate predicate,
             ComposeKind composeKind = ComposeKind.And)
         {
+            var props = GetProps<TSubject, TPredicate>(predicate, false);
+
+            if (!props.Any())
+            {
+                return query;
+            }
+
+            var expr = composeKind == ComposeKind.And
+                ? props.Aggregate((c, n) => c.And(n))
+                : props.Aggregate((c, n) => c.Or(n));
+
+            return query.Where(expr);
+
+        }
+
+        public static IEnumerable<TSubject> Filter<TPredicate>(IEnumerable<TSubject> query,
+            TPredicate predicate,
+            ComposeKind composeKind = ComposeKind.And)
+        {
+            var props = GetProps<TSubject, TPredicate>(predicate, true);
+
+            if (!props.Any())
+            {
+                return query;
+            }
+
+            var expr = composeKind == ComposeKind.And
+                ? props.Aggregate((c, n) => c.And(n))
+                : props.Aggregate((c, n) => c.Or(n));
+
+            return query.Where(expr.Compile()); //можно сделать кеш компилированных Linq выражений
+
+        }
+
+        private static Expression<Func<TSubject, bool>>[] GetProps<TSubject, TPredicate>(TPredicate predicate, bool checkNullNavProperties)
+        {
             var filterProps = FastTypeInfo<TPredicate>
                 .PublicProperties
                 .ToArray();
@@ -164,13 +207,13 @@ namespace ContestantRegister.Utils
                     ConverAttribute = filter.FilterProperty.GetCustomAttribute<ConvertFilterAttribute>(),
                     RelatedObjectAttribute = filter.RelatedObjectAttribute,
                 })
-                .ToArray();            
-            
+                .ToArray();
+
 
             var props = subjectNotnavigationProps
                 .Select(x =>
                 {
-                    return Calc<TSubject>(x, parameter);
+                    return Calc<TSubject>(x, parameter, checkNullNavProperties);
                 })
                 .ToList();
 
@@ -187,23 +230,13 @@ namespace ContestantRegister.Utils
             var props2 = navigationProperties
                 .Select(x =>
                 {
-                    return Calc<TSubject>(x, parameter);
+                    return Calc<TSubject>(x, parameter, checkNullNavProperties);
                 })
                 .ToArray();
 
             props.AddRange(props2);
 
-            if (!props.Any())
-            {
-                return query;
-            }
-
-            var expr = composeKind == ComposeKind.And
-                ? props.Aggregate((c, n) => c.And(n))
-                : props.Aggregate((c, n) => c.Or(n));
-
-            return query.Where(expr);
-            
+            return props.ToArray();
         }
 
         private class FilterPropertyInfo
@@ -215,7 +248,7 @@ namespace ContestantRegister.Utils
             public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
         }
 
-        private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter)
+        private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter, bool checkNullNavProperties)
         {
             var val = x.Value;
             if (x.ConverAttribute != null)
@@ -267,13 +300,26 @@ namespace ContestantRegister.Utils
 
             MemberExpression property;
 
+            var nullchecks = new List<Expression>();
             if (x.RelatedObjectAttribute != null)
             {
                 var propNames = x.RelatedObjectAttribute.ObjectName.Split('.');
                 property = Expression.Property(parameter, propNames[0]);
+                var nullExpression = Expression.Constant(null);
+                
+                if (checkNullNavProperties)
+                {
+                    var nullCheck = Expression.NotEqual(property, nullExpression);
+                    nullchecks.Add(nullCheck);
+                }
                 for (int i = 1; i < propNames.Length; i++)
                 {
                     property = Expression.Property(property, propNames[i]);
+                    if (checkNullNavProperties)
+                    {
+                        var nullCheck = Expression.NotEqual(property, nullExpression);
+                        nullchecks.Add(nullCheck);
+                    }
                 }
                 if (!string.IsNullOrEmpty(x.RelatedObjectAttribute.PropertyName))
                 {
@@ -291,12 +337,22 @@ namespace ContestantRegister.Utils
 
             Expression value = Expression.Constant(val);
 
-            value = Expression.Convert(value, property.Type);
+            value = Expression.Convert(value, property.Type); // нужна ли эта конвертация?
             var func = property.Type == typeof(string) ?
                 stringFunc :
                 Conventions.Filters[property.Type];
 
             var body = func(property, value);
+
+            if (checkNullNavProperties && nullchecks.Any())
+            {
+                var expr = nullchecks[0];
+                for (int i = 1; i < nullchecks.Count; i++)
+                {
+                    expr = Expression.AndAlso(expr, nullchecks[i]);
+                }
+                body = Expression.AndAlso(expr, body);                
+            }
 
             var res = Expression.Lambda<Func<TSubject, bool>>(body, parameter);
 

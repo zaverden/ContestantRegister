@@ -98,55 +98,55 @@ namespace ContestantRegister.Controllers
 
             IEnumerable<ContestRegistration> contestRegistrations = contest.ContestRegistrations;
 
-            //contestRegistrations = contestRegistrations.AutoFilter(filter);
+            contestRegistrations = contestRegistrations.AutoFilter(filter);
 
-            if (!string.IsNullOrEmpty(filter.ParticipantName))
-            {
-                //TODO для командного контеста прикрутить поиск по участникам
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.Participant1 != null && 
-                                r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
+            //if (!string.IsNullOrEmpty(filter.ParticipantName))
+            //{
+            //    //TODO для командного контеста прикрутить поиск по участникам
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.Participant1 != null && 
+            //                    r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
 
-            }
-            if (!string.IsNullOrEmpty(filter.TrainerName))
-            {
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.Trainer.Surname.ContainsIgnoreCase(filter.TrainerName));
-            }
-            if (!string.IsNullOrEmpty(filter.ManagerName))
-            {
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.Manager != null &&
-                                r.Manager.Surname.ContainsIgnoreCase(filter.ManagerName));
-            }
-            if (!string.IsNullOrEmpty(filter.Area))
-            {
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.ContestArea.Area != null &&
-                                r.ContestArea.Area.Name.ContainsIgnoreCase(filter.Area));
-            }
-            if (!string.IsNullOrEmpty(filter.City))
-            {
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
-            }
-            if (!string.IsNullOrEmpty(filter.StudyPlace))
-            {
-                contestRegistrations = contestRegistrations
-                    .Where(r => r.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
-            }
-            if (!string.IsNullOrEmpty(filter.Status))
-            {
-                var types = Enum.GetValues(typeof(ContestRegistrationStatus))
-                    .Cast<ContestRegistrationStatus>()
-                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).StartsWith(filter.Status, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+            //}
+            //if (!string.IsNullOrEmpty(filter.TrainerName))
+            //{
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.Trainer.Surname.ContainsIgnoreCase(filter.TrainerName));
+            //}
+            //if (!string.IsNullOrEmpty(filter.ManagerName))
+            //{
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.Manager != null &&
+            //                    r.Manager.Surname.ContainsIgnoreCase(filter.ManagerName));
+            //}
+            //if (!string.IsNullOrEmpty(filter.Area))
+            //{
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.ContestArea.Area != null &&
+            //                    r.ContestArea.Area.Name.ContainsIgnoreCase(filter.Area));
+            //}
+            //if (!string.IsNullOrEmpty(filter.City))
+            //{
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
+            //}
+            //if (!string.IsNullOrEmpty(filter.StudyPlace))
+            //{
+            //    contestRegistrations = contestRegistrations
+            //        .Where(r => r.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
+            //}
+            //if (!string.IsNullOrEmpty(filter.Status))
+            //{
+            //    var types = Enum.GetValues(typeof(ContestRegistrationStatus))
+            //        .Cast<ContestRegistrationStatus>()
+            //        .Where(type => HtmlHelperExtensions.GetDisplayName(type).StartsWith(filter.Status, StringComparison.OrdinalIgnoreCase))
+            //        .ToList();
 
-                if (types.Count == 1)
-                {
-                    contestRegistrations = contestRegistrations.Where(r => r.Status == types.First());
-                }
-            }
+            //    if (types.Count == 1)
+            //    {
+            //        contestRegistrations = contestRegistrations.Where(r => r.Status == types.First());
+            //    }
+            //}
 
             object viewModel;
             if (contest.ContestType == ContestType.Individual)
