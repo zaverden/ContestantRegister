@@ -16,18 +16,35 @@ using Microsoft.AspNetCore.Identity;
 using ContestantRegister.ViewModels.ListItemViewModels;
 using System.IO;
 using OfficeOpenXml;
+using ContestantRegister.Utils.Filter;
 
 namespace ContestantRegister.Controllers
-{
+{   
     public class UserFilter
     {
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
         public string Email { get; set; }
+
+        [ConvertFilter(typeof(NullableIntToNullableBooleanConverter))]
         public int? EmailConfirmed { get; set; }
+
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
         public string Surname { get; set; }
+
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
         public string Name { get; set; }
+
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
+        [RelatedObject("StudyPlace.City", PropertyName = "Name")]
         public string City { get; set; }
+
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
+        [RelatedObject("StudyPlace", PropertyName = "ShortName")]        
         public string StudyPlace { get; set; }
-        public string UserTypeName { get; set; }
+
+        [ConvertFilter(typeof(EnumDisplayToValueConverter<UserType>))]
+        [PropertyName("UserType")]
+        public string UserTypeName { get; set; }        
     }
 
     [Authorize(Roles = Roles.Admin)]
@@ -65,51 +82,53 @@ namespace ContestantRegister.Controllers
                 .Include(c => c.StudyPlace)
                 .Include(c => c.StudyPlace.City);
 
-            if (!string.IsNullOrEmpty(filter.Email))
-            {
-                users = users.Where(u => u.Email.ContainsIgnoreCase(filter.Email));
-            }
+            var filtered = users.AutoFilter(filter);
 
-            if (filter.EmailConfirmed.HasValue)
-            {
-                var confirmed = filter.EmailConfirmed.Value == 1;
-                users = users.Where(u => u.EmailConfirmed == confirmed);
-            }
+            //if (!string.IsNullOrEmpty(filter.Email))
+            //{
+            //    users = users.Where(u => u.Email.ContainsIgnoreCase(filter.Email));
+            //}
 
-            if (!string.IsNullOrEmpty(filter.Surname))
-            {
-                users = users.Where(u => u.Surname.ContainsIgnoreCase(filter.Surname));
-            }
+            //if (filter.EmailConfirmed.HasValue)
+            //{
+            //    var confirmed = filter.EmailConfirmed.Value == 1;
+            //    users = users.Where(u => u.EmailConfirmed == confirmed);
+            //}
 
-            if (!string.IsNullOrEmpty(filter.Name))
-            {
-                users = users.Where(u => u.Name.ContainsIgnoreCase(filter.Name));
-            }
+            //if (!string.IsNullOrEmpty(filter.Surname))
+            //{
+            //    users = users.Where(u => u.Surname.ContainsIgnoreCase(filter.Surname));
+            //}
 
-            if (!string.IsNullOrEmpty(filter.City))
-            {
-                users = users.Where(u => u.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
-            }
+            //if (!string.IsNullOrEmpty(filter.Name))
+            //{
+            //    users = users.Where(u => u.Name.ContainsIgnoreCase(filter.Name));
+            //}
 
-            if (!string.IsNullOrEmpty(filter.StudyPlace))
-            {
-                users = users.Where(u => u.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
-            }
+            //if (!string.IsNullOrEmpty(filter.City))
+            //{
+            //    users = users.Where(u => u.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
+            //}
 
-            if (!string.IsNullOrEmpty(filter.UserTypeName))
-            {
-                var types = Enum.GetValues(typeof(UserType))
-                    .Cast<UserType>()
-                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.UserTypeName))
-                    .ToList();
+            //if (!string.IsNullOrEmpty(filter.StudyPlace))
+            //{
+            //    users = users.Where(u => u.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
+            //}
 
-                if (types.Count == 1)
-                {
-                    users = users.Where(u => u.UserType == types.First());
-                }
-            }
+            //if (!string.IsNullOrEmpty(filter.UserTypeName))
+            //{
+            //    var types = Enum.GetValues(typeof(UserType))
+            //        .Cast<UserType>()
+            //        .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.UserTypeName))
+            //        .ToList();
 
-            return View(await users.OrderBy(u => u.Id).ToListAsync());
+            //    if (types.Count == 1)
+            //    {
+            //        users = users.Where(u => u.UserType == types.First());
+            //    }
+            //}
+
+            return View(await filtered.OrderBy(u => u.Id).ToListAsync());
         }
 
         // GET: Admins

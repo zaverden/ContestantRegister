@@ -11,6 +11,12 @@ namespace ContestantRegister.Data
         {
         }
 
+        //public ApplicationDbContext()
+        //{ }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //    => optionsBuilder.UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
+
         public DbSet<Area> Areas { get; set; }
 
         public DbSet<City> Cities { get; set; }

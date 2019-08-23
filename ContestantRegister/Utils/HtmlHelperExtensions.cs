@@ -39,7 +39,11 @@ namespace ContestantRegister.Utils
 
         public static string GetDisplayName<T>(T value)
         {
-            Type type = typeof(T);
+            return GetDisplayName(typeof(T), value);
+        }
+
+        public static string GetDisplayName(Type type, object value)
+        {
             FieldInfo fieldInfo = type.GetField(value.ToString());
             DisplayAttribute attr = fieldInfo.GetCustomAttribute<DisplayAttribute>();
             return attr?.Name ?? value.ToString();

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using ContestantRegister.Utils;
 
 namespace ContestantRegister.Controllers
 {
@@ -96,11 +97,16 @@ namespace ContestantRegister.Controllers
             }
 
             IEnumerable<ContestRegistration> contestRegistrations = contest.ContestRegistrations;
+
+            //contestRegistrations = contestRegistrations.AutoFilter(filter);
+
             if (!string.IsNullOrEmpty(filter.ParticipantName))
             {
                 //TODO для командного контеста прикрутить поиск по участникам
                 contestRegistrations = contestRegistrations
-                    .Where(r => r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
+                    .Where(r => r.Participant1 != null && 
+                                r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
+
             }
             if (!string.IsNullOrEmpty(filter.TrainerName))
             {
@@ -133,7 +139,7 @@ namespace ContestantRegister.Controllers
             {
                 var types = Enum.GetValues(typeof(ContestRegistrationStatus))
                     .Cast<ContestRegistrationStatus>()
-                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.Status))
+                    .Where(type => HtmlHelperExtensions.GetDisplayName(type).StartsWith(filter.Status, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
                 if (types.Count == 1)
