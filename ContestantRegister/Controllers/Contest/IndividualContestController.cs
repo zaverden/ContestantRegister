@@ -39,8 +39,6 @@ namespace ContestantRegister.Controllers
         protected override async Task<ContestRegistration> GetContestRegistrationForEditAsync(int registrationId)
         {
             var registration = await _context.ContestRegistrations
-                .Include(r => r.Contest)
-                .Include(r => r.Contest.ContestAreas)
                 .Include("Contest.ContestAreas.Area")
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
@@ -138,8 +136,6 @@ namespace ContestantRegister.Controllers
 
             var registrations = await _context.IndividualContestRegistrations
                 .Include(r => r.Contest)
-                .Include(r => r.StudyPlace)
-                .Include(r => r.StudyPlace.City)
                 .Include(r => r.StudyPlace.City.Region)
                 .Include(r => r.Participant1)
                 .Include(r => r.Trainer)
@@ -232,7 +228,6 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.Participant1)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
-                .Include(r => r.StudyPlace)
                 .Include(r => r.StudyPlace.City)
                 .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id)

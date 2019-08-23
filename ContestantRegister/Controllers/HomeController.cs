@@ -244,7 +244,6 @@ namespace ContestantRegister.Controllers
             }
 
             var contestantUser = await _context.Users
-                .Include(u => u.StudyPlace)
                 .Include(u => u.StudyPlace.City)
                 .SingleOrDefaultAsync(m => m.Id == id);
 

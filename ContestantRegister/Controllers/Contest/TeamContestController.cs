@@ -84,7 +84,6 @@ namespace ContestantRegister.Controllers
         protected override async Task<Contest> GetContestForRegistration(int contestId)
         {
             return await _context.Contests
-                .Include(c => c.ContestAreas)
                 .Include(c => c.ContestRegistrations)
                 .Include("ContestAreas.Area")
                 .SingleOrDefaultAsync(c => c.Id == contestId);
@@ -98,8 +97,6 @@ namespace ContestantRegister.Controllers
         protected override async Task<ContestRegistration> GetContestRegistrationForEditAsync(int registrationId)
         {
             var registration = await _context.TeamContestRegistrations
-                .Include(r => r.Contest)
-                .Include(r => r.Contest.ContestAreas)
                 .Include("Contest.ContestAreas.Area")
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
@@ -259,8 +256,6 @@ namespace ContestantRegister.Controllers
 
             var registrations = await _context.TeamContestRegistrations
                 .Include(r => r.Contest)
-                .Include(r => r.StudyPlace)
-                .Include(r => r.StudyPlace.City)
                 .Include(r => r.StudyPlace.City.Region)
                 .Include(r => r.Participant1)
                 .Include(r => r.Participant2)
@@ -495,7 +490,6 @@ namespace ContestantRegister.Controllers
                 .Include(r => r.ReserveParticipant)
                 .Include(r => r.Trainer)
                 .Include(r => r.Manager)
-                .Include(r => r.StudyPlace)
                 .Include(r => r.StudyPlace.City)
                 .Include(r => r.ContestArea.Area)
                 .Where(r => r.ContestId == id)

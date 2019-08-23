@@ -45,32 +45,7 @@ namespace ContestantRegister.Controllers
             IQueryable<Email> emails = _context.Emails;
 
             emails = emails.AutoFilter(filter);
-
-            //bool filtered = false; 
-            //if (!string.IsNullOrEmpty(filter.Email))
-            //{
-            //    filtered = true;
-            //    emails = emails.Where(e => e.Address.ContainsIgnoreCase(filter.Email));
-            //}
-
-            //if (filter.Sended.HasValue)
-            //{
-            //    filtered = true;
-            //    var isSended = filter.Sended.Value != 0;
-            //    emails = emails.Where(e => e.IsSended == isSended);
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.Message))
-            //{
-            //    filtered = true;
-            //    emails = emails.Where(e => e.Message.ContainsIgnoreCase(filter.Message));
-            //}
-
-            //if (!filtered)
-            //{
-            //    emails = emails.OrderByDescending(e => e.Id).Take(100);
-            //}
-
+            
             emails = emails.OrderByDescending(e => e.Id).Take(100);
 
             return View(await emails.ToListAsync());

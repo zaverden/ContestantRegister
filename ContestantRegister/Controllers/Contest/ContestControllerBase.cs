@@ -100,54 +100,6 @@ namespace ContestantRegister.Controllers
 
             contestRegistrations = contestRegistrations.AutoFilter(filter);
 
-            //if (!string.IsNullOrEmpty(filter.ParticipantName))
-            //{
-            //    //TODO для командного контеста прикрутить поиск по участникам
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.Participant1 != null && 
-            //                    r.Participant1.Surname.ContainsIgnoreCase(filter.ParticipantName));
-
-            //}
-            //if (!string.IsNullOrEmpty(filter.TrainerName))
-            //{
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.Trainer.Surname.ContainsIgnoreCase(filter.TrainerName));
-            //}
-            //if (!string.IsNullOrEmpty(filter.ManagerName))
-            //{
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.Manager != null &&
-            //                    r.Manager.Surname.ContainsIgnoreCase(filter.ManagerName));
-            //}
-            //if (!string.IsNullOrEmpty(filter.Area))
-            //{
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.ContestArea.Area != null &&
-            //                    r.ContestArea.Area.Name.ContainsIgnoreCase(filter.Area));
-            //}
-            //if (!string.IsNullOrEmpty(filter.City))
-            //{
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
-            //}
-            //if (!string.IsNullOrEmpty(filter.StudyPlace))
-            //{
-            //    contestRegistrations = contestRegistrations
-            //        .Where(r => r.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
-            //}
-            //if (!string.IsNullOrEmpty(filter.Status))
-            //{
-            //    var types = Enum.GetValues(typeof(ContestRegistrationStatus))
-            //        .Cast<ContestRegistrationStatus>()
-            //        .Where(type => HtmlHelperExtensions.GetDisplayName(type).StartsWith(filter.Status, StringComparison.OrdinalIgnoreCase))
-            //        .ToList();
-
-            //    if (types.Count == 1)
-            //    {
-            //        contestRegistrations = contestRegistrations.Where(r => r.Status == types.First());
-            //    }
-            //}
-
             object viewModel;
             if (contest.ContestType == ContestType.Individual)
             {
@@ -179,7 +131,6 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
             var contest = await _context.Contests
-                .Include(c => c.ContestAreas)
                 .Include("ContestAreas.Area")
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
@@ -292,7 +243,6 @@ namespace ContestantRegister.Controllers
         protected virtual async Task<Contest> GetContestForRegistration(int contestId)
         {
             return await _context.Contests
-                .Include(c => c.ContestAreas)
                 .Include("ContestAreas.Area")
                 .SingleOrDefaultAsync(c => c.Id == contestId);
         }
@@ -471,9 +421,7 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Sorting(int id)
         {
             var contest = await _context.Contests
-                .Include(c => c.ContestAreas)
                 .Include("ContestAreas.Area")
-                .Include(c => c.ContestRegistrations)
                 .Include("ContestRegistrations.Participant1")
                 .Include("ContestRegistrations.StudyPlace")
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -698,7 +646,6 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> ImportParticipants(int id, ImportParticipantsViewModel viewModel)
         {
             var contest = await _context.Contests
-                .Include(c => c.ContestAreas)
                 .Include("ContestAreas.Area")
                 .SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)

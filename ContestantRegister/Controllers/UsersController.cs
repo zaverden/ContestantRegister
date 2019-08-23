@@ -79,54 +79,9 @@ namespace ContestantRegister.Controllers
             ViewData["UserTypeName"] = filter.UserTypeName;
 
             IQueryable<ApplicationUser> users = _context.Users
-                .Include(c => c.StudyPlace)
                 .Include(c => c.StudyPlace.City);
 
             var filtered = users.AutoFilter(filter);
-
-            //if (!string.IsNullOrEmpty(filter.Email))
-            //{
-            //    users = users.Where(u => u.Email.ContainsIgnoreCase(filter.Email));
-            //}
-
-            //if (filter.EmailConfirmed.HasValue)
-            //{
-            //    var confirmed = filter.EmailConfirmed.Value == 1;
-            //    users = users.Where(u => u.EmailConfirmed == confirmed);
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.Surname))
-            //{
-            //    users = users.Where(u => u.Surname.ContainsIgnoreCase(filter.Surname));
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.Name))
-            //{
-            //    users = users.Where(u => u.Name.ContainsIgnoreCase(filter.Name));
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.City))
-            //{
-            //    users = users.Where(u => u.StudyPlace.City.Name.ContainsIgnoreCase(filter.City));
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.StudyPlace))
-            //{
-            //    users = users.Where(u => u.StudyPlace.ShortName.ContainsIgnoreCase(filter.StudyPlace));
-            //}
-
-            //if (!string.IsNullOrEmpty(filter.UserTypeName))
-            //{
-            //    var types = Enum.GetValues(typeof(UserType))
-            //        .Cast<UserType>()
-            //        .Where(type => HtmlHelperExtensions.GetDisplayName(type).ContainsIgnoreCase(filter.UserTypeName))
-            //        .ToList();
-
-            //    if (types.Count == 1)
-            //    {
-            //        users = users.Where(u => u.UserType == types.First());
-            //    }
-            //}
 
             return View(await filtered.OrderBy(u => u.Id).ToListAsync());
         }
@@ -296,7 +251,6 @@ namespace ContestantRegister.Controllers
             }
 
             var contestantUser = await _context.Users
-                .Include(u => u.StudyPlace)
                 .Include(u => u.StudyPlace.City)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contestantUser == null)
@@ -357,8 +311,6 @@ namespace ContestantRegister.Controllers
         public FileResult Export()
         {
             var users = _context.Users
-                .Include(r => r.StudyPlace)
-                .Include(r => r.StudyPlace.City)
                 .Include(r => r.StudyPlace.City.Region);
 
             var package = new ExcelPackage();
