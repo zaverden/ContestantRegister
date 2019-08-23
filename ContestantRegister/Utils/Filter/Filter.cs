@@ -179,12 +179,15 @@ namespace ContestantRegister.Utils
                     Value = p.GetValue(predicate),
                     RelatedObjectAttribute = p.GetCustomAttribute<RelatedObjectAttribute>(),
                     PropertyNameAttribute = p.GetCustomAttribute<PropertyNameAttribute>(),
+                    ConverAttribute = p.GetCustomAttribute<ConvertFilterAttribute>(),
                 })
                 .Where(obj => obj.Value != null)
                 .Select(obj => new
                 {
                     obj.FilterProperty,
-                    obj.Value,
+                    Value = obj.ConverAttribute != null ?
+                                ((IFilverValueConverter)Activator.CreateInstance(obj.ConverAttribute.DestinationType)).Convert(obj.Value) : 
+                                obj.Value,
                     obj.RelatedObjectAttribute,
                     Name = obj.PropertyNameAttribute != null ? obj.PropertyNameAttribute.PropertyName : obj.FilterProperty.Name,
                 })
@@ -203,8 +206,7 @@ namespace ContestantRegister.Utils
                 {
                     Property = propInfo,
                     Value = filter.Value,
-                    FilterProperty = filter.FilterProperty,
-                    ConverAttribute = filter.FilterProperty.GetCustomAttribute<ConvertFilterAttribute>(),
+                    FilterProperty = filter.FilterProperty,                    
                     RelatedObjectAttribute = filter.RelatedObjectAttribute,
                 })
                 .ToArray();
@@ -223,7 +225,6 @@ namespace ContestantRegister.Utils
                 {
                     Value = filter.Value,
                     FilterProperty = filter.FilterProperty,
-                    ConverAttribute = filter.FilterProperty.GetCustomAttribute<ConvertFilterAttribute>(),
                     RelatedObjectAttribute = filter.RelatedObjectAttribute,
                 });
 
@@ -244,19 +245,11 @@ namespace ContestantRegister.Utils
             public PropertyInfo Property { get; set; }
             public object Value { get; set; }
             public PropertyInfo FilterProperty { get; set; }
-            public ConvertFilterAttribute ConverAttribute { get; set; }
             public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
         }
 
         private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter, bool checkNullNavProperties)
         {
-            var val = x.Value;
-            if (x.ConverAttribute != null)
-            {
-                IFilverValueConverter converter = (IFilverValueConverter)Activator.CreateInstance(x.ConverAttribute.DestinationType);
-                val = converter.Convert(val);
-            }
-
             Func<MemberExpression, Expression, Expression> stringFunc = null;
 
             if (x.FilterProperty.PropertyType == typeof(string))
@@ -335,7 +328,7 @@ namespace ContestantRegister.Utils
                 property = Expression.Property(parameter, x.Property);
             }
 
-            Expression value = Expression.Constant(val);
+            Expression value = Expression.Constant(x.Value);
 
             value = Expression.Convert(value, property.Type); // нужна ли эта конвертация?
             var func = property.Type == typeof(string) ?
