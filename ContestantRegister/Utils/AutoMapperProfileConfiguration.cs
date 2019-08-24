@@ -8,6 +8,7 @@ using ContestantRegister.ViewModels.ListItemViewModels;
 using ContestantRegister.ViewModels.ManageViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
 using ContestantRegister.ViewModels.ListItem;
+using ContestantRegister.Controllers;
 
 namespace ContestantRegister.Utils
 {
@@ -15,6 +16,11 @@ namespace ContestantRegister.Utils
     {
         public AutoMapperProfileConfiguration()
         {
+            CreateMap<ApplicationUser, UserViewModel>()
+                .ForMember(x => x.StudyPlace, opt => opt.MapFrom(y => y.StudyPlace.ShortName))
+                .ForMember(x => x.City, opt => opt.MapFrom(y => y.StudyPlace.City.Name))                
+                ;
+
             CreateMap<City, City>();
             CreateMap<School, School>();
             CreateMap<Institution, Institution>();

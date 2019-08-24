@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,7 @@ using ContestantRegister.ViewModels.ListItemViewModels;
 using System.IO;
 using OfficeOpenXml;
 using ContestantRegister.Utils.Filter;
+using System.ComponentModel.DataAnnotations;
 
 namespace ContestantRegister.Controllers
 {   
@@ -35,16 +37,33 @@ namespace ContestantRegister.Controllers
         public string Name { get; set; }
 
         [StringFilter(StringFilter.Contains, IgnoreCase = true)]
-        [RelatedObject("StudyPlace.City", PropertyName = "Name")]
+        //[RelatedObject("StudyPlace.City", PropertyName = "Name")]
         public string City { get; set; }
 
         [StringFilter(StringFilter.Contains, IgnoreCase = true)]
-        [RelatedObject("StudyPlace", PropertyName = "ShortName")]        
+        //[RelatedObject("StudyPlace", PropertyName = "ShortName")]        
         public string StudyPlace { get; set; }
 
         [ConvertFilter(typeof(EnumDisplayToValueConverter<UserType>))]
         [PropertyName("UserType")]
         public string UserTypeName { get; set; }        
+    }
+
+    public class UserViewModel
+    {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string Surname { get; set; }
+        public string Name { get; set; }
+        public string Patronymic { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        [Display(Name = "Роль")]
+        public UserType UserType { get; set; }
+        public string City { get; set; }
+        public string StudyPlace { get; set; }       
+
     }
 
     [Authorize(Roles = Roles.Admin)]
@@ -78,12 +97,13 @@ namespace ContestantRegister.Controllers
             ViewData["StudyPlace"] = filter.StudyPlace;
             ViewData["UserTypeName"] = filter.UserTypeName;
 
-            IQueryable<ApplicationUser> users = _context.Users
-                .Include(c => c.StudyPlace.City);
+            IQueryable<UserViewModel> users = _context
+                .Users
+                .ProjectTo<UserViewModel>()
+                .AutoFilter(filter)
+                .OrderBy(u => u.Id);
 
-            var filtered = users.AutoFilter(filter);
-
-            return View(await filtered.OrderBy(u => u.Id).ToListAsync());
+            return View(await users.ToListAsync());
         }
 
         // GET: Admins
@@ -150,7 +170,7 @@ namespace ContestantRegister.Controllers
             var user = new ApplicationUser
             {
                 UserName = viewModel.Email,
-                RegistrationDateTime = Extensions.SfuServerNow,
+                RegistrationDateTime = Utils.Extensions.SfuServerNow,
                 RegistredBy = await _userManager.GetUserAsync(User) //Хотя пользователя регистрирует админ, все равно проставляем кто зарегал, иначе не отличить от тех, кто зарегался сам
             };
 
