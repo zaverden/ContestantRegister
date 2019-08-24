@@ -33,38 +33,122 @@ namespace ContestantRegister.Utils.Filter
 
     public static class Conventions
     {
-        public static ConventionalFilters Filters { get; } = new ConventionalFilters();
-    }
-
-    public class ConventionalFilters
-    {
         public static MethodInfo StartsWith = typeof(string)
             .GetMethod("StartsWith", new[] { typeof(string) });
-        
+
         public static MethodInfo Contains = typeof(string)
             .GetMethod("Contains", new[] { typeof(string) });
-        
-        private static Dictionary<Type, Func<MemberExpression, Expression, Expression>> _filters
-            = new Dictionary<Type, Func<MemberExpression, Expression, Expression>>()
-            {
-                { typeof(string),  (p, v) => Expression.Call(p, StartsWith, v) }
-            };
 
-        internal ConventionalFilters()
+        private static string StringStartWithIgnoreCase = "StringStartWithIgnoreCase";
+        private static string StringStartWith = "StringStartWith";
+        private static string StringContainsIgnoreCase = "StringContainsIgnoreCase";
+        private static string StringContains = "StringContains";
+
+        private static Dictionary<string, Func<MemberExpression, Expression, Expression>> _filters
+            = new Dictionary<string, Func<MemberExpression, Expression, Expression>>();
+
+        public static Func<MemberExpression, Expression, Expression> GetFilterBuilderFunc(FilterPropertyInfo filterPropertyInfo)
         {
-                
+            if (filterPropertyInfo.Property.PropertyType == typeof(string))
+                return GetStringBuilderFunc(filterPropertyInfo);
+
+            if (filterPropertyInfo.FilterProperty.FilterConditionAttribute != null)
+                return GetConditionBuilderFunc(filterPropertyInfo);
+
+            return Expression.Equal;
         }
 
-        public Func<MemberExpression, Expression, Expression> this[Type key]
+        private static Func<MemberExpression, Expression, Expression> GetConditionBuilderFunc(FilterPropertyInfo filterPropertyInfo)
         {
-            get => _filters.ContainsKey(key)
-                ? _filters[key]
-                : Expression.Equal;
-            set => _filters[key] = value ?? throw new ArgumentException(nameof(value));
+            switch (filterPropertyInfo.FilterProperty.FilterConditionAttribute.FilterCondition)
+            {
+                case FilterCondition.Equal: return Expression.Equal;
+                case FilterCondition.Greater: return Expression.GreaterThan;
+                case FilterCondition.GreaterOrEqual: return Expression.GreaterThanOrEqual;
+                case FilterCondition.Less: return Expression.LessThan;
+                case FilterCondition.LessOrEqual: return Expression.LessThanOrEqual;
+            }
+
+            return Expression.Equal;
+        }
+
+        private static Func<MemberExpression, Expression, Expression> GetStringBuilderFunc(FilterPropertyInfo filterPropertyInfo)
+        {
+            if (filterPropertyInfo.FilterProperty.StringFilterAttribute == null)
+                return (p, v) => Expression.Call(p, StartsWith, v);
+
+            Func<MemberExpression, Expression, Expression> result = null;
+            string key = null;
+
+            switch (filterPropertyInfo.FilterProperty.StringFilterAttribute.StringFilter)
+            {
+                case StringFilter.StartsWith:
+                    if (filterPropertyInfo.FilterProperty.StringFilterAttribute.IgnoreCase)
+                    {
+                        if (_filters.ContainsKey(StringStartWithIgnoreCase)) return _filters[StringStartWithIgnoreCase];
+
+                        result = (p, v) =>
+                        {
+                            var mi = typeof(string).GetMethod("ToLower", new Type[] { });
+                            var pl = Expression.Call(p, mi);
+                            var vl = Expression.Call(v, mi);
+                            return Expression.Call(pl, StartsWith, vl);
+                        };
+                        key = StringStartWithIgnoreCase;
+                    }
+                    else
+                    {
+                        if (_filters.ContainsKey(StringStartWith)) return _filters[StringStartWith];
+
+                        result = (p, v) => Expression.Call(p, StartsWith, v);
+                        key = StringStartWith;
+                    }
+                    break;
+                case StringFilter.Contains:
+                    if (filterPropertyInfo.FilterProperty.StringFilterAttribute.IgnoreCase)
+                    {
+                        if (_filters.ContainsKey(StringContainsIgnoreCase)) return _filters[StringContainsIgnoreCase];
+
+                        result = (p, v) =>
+                        {
+                            var mi = typeof(string).GetMethod("ToLower", new Type[] { });
+                            var pl = Expression.Call(p, mi);
+                            var vl = Expression.Call(v, mi);
+                            return Expression.Call(pl, Contains, vl);
+                        };
+                        key = StringContainsIgnoreCase;
+                    }
+                    else
+                    {
+                        if (_filters.ContainsKey(StringContains)) return _filters[StringContains];
+
+                        result = (p, v) => Expression.Call(p, Contains, v);
+                        key = StringContains;
+                    }
+                    break;
+            }
+
+            _filters.Add(key, result);
+            return result;
         }
     }
-
     
+    public class FilterPropertyInfo
+    {
+        public PropertyInfo Property { get; set; }
+        public object Value { get; set; }
+        public FilterProperty FilterProperty { get; set; }
+    }
+
+    public class FilterProperty
+    {
+        public PropertyInfo PropertyInfo { get; set; }
+        public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
+        public string ObjectPropertyName { get; set; }
+        public StringFilterAttribute StringFilterAttribute { get; set; }
+        public IFilverValueConverter Converter { get; set; }
+        public FilterConditionAttribute FilterConditionAttribute { get; set; }
+    }
 
     public static class Conventions<TSubject>
     {
@@ -167,63 +251,11 @@ namespace ContestantRegister.Utils.Filter
             return props.ToArray();
         }
 
-        private class FilterPropertyInfo
-        {
-            public PropertyInfo Property { get; set; }
-            public object Value { get; set; }
-            public FilterProperty FilterProperty { get; set; }            
-        }
+        
 
         private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter, bool checkNullNavProperties)
         {
-            Func<MemberExpression, Expression, Expression> stringFunc = null;
-
-            if (x.FilterProperty.PropertyInfo.PropertyType == typeof(string))
-            {
-                if (x.FilterProperty.StringFilterAttribute != null)
-                {
-                    switch (x.FilterProperty.StringFilterAttribute.StringFilter)
-                    {
-                        case StringFilter.StartsWith:
-                            if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
-                            {
-                                stringFunc = (p, v) =>
-                                {
-                                    var mi = typeof(string).GetMethod("ToLower", new Type[] { });
-                                    var pl = Expression.Call(p, mi);
-                                    var vl = Expression.Call(v, mi);
-                                    return Expression.Call(pl, ConventionalFilters.StartsWith, vl);
-                                };
-                            }
-                            else
-                            {
-                                stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.StartsWith, v);
-                            }
-                            break;
-                        case StringFilter.Contains:
-                            if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
-                            {
-                                var notFound = Expression.Constant(-1);
-                                stringFunc = (p, v) =>
-                                {
-                                    var mi = typeof(string).GetMethod("ToLower", new Type[] { });
-                                    var pl = Expression.Call(p, mi);
-                                    var vl = Expression.Call(v, mi);
-                                    return Expression.Call(pl, ConventionalFilters.Contains, vl);
-                                };
-                            }
-                            else
-                            {
-                                stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.Contains, v);
-                            }
-                            break;
-                    }
-                }
-                else
-                {
-                    stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.StartsWith, v);
-                }
-            }
+            
 
             MemberExpression property;
 
@@ -264,10 +296,9 @@ namespace ContestantRegister.Utils.Filter
 
             Expression value = Expression.Constant(x.Value);
 
-            value = Expression.Convert(value, property.Type); //например для конвертирования enum в object
-            var func = property.Type == typeof(string) ?
-                stringFunc :
-                Conventions.Filters[property.Type];
+            value = Expression.Convert(value, property.Type); //например для конвертирования enum в object или int? в int
+
+            var func = Conventions.GetFilterBuilderFunc(x);
 
             var body = func(property, value);
 
@@ -286,14 +317,7 @@ namespace ContestantRegister.Utils.Filter
             return res;
         }
 
-        private class FilterProperty
-        {
-            public PropertyInfo PropertyInfo { get; set; }
-            public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
-            public string ObjectPropertyName { get; set; }
-            public StringFilterAttribute StringFilterAttribute { get; set; }
-            public IFilverValueConverter Converter { get; set; }
-        }
+        
 
         private static class FastFilterPropertyInfo<T>
         {
@@ -304,22 +328,22 @@ namespace ContestantRegister.Utils.Filter
                     .Select(x => new
                     {
                         PropertyInfo = x,
-                        RelatedObjectAttribute = x.GetCustomAttribute<RelatedObjectAttribute>(),
                         PropertyNameAttribute = x.GetCustomAttribute<PropertyNameAttribute>(),
-                        ConvertFilterAttribute = x.GetCustomAttribute<ConvertFilterAttribute>(),
-                        StringFilterAttribute = x.GetCustomAttribute<StringFilterAttribute>(),
+                        ConvertFilterAttribute = x.GetCustomAttribute<ConvertFilterAttribute>(),                        
                     })
                     .Select(x => new FilterProperty
                     {
                         PropertyInfo = x.PropertyInfo,
-                        RelatedObjectAttribute = x.RelatedObjectAttribute,
-                        StringFilterAttribute = x.StringFilterAttribute,
                         ObjectPropertyName = x.PropertyNameAttribute != null ?
                                                 x.PropertyNameAttribute.PropertyName :
                                                 x.PropertyInfo.Name,
                         Converter = x.ConvertFilterAttribute != null ?
                                         ((IFilverValueConverter)Activator.CreateInstance(x.ConvertFilterAttribute.DestinationType)) :
                                         null,
+
+                        RelatedObjectAttribute = x.PropertyInfo.GetCustomAttribute<RelatedObjectAttribute>(),
+                        StringFilterAttribute = x.PropertyInfo.GetCustomAttribute<StringFilterAttribute>(),
+                        FilterConditionAttribute = x.PropertyInfo.GetCustomAttribute<FilterConditionAttribute>()
                     })
                     .ToArray();
             }

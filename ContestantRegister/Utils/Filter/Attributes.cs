@@ -58,4 +58,22 @@ namespace ContestantRegister.Utils.Filter
         public bool IgnoreCase { get; set; }
     }
 
+    public enum FilterCondition
+    {
+        Equal,
+        Less,
+        LessOrEqual,
+        Greater,
+        GreaterOrEqual
+    }
+    public class FilterConditionAttribute : Attribute
+    {
+        public FilterConditionAttribute(FilterCondition condition)
+        {
+            FilterCondition = condition;
+        }
+
+        public FilterCondition FilterCondition { get; }
+    }
+
 }
