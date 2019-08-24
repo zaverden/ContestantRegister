@@ -40,14 +40,10 @@ namespace ContestantRegister.Utils.Filter
     {
         public static MethodInfo StartsWith = typeof(string)
             .GetMethod("StartsWith", new[] { typeof(string) });
-        public static MethodInfo StartsWithComparsion = typeof(string)
-            .GetMethod("StartsWith", new[] { typeof(string), typeof(StringComparison) });
-
+        
         public static MethodInfo Contains = typeof(string)
             .GetMethod("Contains", new[] { typeof(string) });
-        public static MethodInfo IndexOfComparsion = typeof(string)
-            .GetMethod("IndexOf", new[] { typeof(string), typeof(StringComparison) });
-
+        
         private static Dictionary<Type, Func<MemberExpression, Expression, Expression>> _filters
             = new Dictionary<Type, Func<MemberExpression, Expression, Expression>>()
             {
@@ -191,8 +187,13 @@ namespace ContestantRegister.Utils.Filter
                         case StringFilter.StartsWith:
                             if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
                             {
-                                var enumVal = Expression.Constant(StringComparison.OrdinalIgnoreCase);
-                                stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.StartsWithComparsion, v, enumVal);
+                                stringFunc = (p, v) =>
+                                {
+                                    var mi = typeof(string).GetMethod("ToLower", new Type[] { });
+                                    var pl = Expression.Call(p, mi);
+                                    var vl = Expression.Call(v, mi);
+                                    return Expression.Call(pl, ConventionalFilters.StartsWith, vl);
+                                };
                             }
                             else
                             {
@@ -202,12 +203,13 @@ namespace ContestantRegister.Utils.Filter
                         case StringFilter.Contains:
                             if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
                             {
-                                var enumVal = Expression.Constant(StringComparison.OrdinalIgnoreCase);
                                 var notFound = Expression.Constant(-1);
                                 stringFunc = (p, v) =>
                                 {
-                                    var indexOf = Expression.Call(p, ConventionalFilters.IndexOfComparsion, v, enumVal);
-                                    return Expression.NotEqual(indexOf, notFound);
+                                    var mi = typeof(string).GetMethod("ToLower", new Type[] { });
+                                    var pl = Expression.Call(p, mi);
+                                    var vl = Expression.Call(v, mi);
+                                    return Expression.Call(pl, ConventionalFilters.Contains, vl);
                                 };
                             }
                             else

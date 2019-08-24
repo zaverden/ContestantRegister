@@ -1,11 +1,17 @@
 ﻿using ContestantRegister.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace ContestantRegister.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public static readonly ILoggerFactory loggerFactory = new LoggerFactory(new[] {
+              new ConsoleLoggerProvider((_, __) => true, true)
+        });
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -15,7 +21,10 @@ namespace ContestantRegister.Data
         //{ }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //    => optionsBuilder.UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
+        //    => optionsBuilder
+        //    .UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
+        //    .EnableSensitiveDataLogging()
+        //    .UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
 
         public DbSet<Area> Areas { get; set; }
 

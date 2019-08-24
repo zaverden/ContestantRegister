@@ -4,12 +4,15 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ContestantRegister.Properties;
+using ContestantRegister.Utils.Ddd;
 
 namespace ContestantRegister.Models
 {
     [DisplayName("Контест")]
     public class Contest : DomainObject
     {
+        public static readonly Spec<Contest> Archived = new Spec<Contest>(x => x.IsArchive);
+
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(200)]
         [Display(Name = "Название")]

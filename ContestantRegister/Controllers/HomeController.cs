@@ -50,14 +50,14 @@ namespace ContestantRegister.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var actualContests = _context.Contests.Where(c => !c.IsArchive);
+            var actualContests = _context.Contests.Where(!Contest.Archived);
 
             return View(await actualContests.OrderBy(item => item.Id).ToListAsync());
         }
 
         public async Task<IActionResult> Archive()
         {
-            var archiveContests = _context.Contests.Where(c => c.IsArchive);
+            var archiveContests = _context.Contests.Where(Contest.Archived);
 
             return View(await archiveContests.OrderByDescending(item => item.Id).ToListAsync());
         }
