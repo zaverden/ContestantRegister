@@ -112,27 +112,22 @@ namespace ContestantRegister.Utils.Filter
 
         private static Expression<Func<TSubject, bool>>[] GetProps<TSubject, TPredicate>(TPredicate predicate, bool checkNullNavProperties)
         {
-            var filterProps = FastPropertyInfo<TPredicate>
+            var filterProps = FastFilterPropertyInfo<TPredicate>
                 .PublicProperties
                 .ToArray();
 
             var filterPropsData = filterProps
-                .Select(p => new
+                .Select(x => new
                 {
-                    FilterProperty = p,
-                    Value = p.GetValue(predicate),
-                    RelatedObjectAttribute = p.GetCustomAttribute<RelatedObjectAttribute>(),
-                    PropertyNameAttribute = p.GetCustomAttribute<PropertyNameAttribute>(),
-                    ConverAttribute = p.GetCustomAttribute<ConvertFilterAttribute>(),
+                    FilterProperty = x,
+                    Value = x.PropertyInfo.GetValue(predicate),
                 })
-                .Select(obj => new
+                .Select(x => new
                 {
-                    obj.FilterProperty,
-                    Value = obj.ConverAttribute != null && obj.Value != null ?
-                                ((IFilverValueConverter)Activator.CreateInstance(obj.ConverAttribute.DestinationType)).Convert(obj.Value) : 
-                                obj.Value,
-                    obj.RelatedObjectAttribute,
-                    Name = obj.PropertyNameAttribute != null ? obj.PropertyNameAttribute.PropertyName : obj.FilterProperty.Name,
+                    x.FilterProperty,
+                    Value = x.FilterProperty.Converter != null && x.Value != null ?
+                                x.FilterProperty.Converter.Convert(x.Value) :
+                                x.Value,
                 })
                 .Where(x => x.Value != null)
                 .ToArray();
@@ -146,12 +141,11 @@ namespace ContestantRegister.Utils.Filter
 
             var subjectNotnavigationProps = FastPropertyInfo<TSubject>
                 .PublicProperties
-                .Join(filterPropsData.Where(x => x.RelatedObjectAttribute == null), fp => fp.Name, sp => sp.Name, (propInfo, filter) => new FilterPropertyInfo
+                .Join(filterPropsData.Where(x => x.FilterProperty.RelatedObjectAttribute == null), p => p.Name, f => f.FilterProperty.ObjectPropertyName, (propInfo, filter) => new FilterPropertyInfo
                 {
                     Property = propInfo,
                     Value = filter.Value,
                     FilterProperty = filter.FilterProperty,                    
-                    RelatedObjectAttribute = filter.RelatedObjectAttribute,
                 })
                 .ToArray();
 
@@ -161,12 +155,11 @@ namespace ContestantRegister.Utils.Filter
                 .ToList();
 
             var navigationProperties = filterPropsData
-                .Where(x => x.RelatedObjectAttribute != null)
+                .Where(x => x.FilterProperty.RelatedObjectAttribute != null)
                 .Select(filter => new FilterPropertyInfo
                 {
                     Value = filter.Value,
-                    FilterProperty = filter.FilterProperty,
-                    RelatedObjectAttribute = filter.RelatedObjectAttribute,
+                    FilterProperty = filter.FilterProperty,                    
                 });
 
             var props2 = navigationProperties
@@ -182,24 +175,21 @@ namespace ContestantRegister.Utils.Filter
         {
             public PropertyInfo Property { get; set; }
             public object Value { get; set; }
-            public PropertyInfo FilterProperty { get; set; }
-            public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
+            public FilterProperty FilterProperty { get; set; }            
         }
 
         private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter, bool checkNullNavProperties)
         {
             Func<MemberExpression, Expression, Expression> stringFunc = null;
 
-            if (x.FilterProperty.PropertyType == typeof(string))
+            if (x.FilterProperty.PropertyInfo.PropertyType == typeof(string))
             {
-                var stringFilter = x.FilterProperty.GetCustomAttribute<StringFilterAttribute>();
-                if (stringFilter != null)
+                if (x.FilterProperty.StringFilterAttribute != null)
                 {
-
-                    switch (stringFilter.StringFilter)
+                    switch (x.FilterProperty.StringFilterAttribute.StringFilter)
                     {
                         case StringFilter.StartsWith:
-                            if (stringFilter.IgnoreCase)
+                            if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
                             {
                                 var enumVal = Expression.Constant(StringComparison.OrdinalIgnoreCase);
                                 stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.StartsWithComparsion, v, enumVal);
@@ -210,7 +200,7 @@ namespace ContestantRegister.Utils.Filter
                             }
                             break;
                         case StringFilter.Contains:
-                            if (stringFilter.IgnoreCase)
+                            if (x.FilterProperty.StringFilterAttribute.IgnoreCase)
                             {
                                 var enumVal = Expression.Constant(StringComparison.OrdinalIgnoreCase);
                                 var notFound = Expression.Constant(-1);
@@ -227,14 +217,18 @@ namespace ContestantRegister.Utils.Filter
                             break;
                     }
                 }
+                else
+                {
+                    stringFunc = (p, v) => Expression.Call(p, ConventionalFilters.StartsWith, v);
+                }
             }
 
             MemberExpression property;
 
             var nullchecks = new List<Expression>();
-            if (x.RelatedObjectAttribute != null)
+            if (x.FilterProperty.RelatedObjectAttribute != null)
             {
-                var propNames = x.RelatedObjectAttribute.ObjectName.Split('.');
+                var propNames = x.FilterProperty.RelatedObjectAttribute.ObjectName.Split('.');
                 property = Expression.Property(parameter, propNames[0]);
                 var nullExpression = Expression.Constant(null);
                 
@@ -252,13 +246,13 @@ namespace ContestantRegister.Utils.Filter
                         nullchecks.Add(nullCheck);
                     }
                 }
-                if (!string.IsNullOrEmpty(x.RelatedObjectAttribute.PropertyName))
+                if (!string.IsNullOrEmpty(x.FilterProperty.RelatedObjectAttribute.PropertyName))
                 {
-                    property = Expression.Property(property, x.RelatedObjectAttribute.PropertyName);
+                    property = Expression.Property(property, x.FilterProperty.RelatedObjectAttribute.PropertyName);
                 }
                 else
                 {
-                    property = Expression.Property(property, x.FilterProperty.Name);
+                    property = Expression.Property(property, x.FilterProperty.ObjectPropertyName);
                 }
             }
             else
@@ -288,6 +282,48 @@ namespace ContestantRegister.Utils.Filter
             var res = Expression.Lambda<Func<TSubject, bool>>(body, parameter);
 
             return res;
+        }
+
+        private class FilterProperty
+        {
+            public PropertyInfo PropertyInfo { get; set; }
+            public RelatedObjectAttribute RelatedObjectAttribute { get; set; }
+            public string ObjectPropertyName { get; set; }
+            public StringFilterAttribute StringFilterAttribute { get; set; }
+            public IFilverValueConverter Converter { get; set; }
+        }
+
+        private static class FastFilterPropertyInfo<T>
+        {
+            static FastFilterPropertyInfo()
+            {
+                PublicProperties = FastPropertyInfo<T>
+                    .PublicProperties
+                    .Select(x => new
+                    {
+                        PropertyInfo = x,
+                        RelatedObjectAttribute = x.GetCustomAttribute<RelatedObjectAttribute>(),
+                        PropertyNameAttribute = x.GetCustomAttribute<PropertyNameAttribute>(),
+                        ConvertFilterAttribute = x.GetCustomAttribute<ConvertFilterAttribute>(),
+                        StringFilterAttribute = x.GetCustomAttribute<StringFilterAttribute>(),
+                    })
+                    .Select(x => new FilterProperty
+                    {
+                        PropertyInfo = x.PropertyInfo,
+                        RelatedObjectAttribute = x.RelatedObjectAttribute,
+                        StringFilterAttribute = x.StringFilterAttribute,
+                        ObjectPropertyName = x.PropertyNameAttribute != null ?
+                                                x.PropertyNameAttribute.PropertyName :
+                                                x.PropertyInfo.Name,
+                        Converter = x.ConvertFilterAttribute != null ?
+                                        ((IFilverValueConverter)Activator.CreateInstance(x.ConvertFilterAttribute.DestinationType)) :
+                                        null,
+                    })
+                    .ToArray();
+            }
+
+            public static FilterProperty[] PublicProperties { get; }
+
         }
 
         private static class FastPropertyInfo<T>
