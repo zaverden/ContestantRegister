@@ -249,14 +249,10 @@ namespace ContestantRegister.Utils.Filter
             props.AddRange(props2);
 
             return props.ToArray();
-        }
-
-        
+        }       
 
         private static Expression<Func<TSubject, bool>> Calc<TSubject>(FilterPropertyInfo x, ParameterExpression parameter, bool checkNullNavProperties)
         {
-            
-
             MemberExpression property;
 
             var nullchecks = new List<Expression>();
@@ -304,20 +300,14 @@ namespace ContestantRegister.Utils.Filter
 
             if (checkNullNavProperties && nullchecks.Any())
             {
-                var expr = nullchecks[0];
-                for (int i = 1; i < nullchecks.Count; i++)
-                {
-                    expr = Expression.AndAlso(expr, nullchecks[i]);
-                }
+                var expr = nullchecks.Aggregate((cur, next) => Expression.AndAlso(cur, next));               
                 body = Expression.AndAlso(expr, body);                
             }
 
             var res = Expression.Lambda<Func<TSubject, bool>>(body, parameter);
 
             return res;
-        }
-
-        
+        }        
 
         private static class FastFilterPropertyInfo<T>
         {
@@ -380,8 +370,16 @@ namespace ContestantRegister.Utils.Filter
     public static class ExpressionExtensions
     {
         public static Func<TIn, TOut> AsFunc<TIn, TOut>(this Expression<Func<TIn, TOut>> expr)
-            => CompiledExpressions<TIn, TOut>.AsFunc(expr);
-
+            => CompiledExpressions<TIn, TOut>.AsFunc(expr);        
+    }
+           
+    public static class QuerableExtensions
+    {
+        public static IQueryable<T> Where<T, TParam>(this IQueryable<T> queryable, 
+            Expression<Func<T, TParam>> first, Expression<Func<TParam, bool>> second)
+        {
+            return queryable.Where(first.Combine<T, TParam, bool>(second));
+        }
     }
 
     public static class PredicateBuilder
@@ -441,8 +439,38 @@ namespace ContestantRegister.Utils.Filter
             var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
 
             // create a merged lambda expression with parameters from the first expression
-            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
-            
+            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);            
+        }
+
+        public static Expression<Func<TFirstParam, TResult>> Combine<TFirstParam, TIntermediate, TResult>(
+                        this Expression<Func<TFirstParam, TIntermediate>> first,
+                    Expression<Func<TIntermediate, TResult>> second)
+        {
+            var param = Expression.Parameter(typeof(TFirstParam));
+
+            var newFirst = first.Body.Replace(first.Parameters[0], param);
+            var newSecond = second.Body.Replace(second.Parameters[0], newFirst);
+
+            return Expression.Lambda<Func<TFirstParam, TResult>>(newSecond, param);
+        }
+
+        private static Expression Replace(this Expression expression, Expression searchEx, Expression replaceEx)
+        {
+            return new ReplaceVisitor(searchEx, replaceEx).Visit(expression);
+        }
+
+        private class ReplaceVisitor : ExpressionVisitor
+        {
+            private readonly Expression from, to;
+            public ReplaceVisitor(Expression from, Expression to)
+            {
+                this.from = from;
+                this.to = to;
+            }
+            public override Expression Visit(Expression node)
+            {
+                return node == from ? to : base.Visit(node);
+            }
         }
 
         private class ParameterRebinder : ExpressionVisitor
@@ -452,6 +480,13 @@ namespace ContestantRegister.Utils.Filter
             private ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
             {
                 _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+            }
+
+            public static Expression ReplaceParameters(Expression exp, ParameterExpression f, ParameterExpression s)
+            {
+                var map = new Dictionary<ParameterExpression, ParameterExpression>()
+                { { f, s} };
+                return new ParameterRebinder(map).Visit(exp);
             }
 
             public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
