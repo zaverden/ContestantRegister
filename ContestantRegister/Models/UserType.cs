@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Reflection;
 
 namespace ContestantRegister.Models
@@ -21,7 +20,7 @@ namespace ContestantRegister.Models
         public static string GetDisplayName(this UserType userType)
         {
             var fieldInfo = userType.GetType().GetField(userType.ToString());
-            var displayAttribute = (DisplayAttribute)fieldInfo.GetCustomAttributes(typeof(DisplayAttribute)).First();
+            var displayAttribute = fieldInfo.GetCustomAttribute<DisplayAttribute>();
             return displayAttribute.Name;
         }
     }
