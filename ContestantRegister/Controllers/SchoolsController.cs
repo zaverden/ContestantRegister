@@ -10,6 +10,7 @@ using AutoMapper;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using ContestantRegister.Utils.Filter;
+using ContestantRegister.Utils.Ddd;
 
 namespace ContestantRegister.Controllers
 {
@@ -40,6 +41,18 @@ namespace ContestantRegister.Controllers
         {
             ViewData["shortNameFilter"] = filter.ShortName;
             ViewData["cityFilter"] = filter.City;
+
+            // Sample of specs for navigation properties
+            //if (!string.IsNullOrEmpty(filter.City))
+            //{
+            //    var citySpec = new Spec<City>(x => x.Name.ToLower().Contains(filter.City.ToLower()));
+            //    var testSchools = _context.Schools
+            //        .Include(s => s.City)
+            //        .Where(x => x.City, citySpec)
+            //        .OrderBy(item => item.ShortName)
+            //        .ToList();
+
+            //}
 
             IQueryable<School> schools = _context.Schools
                 .Include(s => s.City)
