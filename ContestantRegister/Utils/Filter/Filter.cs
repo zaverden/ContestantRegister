@@ -29,6 +29,9 @@ namespace ContestantRegister.Utils.Filter
             var filtered = Conventions<TSubject>.Filter(query, predicate, composeKind);
             return filtered;
         }
+
+        public static IOrderedQueryable<TSubject> OrderBy<TSubject>(this IQueryable<TSubject> query, string propertyName)
+            => Conventions<TSubject>.Sort(query, propertyName);
     }
 
     public static class Conventions
@@ -191,7 +194,54 @@ namespace ContestantRegister.Utils.Filter
                 : props.Aggregate((c, n) => c.Or(n));
 
             return query.Where(expr.AsFunc()); 
+        }
 
+        public static IOrderedQueryable<TSubject> Sort(IQueryable<TSubject> query, string propertyName)
+        {
+            (string, bool) GetSorting()
+            {
+                var arr = propertyName.Split('.');
+                if (arr.Length == 1)
+                    return (arr[0], false);
+                var sort = arr[1];
+                if (string.Equals(sort, "ASC", StringComparison.CurrentCultureIgnoreCase))
+                    return (arr[0], false);
+                if (string.Equals(sort, "DESC", StringComparison.CurrentCultureIgnoreCase))
+                    return (arr[0], true);
+                return (arr[0], false);
+            }
+
+            var (name, isDesc) = GetSorting();
+            propertyName = name;
+
+            var property = FastPropertyInfo<TSubject>
+                .PublicProperties
+                .FirstOrDefault(x => string.Equals(x.Name, propertyName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (property == null)
+                throw new InvalidOperationException($"There is no public property \"{propertyName}\" " +
+                                                    $"in type \"{typeof(TSubject)}\"");
+
+            var parameter = Expression.Parameter(typeof(TSubject));
+            var body = Expression.Property(parameter, propertyName);
+
+            var lambda = FastPropertyInfo<Expression>
+                .PublicMethods
+                .First(x => x.Name == "Lambda");
+
+            lambda = lambda.MakeGenericMethod(typeof(Func<,>)
+                .MakeGenericType(typeof(TSubject), property.PropertyType));
+
+            var expression = lambda.Invoke(null, new object[] { body, new[] { parameter } });
+
+            var methodName = isDesc ? "OrderByDescending" : "OrderBy";
+
+            var orderBy = typeof(Queryable)
+                .GetMethods()
+                .First(x => x.Name == methodName && x.GetParameters().Length == 2)
+                .MakeGenericMethod(typeof(TSubject), property.PropertyType);
+
+            return (IOrderedQueryable<TSubject>)orderBy.Invoke(query, new object[] { query, expression });
         }
 
         private static Expression<Func<TSubject, bool>>[] GetProps<TSubject, TPredicate>(TPredicate predicate, bool checkNullNavProperties)
@@ -348,6 +398,7 @@ namespace ContestantRegister.Utils.Filter
 
         private static class FastPropertyInfo<T>
         {
+            private static MethodInfo[] _methods;
             static FastPropertyInfo()
             {
                 var type = typeof(T);
@@ -355,9 +406,15 @@ namespace ContestantRegister.Utils.Filter
                     .GetProperties()
                     .Where(x => x.CanRead && x.CanWrite)
                     .ToArray();
+
+                _methods = type.GetMethods()
+                    .Where(x => x.IsPublic && !x.IsAbstract)
+                    .ToArray();
             }
 
             public static PropertyInfo[] PublicProperties { get; }
+
+            public static MethodInfo[] PublicMethods => _methods;
 
         }
     }
