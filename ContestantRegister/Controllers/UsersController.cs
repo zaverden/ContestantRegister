@@ -59,7 +59,6 @@ namespace ContestantRegister.Controllers
         public string Patronymic { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        [Display(Name = "Роль")]
         public UserType UserType { get; set; }
         public string City { get; set; }
         public string StudyPlace { get; set; }       

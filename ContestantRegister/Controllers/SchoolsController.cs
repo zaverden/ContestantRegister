@@ -9,9 +9,19 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
+using ContestantRegister.Utils.Filter;
 
 namespace ContestantRegister.Controllers
 {
+    public class SchoolFitler
+    {
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
+        public string ShortName { get; set; }
+        [StringFilter(StringFilter.Contains, IgnoreCase = true)]
+        [RelatedObject("City", PropertyName = "Name")]
+        public string City { get; set; }
+    }
+
     [Authorize(Roles = Roles.Admin)]
     public class SchoolsController : Controller
     {
@@ -26,24 +36,17 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Schools
-        public async Task<IActionResult> Index(string shortNameFilter, string cityFilter)
+        public async Task<IActionResult> Index(SchoolFitler filter)
         {
-            ViewData["shortNameFilter"] = shortNameFilter;
-            ViewData["cityFilter"] = cityFilter;
+            ViewData["shortNameFilter"] = filter.ShortName;
+            ViewData["cityFilter"] = filter.City;
 
-            IQueryable<School> schools = _context.Schools.Include(s => s.City);
+            IQueryable<School> schools = _context.Schools
+                .Include(s => s.City)
+                .AutoFilter(filter)
+                .OrderBy(item => item.ShortName);            
 
-            if (!string.IsNullOrEmpty(shortNameFilter))
-            {
-                schools = schools.Where(s => s.ShortName.ContainsIgnoreCase(shortNameFilter));
-            }
-
-            if (!string.IsNullOrEmpty(cityFilter))
-            {
-                schools = schools.Where(s => s.City.Name.ContainsIgnoreCase(cityFilter));
-            }
-
-            return View(await schools.OrderBy(item => item.ShortName).ToListAsync());
+            return View(await schools.ToListAsync());
         }
 
         // GET: Schools/Create

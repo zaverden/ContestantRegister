@@ -49,7 +49,11 @@ namespace ContestantRegister.Utils.Filter
 
         public static Func<MemberExpression, Expression, Expression> GetFilterBuilderFunc(FilterPropertyInfo filterPropertyInfo)
         {
-            if (filterPropertyInfo.Property.PropertyType == typeof(string))
+            var propertyType = filterPropertyInfo.Property != null ?
+                filterPropertyInfo.Property.PropertyType :
+                filterPropertyInfo.FilterProperty.PropertyInfo.PropertyType;
+
+            if (propertyType == typeof(string))
                 return GetStringBuilderFunc(filterPropertyInfo);
 
             if (filterPropertyInfo.FilterProperty.FilterConditionAttribute != null)
