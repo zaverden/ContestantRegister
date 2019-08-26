@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
 using ContestantRegister.ViewModels.ListItem;
@@ -14,8 +15,9 @@ namespace ContestantRegister.Controllers
     {
         protected async Task<List<TVM>> GetListItemsAsync<TDB, TVM>(ApplicationDbContext context, IMapper mapper) where TDB : class
         {
-            List<TDB> dbList = await context.Set<TDB>().ToListAsync();
-            List<TVM> viewModels = mapper.Map<List<TVM>>(dbList);
+            var viewModels = await context.Set<TDB>()
+                .ProjectTo<TVM>()
+                .ToListAsync(); 
             return viewModels;
         }
 
