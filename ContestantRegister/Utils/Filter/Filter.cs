@@ -439,7 +439,13 @@ namespace ContestantRegister.Utils.Filter
         public static IQueryable<T> Where<T, TParam>(this IQueryable<T> queryable, 
             Expression<Func<T, TParam>> first, Expression<Func<TParam, bool>> second)
         {
-            return queryable.Where(first.Combine<T, TParam, bool>(second));
+            return queryable.Where(first.Combine(second));
+        }
+
+        public static IQueryable<T> WhereAny<T, TParam>(this IQueryable<T> queryable,
+            Expression<Func<T, IEnumerable<TParam>>> first, Expression<Func<TParam, bool>> second)
+        {
+            return queryable.Where(first.Combine(second));
         }
     }
 
@@ -513,6 +519,20 @@ namespace ContestantRegister.Utils.Filter
             var newSecond = second.Body.Replace(second.Parameters[0], newFirst);
 
             return Expression.Lambda<Func<TFirstParam, TResult>>(newSecond, param);
+        }
+
+        public static Expression<Func<TFirstParam, TResult>> Combine<TFirstParam, TIntermediate, TResult>(
+                        this Expression<Func<TFirstParam, IEnumerable<TIntermediate>>> first,
+                        Expression<Func<TIntermediate, TResult>> second)
+        {
+            var anyMethod = typeof(Enumerable).GetMethods().Where(x => x.Name == "Any" && x.GetParameters().Length == 2).Single();
+            var genericMethod = anyMethod.MakeGenericMethod(typeof(TIntermediate));
+
+            var param = Expression.Parameter(typeof(TFirstParam));
+            var firstBody = first.Body.Replace(first.Parameters[0], param);
+            var res = Expression.Call(null, genericMethod, firstBody, second);
+
+            return Expression.Lambda<Func<TFirstParam, TResult>>(res, param);            
         }
 
         private static Expression Replace(this Expression expression, Expression searchEx, Expression replaceEx)
