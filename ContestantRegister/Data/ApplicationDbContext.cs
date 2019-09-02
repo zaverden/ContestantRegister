@@ -17,14 +17,16 @@ namespace ContestantRegister.Data
         {
         }
 
-        //public ApplicationDbContext()
-        //{ }
+        public ApplicationDbContext()
+        {
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //    => optionsBuilder
-        //    .UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
-        //    .EnableSensitiveDataLogging()
-        //    .UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder
+            .UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
+            .EnableSensitiveDataLogging()
+            .UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
 
         public DbSet<Area> Areas { get; set; }
 

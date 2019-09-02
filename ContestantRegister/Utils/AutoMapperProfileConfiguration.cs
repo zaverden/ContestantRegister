@@ -9,6 +9,7 @@ using ContestantRegister.ViewModels.ManageViewModels;
 using ContestantRegister.ViewModels.UserViewModels;
 using ContestantRegister.ViewModels.ListItem;
 using ContestantRegister.Controllers;
+using ContestantRegister.Features.Frontend.Account.ViewModels;
 
 namespace ContestantRegister.Utils
 {
@@ -21,14 +22,13 @@ namespace ContestantRegister.Utils
                 .ForMember(x => x.City, opt => opt.MapFrom(y => y.StudyPlace.City.Name))                
                 ;
 
-            CreateMap<City, City>();
-            CreateMap<School, School>();
-            CreateMap<Institution, Institution>();
+            
+            
+            
             CreateMap<Contest, Contest>()
                 .ForMember(x => x.ContestAreas, opt => opt.Ignore());
 
-            CreateMap<RegisterViewModel, ApplicationUser>();
-
+            
             CreateMap<ContestRegistrationViewModel, IndividualContestRegistration>();
             CreateMap<IndividualContestRegistration, ContestRegistrationViewModel>();
             
@@ -57,11 +57,11 @@ namespace ContestantRegister.Utils
                 .ForMember(vm => vm.Text, opt => opt.MapFrom(ca => ca.Area.Name))
                 .ForMember(vm => vm.Value, opt => opt.MapFrom(ca => ca.Id));
 
-            CreateMap<StudyPlace, StudyPlaceListItemViewModel>()
+            CreateMap<StudyPlace, StudyPlaceDropdownItemViewModel>()
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
                 .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => sp is School ? sp.ShortName : $"{sp.ShortName} ({sp.FullName})"));
 
-            CreateMap<Institution, StudyPlaceListItemViewModel>()
+            CreateMap<Institution, StudyPlaceDropdownItemViewModel>()
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
                 .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => $"{sp.ShortName} ({sp.FullName})"));
 

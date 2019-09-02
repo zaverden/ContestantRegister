@@ -50,7 +50,7 @@ namespace ContestantRegister
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseNLog()
+                .UseNLog() // TODO перейти на Serilog
                 .Build();
     }
 }

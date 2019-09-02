@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ContestantRegister.Models.Institution>
+﻿@model IEnumerable<ContestantRegister.Controllers.Institutions.ViewModels.InstitutionListItemViewModel>
 
 @{
     ViewData["Title"] = "Вузы";
@@ -46,7 +46,7 @@
                 @Html.DisplayFor(modelItem => item.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.City.Name)
+                @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ShortNameEnglish)

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ContestantRegister.Framework.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,7 +19,7 @@ namespace ContestantRegister.Utils
 
         public static IHtmlContent EnumAsJsMap<TEnum>(this IHtmlHelper html, bool useDisplayName = false) where TEnum : struct
         {
-            return EnumAsJsMap<TEnum>(html, v => useDisplayName ? GetDisplayName(v) : v.ToString());
+            return EnumAsJsMap<TEnum>(html, v => useDisplayName ? FrameworkExtensions.GetEnumDisplayName(v) : v.ToString());
         }
 
         private static IHtmlContent EnumAsJsMap<TEnum>(this IHtmlHelper html, Func<TEnum, string> getDisplayName) where TEnum : struct
@@ -37,16 +38,6 @@ namespace ContestantRegister.Utils
         }
 
 
-        public static string GetDisplayName<T>(T value)
-        {
-            return GetDisplayName(typeof(T), value);
-        }
-
-        public static string GetDisplayName(Type type, object value)
-        {
-            FieldInfo fieldInfo = type.GetField(value.ToString());
-            DisplayAttribute attr = fieldInfo.GetCustomAttribute<DisplayAttribute>();
-            return attr?.Name ?? value.ToString();
-        }
+        
     }
 }

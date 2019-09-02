@@ -1,8 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using ContestantRegister.Data;
+using ContestantRegister.Domain;
+using ContestantRegister.Features;
+using ContestantRegister.Features.Admin.Areas.Utils;
+using ContestantRegister.Features.Admin.Cities.Utils;
+using ContestantRegister.Features.Admin.Institutions.Utils;
+using ContestantRegister.Features.Admin.Schools.Utils;
+using ContestantRegister.Features.Frontend.Account.Utils;
+using ContestantRegister.Infrastructure;
+using ContestantRegister.Infrastructure.Cqrs;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
 using ContestantRegister.Services.BackgroundJobs;
@@ -11,6 +21,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,9 +65,42 @@ namespace ContestantRegister
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IContestRegistrationService, ContestRegistrationService>();
 
+            //Infrastructure
+            services.AddScoped<IHandlerDispatcher, MsDiHandlerDispatcher>();
+            services.AddScoped<IReadRepository, EfCoreRepository>();
+            services.AddScoped<IRepository, EfCoreRepository>();
+            QueryableExtensions.OrmExtensionsHider = new EfOrmExtensionsHider();
+
+            //TODO можно изобрести какие-то модули или просто перейти на Autofac, там они уже есть
+            //TODO еще можно регистрировать все каким-нибудь аццким рефлекшоном, но я не фанат таких решений :)
+            //Admin services
+            services.RegisterCitiesServices();
+            services.RegisterAreasServices(); 
+            services.RegisterCompClassesServices();
+            services.RegisterInstitutionsServices();
+            services.RegisterRegionsServices();
+            services.RegisterSchoolsServices();
+            //Frontend services
+            services.RegisterAccountServices();
+            services.RegisterHomeServices();
+
             services.AddMvc();
 
-            //TODO если заставить AspNet Core DI сделать Build, эту регистрацию можно убрать
+            //TODO перетащить вьюхи в папки с фичами
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.ViewLocationExpanders.Add(new FeatureLocationExpander());
+            });
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(serviceProvider =>
+            {
+                var actionContext = serviceProvider.GetRequiredService<IActionContextAccessor>().ActionContext;
+                var factory = serviceProvider.GetRequiredService<IUrlHelperFactory>();
+                return factory.GetUrlHelper(actionContext);
+            });
+
+            //Background jobs
             services.AddTransient<EmailJob>();
             services.AddTransient<ContestStatusJob>();
         }

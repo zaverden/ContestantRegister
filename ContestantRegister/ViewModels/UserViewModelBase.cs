@@ -2,10 +2,11 @@
 using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
+using ContestantRegister.Services;
 
 namespace ContestantRegister.ViewModels
 {
-    public abstract class UserViewModelBase
+    public abstract class UserViewModelBase : IApplicationUser
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [EmailAddress(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "InvalidEmailErrorMessage")]

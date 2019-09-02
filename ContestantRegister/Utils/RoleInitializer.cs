@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ContestantRegister.Data;
+using ContestantRegister.Domain;
 using ContestantRegister.Models;
 using ContestantRegister.Services;
 using Microsoft.AspNetCore.Identity;
@@ -7,11 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Utils
 {
-    public class Roles
-    {
-        public const string Admin = "admin";
-    }
-
     public class RoleInitializer
     {
         public static async Task InitializeAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> rolesManager, ApplicationDbContext context)

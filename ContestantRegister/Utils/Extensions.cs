@@ -16,19 +16,15 @@ namespace ContestantRegister.Utils
 {
     public static class Extensions
     {
-        public static DateTime SfuServerNow => DateTime.Now.AddHours(7);
 
+        
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
             return emailSender.SendEmailAsync(email, "Подтвердите email на сайте олимпиад ИКИТ СФУ",
                 $"Подтвердите ваш email на сайте олимпиад ИКИТ СФУ olimp.ikit.sfu-kras.ru, кликнув по ссылке: <a href='{HtmlEncoder.Default.Encode(link)}'>ссылка</a>");
         }
 
-        public static bool ContainsIgnoreCase(this string str, string substr)
-        {
-            return str.IndexOf(substr, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
+        
         /// <summary>
         /// Синхронный метод нужен для использования во вьюхах
         /// </summary>
@@ -39,11 +35,7 @@ namespace ContestantRegister.Utils
             return task.Result;
         }
 
-        public static string GetRequredFieldErrorMessage(this Object obj, string propertyName)
-        {
-            var displayAttribute = (DisplayAttribute)obj.GetType().GetProperty(propertyName).GetCustomAttribute(typeof(DisplayAttribute));
-            return string.Format(Resource.RequiredFieldErrorMessage, displayAttribute.Name);
-        }
+        
 
         public static void AddErrors(this ModelStateDictionary model, IEnumerable<IdentityError> errors)
         {

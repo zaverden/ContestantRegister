@@ -1,21 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
+using ContestantRegister.Services.ApplicationServices.Reg;
 
 namespace ContestantRegister.ViewModels.Contest.Registration
 {
-    public class EditIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
+    public class EditIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel, IEditIndividualContestRegistration
     {
         [Display(Name = "Участник")]
         public string ParticipantName { get; set; }
     }
 
-    public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel
+    public class CreateIndividualContestRegistrationViewModel : IndividualContestRegistrationViewModel, ICreateIndividualContestRegistration
     {
 
     }
 
-    public abstract class IndividualContestRegistrationViewModel : ContestRegistrationViewModel
+    public abstract class IndividualContestRegistrationViewModel : ContestRegistrationViewModel, IIndividualContestRegistration
     {
         [Display(Name = "Курс")]
         [Range(1, 6)]

@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Admin\" />
+    <Folder Include="Features\Frontend\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ContestantRegister.Infrastructure\ContestantRegister.Framework.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Domain.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Services\ContestantRegister.Services.csproj" />
+  </ItemGroup>
+
+</Project>

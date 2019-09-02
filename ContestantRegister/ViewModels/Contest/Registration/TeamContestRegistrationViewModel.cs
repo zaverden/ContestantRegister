@@ -2,20 +2,21 @@
 using System.Text;
 using ContestantRegister.Models;
 using ContestantRegister.Properties;
+using ContestantRegister.Services.ApplicationServices.Reg;
 
 namespace ContestantRegister.ViewModels.Contest.Registration
 {
-    public class CreateTeamContestRegistrationViewModel : TeamContestRegistrationViewModel
+    public class CreateTeamContestRegistrationViewModel : TeamContestRegistrationViewModel, ICreateTeamContestRegistration
     {
         
     }
 
-    public class EditTeamContestRegistrationViewModel : TeamContestRegistrationViewModel
+    public class EditTeamContestRegistrationViewModel : TeamContestRegistrationViewModel, IEditTeamContestRegistration
     {
 
     }
 
-    public abstract class TeamContestRegistrationViewModel : ContestRegistrationViewModel
+    public abstract class TeamContestRegistrationViewModel : ContestRegistrationViewModel, ITeamContestRegistration
     {
         [Display(Name = "Участник 2")]
         public string Participant2Id { get; set; }

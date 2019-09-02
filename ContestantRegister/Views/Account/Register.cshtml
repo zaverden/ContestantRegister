@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Регистрация";
 }
+@{
+    bool isUserTypeDisabled = Model.IsUserTypeDisabled;
+}
 
 <h2>@ViewData["Title"]</h2>
 
@@ -31,7 +34,113 @@
                 <span asp-validation-for="PasswordViewModel.ConfirmPassword" class="text-danger"></span>
             </div>
 
-            @await Html.PartialAsync("_UserPartial")
+            @if (User.IsInRole(Roles.Admin))
+            {
+                <div class="form-group">
+                    <label asp-for="BaylorEmail" class="control-label"></label>
+                    <input asp-for="BaylorEmail" class="form-control" />
+                    <span asp-validation-for="BaylorEmail" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsBaylorRegistrationCompleted" /> @Html.DisplayNameFor(model => model.IsBaylorRegistrationCompleted)
+                        </label>
+                    </div>
+                </div>
+
+            }
+
+            <div class="form-group">
+                <label asp-for="UserType" class="control-label"></label>
+                <select onchange="checkUserType()"
+                        asp-for="UserType"
+                        asp-items="Html.GetEnumSelectList<UserType>()"
+                        class="form-control"
+                        disabled="@(isUserTypeDisabled ? "disabled" : null)"></select>
+                <span asp-validation-for="UserType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Patronymic" class="control-label"></label>
+                <input asp-for="Patronymic" class="form-control" />
+                <span asp-validation-for="Patronymic" class="text-danger"></span>
+            </div>
+            <div class="form-group conditional @UserType.Student @UserType.Trainer">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <p>Имя на английском языке</p>
+            </div>
+            <div class="form-group conditional @UserType.Student @UserType.Trainer">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+                <p>Фамилия на английском языке</p>
+            </div>
+            <div class="form-group">
+                <label asp-for="CityId" class="control-label"></label>
+                <select asp-for="CityId" class="form-control apply-select2" asp-items="ViewBag.CityId" onchange="filterStudyPlaces()"></select>
+                <span asp-validation-for="CityId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StudyPlaceId" class="control-label"></label>
+                <select asp-for="StudyPlaceId" class="form-control"></select>
+                <span asp-validation-for="StudyPlaceId" class="text-danger"></span>
+            </div>
+            @if (Model.CanSuggestStudyPlace)
+            {
+                <div class="form-group">
+                    <p>Если вашего учебного заведения нет в списке, вы можете <a class="conditional @UserType.Pupil @UserType.Trainer" asp-controller="Home" asp-action="SuggestSchool">добавить школу</a> <a class="conditional @UserType.Student @UserType.Trainer" asp-controller="Home" asp-action="SuggestInstitution">добавить вуз/ссуз</a></p>
+                </div>
+            }
+            @*Student*@
+            <div class="form-group conditional @UserType.Student">
+                <label asp-for="StudentType" class="control-label"></label>
+                <select asp-for="StudentType"
+                        asp-items="Html.GetEnumSelectList<StudentType>()"
+                        class="form-control"></select>
+                <span asp-validation-for="StudentType" class="text-danger"></span>
+            </div>
+            <div class="form-group conditional @UserType.Student @UserType.Pupil">
+                <label asp-for="EducationStartDate"></label>
+                <input asp-for="EducationStartDate" class="form-control apply-datetimepicker-date" type="text" />
+                <span asp-validation-for="EducationStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group conditional @UserType.Student">
+                <label asp-for="EducationEndDate"></label>
+                <input asp-for="EducationEndDate" class="form-control apply-datetimepicker-date" type="text" />
+                <span asp-validation-for="EducationEndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateOfBirth"></label>
+                <input asp-for="DateOfBirth" class="form-control apply-datetimepicker-date" type="text" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VkProfile"></label>
+                <input asp-for="VkProfile" class="form-control" type="text" />
+                <span asp-validation-for="VkProfile" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="IsUserTypeDisabled" />
+            <input type="hidden" asp-for="BaylorEmail" />
+            <input type="hidden" asp-for="IsBaylorRegistrationCompleted" />
 
             <button type="submit" class="btn btn-default">Зарегистрироваться</button>
         </form>
@@ -41,3 +150,56 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<partial-script>
+    <script type="text/javascript">
+        const serverData = {};
+        serverData.studyPlaces = @Html.RawJson(ViewData["StudyPlaces"]);
+        serverData.userTypeMapping = @(Html.EnumAsJsMap<UserType>());
+
+
+        function checkUserType() {
+            const userType = parseInt($("#UserType").val());
+            const userTypeName = serverData.userTypeMapping.get(userType);
+            $('.conditional').hide();
+            $(`.conditional.${userTypeName}`).show();
+            filterStudyPlaces();
+        }
+
+        function filterStudyPlaces() {
+            let studyPlaces = serverData.studyPlaces;
+            const userType = parseInt($("#UserType").val());
+            const cityId = parseInt($("#CityId").val());
+
+            switch (userType) {
+                case @((int)UserType.Pupil):
+                    studyPlaces = studyPlaces.filter(sp => sp.Type === '@nameof(School)');
+                    break;
+                case @((int)UserType.Student):
+                    studyPlaces = studyPlaces.filter(sp => sp.Type === '@nameof(Institution)');
+                    break;
+            }
+            const studyPlaceIdSelect = $("#StudyPlaceId");
+            const studyPlaceId = parseInt(studyPlaceIdSelect.val() || '@Model.StudyPlaceId');
+            studyPlaceIdSelect.empty();
+            studyPlaceIdSelect.select2({
+                data: studyPlaces
+                    .filter(sp => sp.CityId === cityId)
+                    .map(sp => ({
+                        id: sp.Id,
+                        text: sp.ShortName,
+                        selected: sp.Id === studyPlaceId,
+                        studyPlace: sp
+                    }))
+            });
+        }
+
+        $(document).ready(function () {
+
+            checkUserType();
+        });
+
+    </script>
+</partial-script>
+
+

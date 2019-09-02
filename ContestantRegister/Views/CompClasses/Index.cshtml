@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ContestantRegister.Models.CompClass>
+﻿@model IEnumerable<ContestantRegister.Controllers.CompClasses.CompClassListItemViewModel>
 
 @{
     ViewData["Title"] = "Компьютерные классы";
@@ -20,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.CompNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AreaId)
+                @Html.DisplayNameFor(model => model.Area)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
@@ -38,7 +38,7 @@
                 @Html.DisplayFor(modelItem => item.CompNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Area.Name)
+                @Html.DisplayFor(modelItem => item.Area)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
