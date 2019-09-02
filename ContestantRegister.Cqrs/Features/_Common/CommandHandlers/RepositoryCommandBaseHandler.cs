@@ -4,11 +4,11 @@ using ContestantRegister.Infrastructure.Cqrs;
 
 namespace ContestantRegister.Controllers._Common.CommandHandlers
 {
-    public abstract class ContextCommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
+    public abstract class RepositoryCommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
     {
         protected readonly IRepository Repository;
 
-        protected ContextCommandBaseHandler(IRepository repository)
+        protected RepositoryCommandBaseHandler(IRepository repository)
         {
             Repository = repository;
         }

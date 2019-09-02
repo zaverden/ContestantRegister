@@ -9,7 +9,9 @@ namespace ContestantRegister.Domain
         void Add<TEntity>( /*[NotNull]*/ TEntity entity);// where TEntity : class;
 
         void Remove<TEntity>( /*[NotNull]*/ TEntity entity);
-        
+
+        void Update<TEntity>(TEntity entity);
+
         Task SaveChangesAsync();
     }
 }

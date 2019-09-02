@@ -10,8 +10,6 @@ using ContestantRegister.Utils.ViewModelsSorting;
 
 namespace ContestantRegister.Controllers._Common.QueryHandlers
 {
-    
-
     public class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetEntitiesWithMappingQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
     {
         public GetEntitiesQueryHandler(IReadRepository repository) : base(repository)

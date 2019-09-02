@@ -20,6 +20,10 @@ namespace ContestantRegister.Services
         Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel, ClaimsPrincipal user);
     }
 
+    //TODO по идее, эти сервисы должны оперировать доменными объектами, а не интерфейсами
+    //но каждый раз перез валидацией делать маппинг - это геммор, проще передавать в сервис сразу вьюможель
+    //сюда могут попадать разные вьюмодели, ради чистоты архитектуры фич я убрал наследование вьюмоделей
+    //поэтому и нужны сервисы, которые реализуются несколькими вьюмоделями
     public class ContestRegistrationService : IContestRegistrationService
     {
         private readonly IReadRepository _readRepository;

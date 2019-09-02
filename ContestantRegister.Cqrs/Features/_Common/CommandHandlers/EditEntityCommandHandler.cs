@@ -7,7 +7,7 @@ using ContestantRegister.Utils.Exceptions;
 
 namespace ContestantRegister.Controllers._Common.CommandHandlers
 {
-    public class EditEntityCommandHandler<TEntity> : ContextCommandBaseHandler<EditEntityCommand<TEntity>> where TEntity : DomainObject
+    public class EditEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<EditEntityCommand<TEntity>> where TEntity : DomainObject
     {
         private readonly IMapper _mapper;
 
@@ -23,6 +23,8 @@ namespace ContestantRegister.Controllers._Common.CommandHandlers
             if (dbEntity == null) throw new EntityNotFoundException();
             
             _mapper.Map(command.Entity, dbEntity);
+
+            //TODO Repository.Update
 
             await Repository.SaveChangesAsync();
         }

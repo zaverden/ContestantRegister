@@ -24,7 +24,7 @@ namespace ContestantRegister.Utils.ViewModelsSorting
                 .Select(x => new
                 {
                     Property = x,
-                    OrderByAttribute = x.GetCustomAttribute<OrderByAttribute>()
+                    OrderByAttribute = x.GetCustomAttribute(typeof(OrderByAttribute)) as OrderByAttribute
                 })
                 .Where(x => x.OrderByAttribute != null)
                 .ToArray();

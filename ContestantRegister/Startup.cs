@@ -83,6 +83,7 @@ namespace ContestantRegister
             //Frontend services
             services.RegisterAccountServices();
             services.RegisterHomeServices();
+            services.RegisterManageServices();
 
             services.AddMvc();
 

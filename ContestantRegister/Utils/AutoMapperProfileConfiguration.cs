@@ -44,9 +44,7 @@ namespace ContestantRegister.Utils
             
             CreateMap<RegisterContestParticipantViewModel, ApplicationUser>();
             
-            CreateMap<IndexViewModel, ApplicationUser>();
-            CreateMap<ApplicationUser, IndexViewModel>();
-
+            
             CreateMap<Contest, SortingViewModel>();
 
             CreateMap<CompClass, CompClassListItemViewModel>()

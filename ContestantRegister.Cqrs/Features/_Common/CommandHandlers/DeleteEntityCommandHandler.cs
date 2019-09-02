@@ -4,7 +4,7 @@ using ContestantRegister.Domain;
 
 namespace ContestantRegister.Controllers._Common.CommandHandlers
 {
-    public class DeleteEntityCommandHandler<TEntity> : ContextCommandBaseHandler<DeleteEntityByIdCommand<TEntity>> where TEntity : class
+    public class DeleteEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity>> where TEntity : class
     {
         public DeleteEntityCommandHandler(IRepository repository) : base(repository)
         {

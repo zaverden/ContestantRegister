@@ -32,6 +32,11 @@ namespace ContestantRegister.Infrastructure
             _context.Remove(entity);
         }
 
+        public void Update<TEntity>(TEntity entity)
+        {
+            _context.Update(entity);
+        }
+
         public IQueryable<TEntity> Set<TEntity>() where TEntity : class
         {
             return _context.Set<TEntity>();

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ContestantRegister.Properties;
+using ContestantRegister.Domain.Properties;
 
 namespace ContestantRegister.ViewModels.ManageViewModels
 {
