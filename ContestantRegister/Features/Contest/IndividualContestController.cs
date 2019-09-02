@@ -40,7 +40,7 @@ namespace ContestantRegister.Controllers
         protected override async Task<ContestRegistration> GetContestRegistrationForEditAsync(int registrationId)
         {
             var registration = await _context.ContestRegistrations
-                .Include("Contest.ContestAreas.Area")
+                .Include(x => x.Contest).ThenInclude(y => y.ContestAreas).ThenInclude(z => z.Area)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
                 .Include(r => r.Participant1)

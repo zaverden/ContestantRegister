@@ -86,7 +86,7 @@ namespace ContestantRegister.Controllers
         {
             return await _context.Contests
                 .Include(c => c.ContestRegistrations)
-                .Include("ContestAreas.Area")
+                .Include(x => x.ContestAreas).ThenInclude(x => x.Area)
                 .SingleOrDefaultAsync(c => c.Id == contestId);
         }
 
@@ -98,7 +98,7 @@ namespace ContestantRegister.Controllers
         protected override async Task<ContestRegistration> GetContestRegistrationForEditAsync(int registrationId)
         {
             var registration = await _context.TeamContestRegistrations
-                .Include("Contest.ContestAreas.Area")
+                .Include(x => x.Contest).ThenInclude(y => y.ContestAreas).ThenInclude(z => z.Area)
                 .Include(r => r.StudyPlace)
                 .Include(r => r.RegistredBy)
                 .Include(r => r.Participant1)

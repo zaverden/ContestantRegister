@@ -134,7 +134,7 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
             var contest = await _context.Contests
-                .Include("ContestAreas.Area")
+                .Include(x => x.ContestAreas).ThenInclude(y => y.Area)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (contest == null)
             {
@@ -246,7 +246,7 @@ namespace ContestantRegister.Controllers
         protected virtual async Task<Contest> GetContestForRegistration(int contestId)
         {
             return await _context.Contests
-                .Include("ContestAreas.Area")
+                .Include(x => x.ContestAreas).ThenInclude(y => y.Area)
                 .SingleOrDefaultAsync(c => c.Id == contestId);
         }
 
@@ -358,8 +358,8 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Sorting(int id, SortingViewModel viewModel)
         {
             var contest = await _context.Contests
-                .Include("ContestAreas.Area")
-                .Include("ContestRegistrations.ContestArea")
+                .Include(x => x.ContestAreas).ThenInclude(y => y.Area)
+                .Include(x => x.ContestRegistrations).ThenInclude(y => y.ContestArea)
                 .SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null) return NotFound();
 
@@ -424,9 +424,9 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Sorting(int id)
         {
             var contest = await _context.Contests
-                .Include("ContestAreas.Area")
-                .Include("ContestRegistrations.Participant1")
-                .Include("ContestRegistrations.StudyPlace")
+                .Include(x => x.ContestAreas).ThenInclude(y => y.Area)
+                .Include(x => x.ContestRegistrations).ThenInclude(y => y.Participant1)
+                .Include(x => x.ContestRegistrations).ThenInclude(y => y.StudyPlace)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (contest == null) return NotFound();
@@ -649,7 +649,7 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> ImportParticipants(int id, ImportParticipantsViewModel viewModel)
         {
             var contest = await _context.Contests
-                .Include("ContestAreas.Area")
+                .Include(x => x.ContestAreas).ThenInclude(y => y.Area)
                 .SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)
             {
