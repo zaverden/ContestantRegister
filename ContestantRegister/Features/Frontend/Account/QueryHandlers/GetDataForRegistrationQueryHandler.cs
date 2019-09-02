@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Controllers.Account.QueryHandlers
 {
-    public class GetDataForRegistrationQueryHandler : ContextQueryHandler<GetDataForRegistrationQuery, DataForRegistration>
+    public class GetDataForRegistrationQueryHandler : ReadRepositoryQueryHandler<GetDataForRegistrationQuery, DataForRegistration>
     {
         public GetDataForRegistrationQueryHandler(IReadRepository repository) : base(repository)
         {

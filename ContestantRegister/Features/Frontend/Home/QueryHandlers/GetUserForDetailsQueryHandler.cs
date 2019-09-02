@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Features.Frontend.Home.QueryHandlers
 {
-    public class GetUserForDetailsQueryHandler : ContextQueryHandler<GetUserForDetailsQuery, ApplicationUser>
+    public class GetUserForDetailsQueryHandler : ReadRepositoryQueryHandler<GetUserForDetailsQuery, ApplicationUser>
     {
         public GetUserForDetailsQueryHandler(IReadRepository repository) : base(repository)
         {

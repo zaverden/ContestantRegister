@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ContestantRegister.Controllers.CompClasses.QueryHandlers
 {
     
-    public class GetAreasForCompClassQueryHandler : ContextQueryHandler<GetAreasForCompClassQuery, List<Area>>
+    public class GetAreasForCompClassQueryHandler : ReadRepositoryQueryHandler<GetAreasForCompClassQuery, List<Area>>
     {
         public GetAreasForCompClassQueryHandler(IReadRepository repository) : base(repository)
         {

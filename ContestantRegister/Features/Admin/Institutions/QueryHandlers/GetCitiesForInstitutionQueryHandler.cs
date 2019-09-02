@@ -13,7 +13,7 @@ namespace ContestantRegister.Controllers.Institutions.Queries
 {
     
 
-    public class GetCitiesForInstitutionQueryHandler : ContextQueryHandler<CitiesForInstitutionQuery, List<City>>
+    public class GetCitiesForInstitutionQueryHandler : ReadRepositoryQueryHandler<CitiesForInstitutionQuery, List<City>>
     {
         public GetCitiesForInstitutionQueryHandler(IReadRepository repository) : base(repository)
         {

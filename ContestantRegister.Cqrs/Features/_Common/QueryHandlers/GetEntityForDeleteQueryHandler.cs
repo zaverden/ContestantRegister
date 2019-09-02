@@ -4,7 +4,7 @@ using ContestantRegister.Domain;
 
 namespace ContestantRegister.Controllers._Common.QueryHandlers
 {
-    public class GetEntityForDeleteQueryHandler<TEntity> : ContextQueryHandler<GetEntityByIdForDeleteQuery<TEntity>, TEntity> where TEntity : class
+    public class GetEntityForDeleteQueryHandler<TEntity> : ReadRepositoryQueryHandler<GetEntityByIdForDeleteQuery<TEntity>, TEntity> where TEntity : class
     {
         public GetEntityForDeleteQueryHandler(IReadRepository repository) : base(repository)
         {

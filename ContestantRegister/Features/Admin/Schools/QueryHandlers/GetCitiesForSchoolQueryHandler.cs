@@ -14,7 +14,7 @@ using ContestantRegister.Infrastructure.Cqrs;
 namespace ContestantRegister.Controllers.Schools
 {
     
-    public class GetCitiesForSchoolQueryHandler : ContextQueryHandler<CitiesForSchoolQuery, List<City>>
+    public class GetCitiesForSchoolQueryHandler : ReadRepositoryQueryHandler<CitiesForSchoolQuery, List<City>>
     {
         public GetCitiesForSchoolQueryHandler(IReadRepository repository) : base(repository)
         {        

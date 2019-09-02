@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Features.Frontend.Home.QueryHandlers
 {
-    public class GetRegisterParticipantDataQueryHandler : ContextQueryHandler<GetRegisterParticipantDataQuery, RegisterParticipantData>
+    public class GetRegisterParticipantDataQueryHandler : ReadRepositoryQueryHandler<GetRegisterParticipantDataQuery, RegisterParticipantData>
     {
         public GetRegisterParticipantDataQueryHandler(IReadRepository repository) : base(repository)
         {

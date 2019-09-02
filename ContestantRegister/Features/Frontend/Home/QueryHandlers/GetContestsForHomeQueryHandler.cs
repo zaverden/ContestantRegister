@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Features.Frontend.Home.QueryHandlers
 {
-    public class GetContestsForHomeQueryHandler : ContextQueryHandler<GetContestsForHomeQuery, List<Contest>>
+    public class GetContestsForHomeQueryHandler : ReadRepositoryQueryHandler<GetContestsForHomeQuery, List<Contest>>
     {
         public GetContestsForHomeQueryHandler(IReadRepository repository) : base(repository)
         {

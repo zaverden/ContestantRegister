@@ -5,7 +5,7 @@ using ContestantRegister.Domain;
 namespace ContestantRegister.Controllers._Common.QueryHandlers
 {
     
-    public class GetEntityQueryHandler<TEntity> : ContextQueryHandler<GetEntityByIdQuery<TEntity>, TEntity> where TEntity : class
+    public class GetEntityQueryHandler<TEntity> : ReadRepositoryQueryHandler<GetEntityByIdQuery<TEntity>, TEntity> where TEntity : class
     {
         public GetEntityQueryHandler(IReadRepository repository) : base(repository)
         {            

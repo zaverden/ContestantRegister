@@ -14,7 +14,7 @@ namespace ContestantRegister.Controllers.Cities
 {
     
 
-    public class GetRegionsForCityQueryHandler : ContextQueryHandler<GetRegionsForCityQuery, List<Region>>
+    public class GetRegionsForCityQueryHandler : ReadRepositoryQueryHandler<GetRegionsForCityQuery, List<Region>>
     {
         public GetRegionsForCityQueryHandler(IReadRepository repository) : base(repository)
         {
