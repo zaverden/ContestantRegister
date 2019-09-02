@@ -12,8 +12,8 @@ namespace ContestantRegister.Controllers
     {
         public RegionsAutoMapperProfile()
         {
-            CreateMap<Region, RegionViewModel>();
-            CreateMap<RegionViewModel, Region>();
+            CreateMap<Region, RegionViewModel>()
+                .ReverseMap();
         }
     }
 }
