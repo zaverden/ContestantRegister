@@ -80,6 +80,7 @@ namespace ContestantRegister
             services.RegisterInstitutionsServices();
             services.RegisterRegionsServices();
             services.RegisterSchoolsServices();
+            services.RegisterEmailsServices();
             //Frontend services
             services.RegisterAccountServices();
             services.RegisterHomeServices();
