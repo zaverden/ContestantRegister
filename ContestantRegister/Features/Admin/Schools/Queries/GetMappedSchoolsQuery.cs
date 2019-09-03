@@ -13,7 +13,7 @@ using ContestantRegister.Infrastructure.Filter.Attributes;
 
 namespace ContestantRegister.Controllers.Schools
 {
-    public class GetSchoolsQuery : GetEntitiesWithMappingQuery<School, SchoolListItemViewModel>
+    public class GetMappedSchoolsQuery : GetMappedEntitiesQuery<School, SchoolListItemViewModel>
     {
         [StringFilter(StringFilter.Contains, IgnoreCase = true)]
         public string ShortName { get; set; }

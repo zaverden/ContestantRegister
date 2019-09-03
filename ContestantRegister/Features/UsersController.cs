@@ -27,7 +27,7 @@ using ContestantRegister.Infrastructure.Filter.Contervers;
 
 namespace ContestantRegister.Controllers
 {   
-    public class UserFilter
+    public class GetUsersQuery
     {
         [StringFilter(StringFilter.Contains, IgnoreCase = true)]
         public string Email { get; set; }
@@ -54,7 +54,7 @@ namespace ContestantRegister.Controllers
         public string UserTypeName { get; set; }        
     }
 
-    public class UserViewModel
+    public class UserListItemViewModel
     {
         public string Id { get; set; }
         public string Email { get; set; }
@@ -91,7 +91,7 @@ namespace ContestantRegister.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index(UserFilter filter)
+        public async Task<IActionResult> Index(GetUsersQuery filter)
         {
             ViewData["Email"] = filter.Email;
             ViewData["EmailConfirmed"] = filter.EmailConfirmed;
@@ -101,10 +101,10 @@ namespace ContestantRegister.Controllers
             ViewData["StudyPlace"] = filter.StudyPlace;
             ViewData["UserTypeName"] = filter.UserTypeName;
 
-            IQueryable<UserViewModel> users = ConventionsExtensions.AutoFilter(_context
+            IQueryable<UserListItemViewModel> users = ConventionsExtensions.AutoFilter(_context
                     .Users
-                    .ProjectTo<UserViewModel>(), filter)
-                .OrderBy<UserViewModel, string>(u => u.Id);
+                    .ProjectTo<UserListItemViewModel>(), filter)
+                .OrderBy<UserListItemViewModel, string>(u => u.Id);
 
             return View(await users.ToListAsync());
         }
@@ -148,7 +148,7 @@ namespace ContestantRegister.Controllers
         // GET: Users/Create
         public async Task<IActionResult> Create()
         {
-            await FillViewData();
+            await FillViewDataAsync();
 
             return View(new CreateUserViewModel());
         }
@@ -165,7 +165,7 @@ namespace ContestantRegister.Controllers
 
             if (!ModelState.IsValid)
             {
-                await FillViewData(viewModel);
+                await FillViewDataAsync(viewModel);
 
                 return View(viewModel);
             }
@@ -187,12 +187,12 @@ namespace ContestantRegister.Controllers
 
             ModelState.AddErrors(result.Errors);
 
-            await FillViewData(viewModel);
+            await FillViewDataAsync(viewModel);
 
             return View(viewModel);
         }
 
-        private async Task FillViewData(UserViewModelBase viewModel = null)
+        private async Task FillViewDataAsync(UserViewModelBase viewModel = null)
         {
             ViewData["StudyPlaces"] = await GetListItemsAsync<StudyPlace, StudyPlaceDropdownItemViewModel>(_context, _mapper);
             ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel?.CityId);
@@ -216,7 +216,7 @@ namespace ContestantRegister.Controllers
             _mapper.Map(user, viewModel);
             viewModel.CityId = user.StudyPlace.CityId;
 
-            await FillViewData(viewModel);
+            await FillViewDataAsync(viewModel);
 
             return View(viewModel);
         }
@@ -260,7 +260,7 @@ namespace ContestantRegister.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            await FillViewData(viewModel); 
+            await FillViewDataAsync(viewModel); 
 
             return View(viewModel);
         }

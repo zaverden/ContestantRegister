@@ -18,6 +18,11 @@ namespace ContestantRegister.Utils.ViewModelsSorting
             return Cache.GetOrAdd(type, CalcOrderBy(type));
         }
 
+        public static string SetOrderBy(Type type, string property)
+        {
+            return Cache.AddOrUpdate(type, property, (t, p) => property);
+        }
+
         private static string CalcOrderBy(Type type)
         {
             var orderByProps = FastTypeInfo.GetPublicProperties(type)

@@ -66,7 +66,7 @@ namespace ContestantRegister.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChangePassword()
+        public IActionResult ChangePassword()
         {
             // не понял нафига доставать из базы того же пользователя. 
             //var user = await _userManager.GetUserAsync(User);

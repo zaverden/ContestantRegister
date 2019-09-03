@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ContestantRegister.Controllers._Common;
 using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Controllers._Common.Queries;
@@ -14,17 +15,18 @@ using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
 using ContestantRegister.Controllers.CompClasses.Queries;
 using ContestantRegister.Controllers.CompClasses;
+using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Domain;
 using ContestantRegister.Infrastructure.Cqrs;
 
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class CompClassesController : CrudController<CompClass, CompClassListItemViewModel,
-        GetEntitiesWithMappingQuery<CompClass, CompClassListItemViewModel>, GetEntityByIdQuery<CompClass>, GetEntityByIdForDeleteQuery<CompClass>,
-        CreateEntityCommand<CompClass>, EditEntityCommand<CompClass>, DeleteEntityByIdCommand<CompClass>>
+    public class CompClassesController : CrudController<CompClass, CompClassListItemViewModel, CompClass,
+        GetMappedEntitiesQuery<CompClass, CompClassListItemViewModel>, GetEntityByIdQuery<CompClass>, GetEntityByIdForDeleteQuery<CompClass>,
+        CreateMappedEntityCommand<CompClass, CompClass>, EditMappedEntityCommand<CompClass, CompClass>, DeleteEntityByIdCommand<CompClass>>
     {
-        public CompClassesController(IHandlerDispatcher dispatcher) : base(dispatcher)
+        public CompClassesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            
         }
 

@@ -13,17 +13,18 @@ using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Controllers.Cities;
 using ContestantRegister.Controllers.Cities.Queries;
+using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Domain;
 using ContestantRegister.Infrastructure.Cqrs;
 
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class CitiesController : CrudController<City, CityListItemViewModel,
-            GetEntitiesWithMappingQuery<City, CityListItemViewModel>, GetEntityByIdQuery<City>, GetEntityByIdForDeleteQuery<City>,
-            CreateEntityCommand<City>, EditEntityCommand<City>, DeleteEntityByIdCommand<City>>
+    public class CitiesController : CrudController<City, CityListItemViewModel, City,
+            GetMappedEntitiesQuery<City, CityListItemViewModel>, GetEntityByIdQuery<City>, GetEntityByIdForDeleteQuery<City>,
+            CreateMappedEntityCommand<City, City>, EditMappedEntityCommand<City, City>, DeleteEntityByIdCommand<City>>
     {
-        public CitiesController(IHandlerDispatcher dispatcher) : base(dispatcher)
+        public CitiesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {
         }
 

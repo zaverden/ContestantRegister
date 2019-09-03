@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using ContestantRegister.Domain.Properties;
-using ContestantRegister.Infrastructure.Ddd;
+using ContestantRegister.Models;
 
-namespace ContestantRegister.Models
+namespace ContestantRegister.Cqrs.Features.Admin.Contests.ViewModels
 {
-    [DisplayName("Контест")]
-    public class Contest : DomainObject
+    public class ContestDetailsViewModel
     {
-        public static readonly Spec<Contest> Archived = new Spec<Contest>(x => x.IsArchive);
+        public int Id { get; set; }
+
+        [Required]
+        [Display(Name = "Площадки")]
+        public int[] SelectedAreaIds { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "RequiredFieldErrorMessage")]
         [MaxLength(200)]
@@ -79,13 +80,8 @@ namespace ContestantRegister.Models
         [Range(0, int.MaxValue)]
         public int UsedAccountsCount { get; set; } = 0;
 
-        [Display(Name = "Площадки")]
-        public List<ContestArea> ContestAreas { get; set; } = new List<ContestArea>();
-
         [Display(Name = "Указывать ли площадку при регистрации")]
         public bool IsAreaRequired { get; set; }
-
-        public ICollection<ContestRegistration> ContestRegistrations { get; set; }
 
         [Display(Name = "Зарегистрировано")]
         [Range(0, int.MaxValue)]
@@ -94,8 +90,11 @@ namespace ContestantRegister.Models
         [Display(Name = "Количество тренеров")]
         [Range(1, 3)]
         public int TrainerCount { get; set; }
-        
+
         [Display(Name = "Показывать решетку перед номером команды")]
         public bool ShowSharpTeamNumber { get; set; }
+
+        [Display(Name = "Площадки")]
+        public List<ContestArea> ContestAreas { get; set; } = new List<ContestArea>();
     }
 }

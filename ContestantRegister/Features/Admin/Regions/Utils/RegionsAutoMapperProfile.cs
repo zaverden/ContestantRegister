@@ -14,6 +14,8 @@ namespace ContestantRegister.Controllers
         {
             CreateMap<Region, RegionViewModel>()
                 .ReverseMap();
+
+            CreateMap<Region, Region>();
         }
     }
 }

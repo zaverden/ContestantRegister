@@ -15,4 +15,8 @@
     <ProjectReference Include="..\ContestantRegister.Services\ContestantRegister.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Admin\Contests\Commands\" />
+  </ItemGroup>
+
 </Project>

@@ -2,5 +2,6 @@
 {
     public class GetEntityByIdForDeleteQuery<TEntity> : EntityIdBaseQuery<TEntity>
     {
+        public string[] IncludeProperties { get; set; }
     }
 }

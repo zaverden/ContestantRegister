@@ -182,7 +182,7 @@ namespace ContestantRegister.Controllers
                 viewModel.CityId = user.StudyPlace.CityId;
             }
 
-            await FillViewDataForContestRegistration(viewModel, contest);
+            await FillViewDataForContestRegistrationAsync(viewModel, contest);
 
             return View(viewModel);
         }
@@ -285,17 +285,17 @@ namespace ContestantRegister.Controllers
 
             var contest = await _context.Contests.SingleAsync(c => c.Id == viewModel.ContestId);
 
-            await FillViewDataForContestRegistration(viewModel, contest);
+            await FillViewDataForContestRegistrationAsync(viewModel, contest);
 
             return View(viewModel);
         }
 
         protected abstract Task<ContestRegistration> GetContestRegistrationForEditAsync(int registrationId);
 
-        protected async Task FillViewDataForContestRegistration(ContestRegistrationViewModel viewModel, Contest contest)
+        protected async Task FillViewDataForContestRegistrationAsync(ContestRegistrationViewModel viewModel, Contest contest)
         {
             ViewData["CityId"] = new SelectList(_context.Cities.OrderBy(c => c.Name), "Id", "Name", viewModel.CityId);
-            var users = await GetListItemsAsync<ApplicationUser, UserListItemViewModel>(_context, _mapper);
+            var users = await GetListItemsAsync<ApplicationUser, ViewModels.ListItemViewModels.UserListItemViewModel>(_context, _mapper);
             users = users.OrderBy(u => u.DisplayName).ToList();
             var studyPlaces = await GetListItemsAsync<StudyPlace, StudyPlaceDropdownItemViewModel>(_context, _mapper);
             studyPlaces = studyPlaces.OrderBy(sp => sp.ShortName).ToList();
@@ -383,7 +383,7 @@ namespace ContestantRegister.Controllers
             }
             if (!ModelState.IsValid)
             {
-                await FillSortingViewData(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
+                await FillSortingViewDataAsync(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
 
                 return View(viewModel);
             }
@@ -415,7 +415,7 @@ namespace ContestantRegister.Controllers
 
             await _context.SaveChangesAsync();
 
-            await FillSortingViewData(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
+            await FillSortingViewDataAsync(contest, viewModel.SelectedContestAreaId, viewModel.SelectedCompClassIds);
 
             return View(viewModel);
         }
@@ -440,7 +440,7 @@ namespace ContestantRegister.Controllers
                 .SelectMany(c => c.SortingCompClassIds.Split(',', StringSplitOptions.RemoveEmptyEntries))
                 .Select(int.Parse)
                 .ToArray();
-            await FillSortingViewData(contest, 0, compClassIds);
+            await FillSortingViewDataAsync(contest, 0, compClassIds);
 
             return View(viewModel);
         }
@@ -565,7 +565,7 @@ namespace ContestantRegister.Controllers
             return RedirectToAction(nameof(EditRegistration), new { id = id });
         }
 
-        private async Task FillSortingViewData(Contest contest, int selectedContestAreaId = 0, int[] selectedCompClassIds = null)
+        private async Task FillSortingViewDataAsync(Contest contest, int selectedContestAreaId = 0, int[] selectedCompClassIds = null)
         {
             ViewData["Areas"] = GetListItems<ContestArea, ContestAreaListItemViewModel>(contest.ContestAreas.OrderBy(ca => ca.Area.Name).ToList(), _mapper, selectedContestAreaId);
             ViewData["CompClasses"] = GetListItems<CompClass, CompClassListItemViewModel>(await _context.CompClasses.OrderBy(c => c.Name).ToListAsync(), _mapper, selectedCompClassIds);
@@ -587,15 +587,15 @@ namespace ContestantRegister.Controllers
 
         protected bool IsSortingAcceptable(List<ContestRegistration> registrations, List<Computer> computers)
         {
-            var pairs = new List<Tuple<ContestRegistration, Computer>>();
+            var pairs = new List<(ContestRegistration ContestRegistration, Computer Computer)>();
             for (int i = 0; i < registrations.Count; i++)
             {
-                pairs.Add(Tuple.Create(registrations[i], computers[i]));
+                pairs.Add((registrations[i], computers[i]));
             }
 
-            foreach (var studyPlaceGroup in pairs.GroupBy(p => p.Item1.StudyPlaceId))
+            foreach (var studyPlaceGroup in pairs.GroupBy(p => p.ContestRegistration.StudyPlaceId))
             {
-                var classes = studyPlaceGroup.Select(el => el.Item2).GroupBy(e => e.CompClass);
+                var classes = studyPlaceGroup.Select(el => el.Computer).GroupBy(e => e.CompClass);
                 foreach (var classGroup in classes)
                 {
                     var numbers = classGroup.OrderBy(el => el.Number).Select(el => el.Number).ToList();

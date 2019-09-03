@@ -12,6 +12,7 @@ namespace ContestantRegister.Controllers.Cities
         public CitiesAutoMapperProfile()
         {
             CreateMap<City, City>();
+
             CreateMap<City, CityListItemViewModel>()
                 .ForMember(x => x.Region, opt => opt.MapFrom(y => y.Region.Name));
         }

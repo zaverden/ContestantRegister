@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Controllers._Common.Queries;
+using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Infrastructure.Cqrs;
 using ContestantRegister.Infrastructure.Filter;
 using ContestantRegister.Models;
@@ -15,33 +17,36 @@ namespace ContestantRegister.Controllers._Common
     //но было интересно, как будет выглядеть cqrs в crud сценарии
     //TODO если будет не лень, сделать вариант реализации просто через генерики, будет на порядок проще 
     public abstract class CrudController<
-        TEntity, TListItemViewModel,
+        TEntity, TListItemViewModel, TDetailsViewModel,
         TGetEntitiesQuery, TGetEntityByIdQuery, TGetEntityByIdForDeleteQuery,
         TCreateEntityCommand, TEditEntityCommand, TDeleteEntityByIdCommand> 
             : Controller
         where TEntity : DomainObject
-        
-        where TGetEntitiesQuery : GetEntitiesWithMappingQuery<TEntity, TListItemViewModel>
+        where TDetailsViewModel : class
+
+        where TGetEntitiesQuery : GetMappedEntitiesQuery<TEntity, TListItemViewModel>
         where TGetEntityByIdQuery : GetEntityByIdQuery<TEntity>, new()
         where TGetEntityByIdForDeleteQuery : GetEntityByIdForDeleteQuery<TEntity>, new()
 
-        where TCreateEntityCommand : CreateEntityCommand<TEntity>, new()
-        where TEditEntityCommand : EditEntityCommand<TEntity>, new()
+        where TCreateEntityCommand : CreateMappedEntityCommand<TEntity, TDetailsViewModel>, new()
+        where TEditEntityCommand : EditMappedEntityCommand<TEntity, TDetailsViewModel>, new()
         where TDeleteEntityByIdCommand : DeleteEntityByIdCommand<TEntity>, new()
     {
         protected readonly IHandlerDispatcher HandlerDispatcher;
+        private readonly IMapper _mapper;
 
-        protected CrudController(IHandlerDispatcher dispatcher)
+        protected CrudController(IHandlerDispatcher dispatcher, IMapper mapper)
         {
             HandlerDispatcher = dispatcher;
+            _mapper = mapper;
         }
 
         // GET: Entities
-        public async Task<IActionResult> Index(TGetEntitiesQuery filter)
+        public async Task<IActionResult> Index(TGetEntitiesQuery query)
         {
-            MapFilterToViewData(filter);
+            MapFilterToViewData(query);
 
-            var entities = await HandlerDispatcher.ExecuteQueryAsync(filter);
+            var entities = await HandlerDispatcher.ExecuteQueryAsync(query);
 
             return View(entities);
         }
@@ -50,6 +55,7 @@ namespace ContestantRegister.Controllers._Common
         public async Task<IActionResult> Create()
         {
             await FillViewDataDetailFormAsync();
+
             return View();
         }
 
@@ -58,16 +64,17 @@ namespace ContestantRegister.Controllers._Common
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TEntity entity)
+        public async Task<IActionResult> Create(TDetailsViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                await HandlerDispatcher.ExecuteCommandAsync(new TCreateEntityCommand { Entity = entity });
+                await HandlerDispatcher.ExecuteCommandAsync(new TCreateEntityCommand { Entity = viewModel });
                 return RedirectToAction(nameof(Index));
             }
 
-            await FillViewDataDetailFormAsync(entity);
-            return View(entity);
+            await FillViewDataDetailFormAsync(viewModel);
+
+            return View(viewModel);
         }
 
         // GET: Entities/Edit/5
@@ -75,11 +82,23 @@ namespace ContestantRegister.Controllers._Common
         {
             if (id == null) return NotFound();
 
-            var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdQuery { Id = id.Value });
+            var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdQuery
+            {
+                Id = id.Value,
+                IncludeProperties = GetIncludePropertiesForEdit()
+            });
             if (entity == null) return NotFound();
+            
+            var viewModel = _mapper.Map<TDetailsViewModel>(entity);
 
-            await FillViewDataDetailFormAsync(entity);
-            return View(entity);
+            await FillViewDataDetailFormAsync(viewModel);
+
+            return View(viewModel);
+        }
+
+        protected virtual string[] GetIncludePropertiesForEdit()
+        {
+            return null;
         }
 
         // POST: Entities/Edit/5
@@ -87,15 +106,19 @@ namespace ContestantRegister.Controllers._Common
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, TEntity entity)
+        public async Task<IActionResult> Edit(int id, TDetailsViewModel viewModel)
         {
-            if (id != entity.Id) return NotFound();
+            //if (id != entity.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await HandlerDispatcher.ExecuteCommandAsync(new TEditEntityCommand { Entity = entity });
+                    await HandlerDispatcher.ExecuteCommandAsync(new TEditEntityCommand
+                    {
+                        Entity = viewModel,
+                        Id = id,
+                    });
                 }
                 catch (EntityNotFoundException)
                 {
@@ -105,8 +128,9 @@ namespace ContestantRegister.Controllers._Common
                 return RedirectToAction(nameof(Index));
             }
 
-            await FillViewDataDetailFormAsync(entity);
-            return View(entity);
+            await FillViewDataDetailFormAsync(viewModel);
+
+            return View(viewModel);
         }
 
         // GET: Entities/Delete/5
@@ -114,10 +138,19 @@ namespace ContestantRegister.Controllers._Common
         {
             if (id == null) return NotFound();
 
-            var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdForDeleteQuery { Id = id.Value });
+            var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdForDeleteQuery
+            {
+                Id = id.Value,
+                IncludeProperties = GetIncludePropertiesForDelete()
+            });
             if (entity == null) return NotFound();
 
             return View(entity);
+        }
+
+        protected virtual string[] GetIncludePropertiesForDelete()
+        {
+            return null;
         }
 
         // POST: Entities/Delete/5
@@ -147,7 +180,7 @@ namespace ContestantRegister.Controllers._Common
             }
         }
 
-        protected virtual Task FillViewDataDetailFormAsync(TEntity item = null)
+        protected virtual Task FillViewDataDetailFormAsync(TDetailsViewModel viewModel = null)
         {
             return Task.FromResult(0);
         }

@@ -20,9 +20,7 @@ namespace ContestantRegister.Infrastructure.Cqrs
             var handlerType = handlerGenericType.MakeGenericType(context.GetType(), typeof(TResult));
             var handler = GetService(handlerType);
             var method = handler.GetType().GetMethod("HandleAsync");
-            var res = method.Invoke(handler, new [] { context });
-            var ret = (Task<TResult>)res;
-            return ret;
+            return (Task<TResult>) method.Invoke(handler, new[] {context});
         }
 
         protected abstract T GetService<T>();

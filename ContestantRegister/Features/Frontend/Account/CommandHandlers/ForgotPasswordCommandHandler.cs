@@ -32,7 +32,7 @@ namespace ContestantRegister.Features.Frontend.Account.CommandHandlers
             // For more information on how to enable account confirmation and password reset please
             // visit https://go.microsoft.com/fwlink/?LinkID=532713
             var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var callbackUrl = _urlHelper.ResetPasswordCallbackLink(command.Action, command.Controller, user.Id, code, command.Scheme);
+            var callbackUrl = _urlHelper.Action(command.Action, command.Controller, new []{user.Id, code }, command.Scheme);
             await _emailSender.SendEmailAsync(command.Email, "Сброс пароля на сайте олимпиад ИКИТ СФУ",
                 $"Для сброса пароля нажмите на ссылку: <a href='{callbackUrl}'>ссылка</a>");
         }

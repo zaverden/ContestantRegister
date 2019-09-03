@@ -53,7 +53,7 @@ namespace ContestantRegister.Controllers.Account.CommandHandlers
             _logger.LogInformation("User created a new account with password.");
 
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = _urlHelper.EmailConfirmationLink(command.Action, command.Controller, user.Id, code, command.RequestScheme);
+            var callbackUrl = _urlHelper.Action(command.Action, command.Controller, new [] { user.Id, code}, command.RequestScheme);
             await _emailSender.SendEmailConfirmationAsync(command.RegisterViewModel.Email, callbackUrl);                            
         }
     }

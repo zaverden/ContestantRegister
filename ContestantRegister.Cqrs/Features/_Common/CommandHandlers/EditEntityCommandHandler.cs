@@ -9,11 +9,11 @@ namespace ContestantRegister.Controllers._Common.CommandHandlers
 {
     public class EditEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<EditEntityCommand<TEntity>> where TEntity : DomainObject
     {
-        private readonly IMapper _mapper;
+        protected readonly IMapper Mapper;
 
         public EditEntityCommandHandler(IRepository repository, IMapper mapper) : base(repository)
         {
-            _mapper = mapper;
+            Mapper = mapper;
         }
 
         public override async Task HandleAsync(EditEntityCommand<TEntity> command)
@@ -22,9 +22,7 @@ namespace ContestantRegister.Controllers._Common.CommandHandlers
             var dbEntity = await Repository.FindAsync<TEntity>(command.Entity.Id);
             if (dbEntity == null) throw new EntityNotFoundException();
             
-            _mapper.Map(command.Entity, dbEntity);
-
-            //TODO Repository.Update
+            Mapper.Map(command.Entity, dbEntity);
 
             await Repository.SaveChangesAsync();
         }

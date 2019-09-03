@@ -17,6 +17,7 @@ namespace ContestantRegister.Features
         Task<bool> AnyAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
         Task<T> FirstOrDefaultAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
         IQueryable<TEntity> Include<TEntity, TProperty>(IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class;
+        IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> source, string navigationPropertyPath) where TEntity : class;
     }
 
     public static class QueryableExtensions
@@ -49,6 +50,11 @@ namespace ContestantRegister.Features
         }
 
         public static IQueryable<TEntity> Include<TEntity, TProperty>(this IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class
+        {
+            return OrmExtensionsHider.Include(source, navigationPropertyPath);
+        }
+
+        public static IQueryable<TEntity> Include<TEntity>(this IQueryable<TEntity> source, string navigationPropertyPath) where TEntity : class
         {
             return OrmExtensionsHider.Include(source, navigationPropertyPath);
         }

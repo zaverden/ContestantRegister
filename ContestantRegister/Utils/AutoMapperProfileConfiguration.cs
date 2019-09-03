@@ -10,6 +10,7 @@ using ContestantRegister.ViewModels.UserViewModels;
 using ContestantRegister.ViewModels.ListItem;
 using ContestantRegister.Controllers;
 using ContestantRegister.Features.Frontend.Account.ViewModels;
+using UserListItemViewModel = ContestantRegister.Controllers.UserListItemViewModel;
 
 namespace ContestantRegister.Utils
 {
@@ -17,33 +18,25 @@ namespace ContestantRegister.Utils
     {
         public AutoMapperProfileConfiguration()
         {
-            CreateMap<ApplicationUser, UserViewModel>()
+            CreateMap<ApplicationUser, UserListItemViewModel>()
                 .ForMember(x => x.StudyPlace, opt => opt.MapFrom(y => y.StudyPlace.ShortName))
-                .ForMember(x => x.City, opt => opt.MapFrom(y => y.StudyPlace.City.Name))                
-                ;
+                .ForMember(x => x.City, opt => opt.MapFrom(y => y.StudyPlace.City.Name));
 
+           
             
+            CreateMap<ContestRegistrationViewModel, IndividualContestRegistration>()
+                .ReverseMap();
             
+            CreateMap<TeamContestRegistrationViewModel, TeamContestRegistration>()
+                .ReverseMap();
             
-            CreateMap<Contest, Contest>()
-                .ForMember(x => x.ContestAreas, opt => opt.Ignore());
-
+            CreateMap<ApplicationUser, CreateUserViewModel>()
+                .ReverseMap();
             
-            CreateMap<ContestRegistrationViewModel, IndividualContestRegistration>();
-            CreateMap<IndividualContestRegistration, ContestRegistrationViewModel>();
-            
-            CreateMap<TeamContestRegistrationViewModel, TeamContestRegistration>();
-            CreateMap<TeamContestRegistration, TeamContestRegistrationViewModel>();
-                
-            CreateMap<ApplicationUser, CreateUserViewModel>();
-            CreateMap<CreateUserViewModel, ApplicationUser>();
-            
-
-            CreateMap<ApplicationUser, EditUserViewModel>();
-            CreateMap<EditUserViewModel, ApplicationUser>();
+            CreateMap<ApplicationUser, EditUserViewModel>()
+                .ReverseMap();
             
             CreateMap<RegisterContestParticipantViewModel, ApplicationUser>();
-            
             
             CreateMap<Contest, SortingViewModel>();
 
@@ -63,7 +56,7 @@ namespace ContestantRegister.Utils
                 .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
                 .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => $"{sp.ShortName} ({sp.FullName})"));
 
-            CreateMap<ApplicationUser, UserListItemViewModel>()
+            CreateMap<ApplicationUser, ViewModels.ListItemViewModels.UserListItemViewModel>()
                 .ForMember(ulivm => ulivm.DisplayName, opt => opt.MapFrom(au => $"{au.Name} {au.Surname} ({au.Email})"));
 
             CreateMap<ContestRegistrationDTO, IndividualContestRegistration>()

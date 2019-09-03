@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Domain;
@@ -55,9 +56,18 @@ namespace ContestantRegister
                 .AddDefaultTokenProviders();
 
             ConfigureOptions(services);
+
+            var profiles = Assembly
+                .GetEntryAssembly()
+                .GetReferencedAssemblies()
+                .Where(x => x.Name.StartsWith("ContestantRegister"))
+                .Select(Assembly.Load)
+                .SelectMany(x => x.DefinedTypes)
+                .Where(type => typeof(Profile).IsAssignableFrom(type.AsType()));
             services.AddAutoMapper(cfg =>
             {
                 cfg.CreateMissingTypeMaps = true;
+                cfg.AddProfiles(profiles);
             });
 
             // Add application services.
@@ -81,6 +91,7 @@ namespace ContestantRegister
             services.RegisterRegionsServices();
             services.RegisterSchoolsServices();
             services.RegisterEmailsServices();
+            services.RegisterContestsServices();
             //Frontend services
             services.RegisterAccountServices();
             services.RegisterHomeServices();

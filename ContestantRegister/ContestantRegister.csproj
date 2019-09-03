@@ -102,6 +102,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Admin\Cities\Views\" />
+    <Folder Include="Features\Admin\Users\" />
     <Folder Include="Features\Admin\Schools\Views\" />
   </ItemGroup>
 

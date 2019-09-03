@@ -10,13 +10,13 @@ using ContestantRegister.Utils.ViewModelsSorting;
 
 namespace ContestantRegister.Controllers._Common.QueryHandlers
 {
-    public class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetEntitiesWithMappingQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
+    public class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetMappedEntitiesQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
     {
         public GetEntitiesQueryHandler(IReadRepository repository) : base(repository)
         {
         }
 
-        public override async Task<List<TViewModel>> HandleAsync(GetEntitiesWithMappingQuery<TEntity, TViewModel> query)
+        public override async Task<List<TViewModel>> HandleAsync(GetMappedEntitiesQuery<TEntity, TViewModel> query)
         {
             var items = ReadRepository.Set<TEntity>()
                 .ProjectTo<TViewModel>()

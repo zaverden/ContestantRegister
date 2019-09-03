@@ -52,7 +52,7 @@ namespace ContestantRegister.Features.Frontend.Home.CommansHandlers
                 throw new UnableToCreateUserException(result.Errors);
             
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = _urlHelper.EmailConfirmationLink(command.Action, command.Controller, user.Id, code, command.Scheme);
+            var callbackUrl = _urlHelper.Action(command.Action, command.Controller, new []{user.Id, code}, command.Scheme);
             await _emailSender.SendEmailConfirmationAsync(command.RegisterContestParticipantViewModel.Email, callbackUrl);
         }
     }

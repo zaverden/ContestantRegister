@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using ContestantRegister.Infrastructure.Filter;
+using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleApp1
 {
@@ -17,8 +18,12 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             var context = new ApplicationDbContext();
-
             var ids = new[] { 1, 2, 3 };
+            Expression<Func<Contest, object>> areas = (x) => x.ContestAreas;
+            Expression<Func<Contest, object>> registrations = (x) => x.ContestRegistrations;
+            Expression<Func<Contest, object>>[] arr = new [] {areas, registrations};
+
+            context.Contests.Include(arr[0]).Include(arr[1]);
             var u = context
                 //.Cities
                 //.SingleOrDefault(x => x.Id == 5);
@@ -70,21 +75,21 @@ namespace ConsoleApp1
 
             //int t = 0;
 
-            var filter = new UserFilter
+            var filter = new GetUsersQuery
             {
                 UserTypeName = "тре",
                 //City = "крас"
             };
 
             var configuration = new MapperConfiguration(cfg =>
-                cfg.CreateMap<ApplicationUser, UserViewModel>()
+                cfg.CreateMap<ApplicationUser, UserListItemViewModel>()
                 .ForMember(x => x.StudyPlace, opt => opt.MapFrom(y => y.StudyPlace.ShortName))
                 .ForMember(x => x.City, opt => opt.MapFrom(y => y.StudyPlace.City.Name))                
                 );
 
             var flt = context.Users
                 //.Where(ApplicationUser.LockoutEnabledSpec.To)
-                .ProjectTo<UserViewModel>(configuration)
+                .ProjectTo<UserListItemViewModel>(configuration)
                 .AutoFilter(filter)
                 .ToList();
             Console.Out.Flush();

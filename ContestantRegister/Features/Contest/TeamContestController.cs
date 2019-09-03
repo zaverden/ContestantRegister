@@ -54,7 +54,7 @@ namespace ContestantRegister.Controllers
             {
                 validationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
 
-                await FillViewDataForContestRegistration(viewModel, contest);
+                await FillViewDataForContestRegistrationAsync(viewModel, contest);
 
                 return View(viewModel);
             }
@@ -128,7 +128,7 @@ namespace ContestantRegister.Controllers
 
                 var contest = await GetContestForRegistration(viewModel.ContestId);
 
-                await FillViewDataForContestRegistration(viewModel, contest);
+                await FillViewDataForContestRegistrationAsync(viewModel, contest);
 
                 return View(viewModel);
             }

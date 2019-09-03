@@ -39,5 +39,10 @@ namespace ContestantRegister.Infrastructure
         {
             return EntityFrameworkQueryableExtensions.Include(source, navigationPropertyPath);
         }
+
+        public IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> source, string navigationPropertyPath) where TEntity : class
+        {
+            return EntityFrameworkQueryableExtensions.Include(source, navigationPropertyPath);
+        }
     }
 }

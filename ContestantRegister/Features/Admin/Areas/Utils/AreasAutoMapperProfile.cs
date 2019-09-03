@@ -12,8 +12,12 @@ namespace ContestantRegister.Controllers
     {
         public AreasAutoMapperProfile()
         {
+            //List
             CreateMap<Area, AreaViewModel>()
                 .ReverseMap();
+            
+            //Details
+            CreateMap<Area, Area>();
         }
     }
 }

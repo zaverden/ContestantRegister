@@ -11,6 +11,10 @@ namespace ContestantRegister.Controllers.CompClasses
     {
         public CompClassesAutoMapperProfile()
         {
+            //Details
+            CreateMap<CompClass, CompClass>();
+            
+            //List
             CreateMap<CompClass, CompClassListItemViewModel>()
                 .ForMember(x => x.Area, opt => opt.MapFrom(y => y.Area.Name));
         }

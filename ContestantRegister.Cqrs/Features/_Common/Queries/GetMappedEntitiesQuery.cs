@@ -3,7 +3,7 @@ using ContestantRegister.Infrastructure.Cqrs;
 
 namespace ContestantRegister.Controllers._Common.Queries
 {
-    public class GetEntitiesWithMappingQuery<TEntity, TViewModel> : IQuery<List<TViewModel>>
+    public class GetMappedEntitiesQuery<TEntity, TViewModel> : IQuery<List<TViewModel>>
     {
     }
 }
