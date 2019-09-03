@@ -16,16 +16,26 @@ using ContestantRegister.Infrastructure.Cqrs;
 namespace ContestantRegister
 {
     [Authorize(Roles = Roles.Admin)]
-    public class ContestsController : CrudController<
-        Contest, ContestListItemViewModel, ContestDetailsViewModel,
-        GetMappedEntitiesQuery<Contest, ContestListItemViewModel>, GetEntityByIdQuery<Contest>, GetEntityByIdForDeleteQuery<Contest>,
-        CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, EditMappedEntityCommand<Contest, ContestDetailsViewModel>, DeleteEntityByIdCommand<Contest>>
+    public class ContestsController : CrudController<int,
+        Contest, ContestListItemViewModel, ContestDetailsViewModel, ContestDetailsViewModel,
+        GetMappedEntitiesQuery<Contest, ContestListItemViewModel>, GetEntityByIdQuery<Contest, int>, GetEntityByIdForDeleteQuery<Contest, int>,
+        CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, EditMappedEntityCommand<Contest, ContestDetailsViewModel, int>, DeleteEntityByIdCommand<Contest>>
     {
         public ContestsController(IHandlerDispatcher handlerDispatcher, IMapper mapper) : base(handlerDispatcher, mapper)
         {
         }
 
-        protected override async Task FillViewDataDetailFormAsync(ContestDetailsViewModel viewModel = null)
+        protected override async Task FillViewDataForEditAsync(ContestDetailsViewModel viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        protected override async Task FillViewDataForCreateAsync(ContestDetailsViewModel viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        private async Task FillViewDataDetailFormAsync(ContestDetailsViewModel viewModel = null)
         {
             var areas = await HandlerDispatcher.ExecuteQueryAsync(new GetAreasForContestQuery());
             ViewData["Areas"] = new MultiSelectList(areas, "Id", "Name", viewModel?.ContestAreas.Select(c => c.AreaId));

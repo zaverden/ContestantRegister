@@ -8,7 +8,7 @@ using ContestantRegister.Models;
 
 namespace ContestantRegister.Features.Frontend.Home.Queries
 {
-    public class GetContestTypeForHomeQuery : GetEntityByIdQuery<ContestType>
+    public class GetContestTypeForHomeQuery : GetEntityByIdQuery<ContestType, int>
     {
     }
 }

@@ -92,6 +92,7 @@ namespace ContestantRegister
             services.RegisterSchoolsServices();
             services.RegisterEmailsServices();
             services.RegisterContestsServices();
+            services.RegisterUsersServices();
             //Frontend services
             services.RegisterAccountServices();
             services.RegisterHomeServices();

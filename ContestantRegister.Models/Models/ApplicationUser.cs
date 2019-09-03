@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Domain;
 using ContestantRegister.Domain.Properties;
 using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Models
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser, IHasId<string>
     {
         [Display(Name = "Роль")]
         public UserType UserType { get; set; }

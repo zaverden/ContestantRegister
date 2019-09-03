@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using ContestantRegister.Cqrs.Features.Frontend.Users.Queries;
+using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
 using ContestantRegister.Infrastructure.Filter;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +20,9 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             var context = new ApplicationDbContext();
-            var ids = new[] { 1, 2, 3 };
-            Expression<Func<Contest, object>> areas = (x) => x.ContestAreas;
-            Expression<Func<Contest, object>> registrations = (x) => x.ContestRegistrations;
-            Expression<Func<Contest, object>>[] arr = new [] {areas, registrations};
+            int p = 3;
+            var user = context.Contests.SingleOrDefaultAsync(x => x.Id.Equals(p)).Result;
 
-            context.Contests.Include(arr[0]).Include(arr[1]);
             var u = context
                 //.Cities
                 //.SingleOrDefault(x => x.Id == 5);

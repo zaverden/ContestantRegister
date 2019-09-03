@@ -18,15 +18,26 @@ using ContestantRegister.Utils.Exceptions;
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class SchoolsController : CrudController<
-        School, SchoolListItemViewModel, School,
-        GetMappedSchoolsQuery, GetEntityByIdQuery<School>, GetEntityByIdForDeleteQuery<School>,
-        CreateMappedEntityCommand<School, School>, EditMappedEntityCommand<School, School>, DeleteEntityByIdCommand<School>>
+    public class SchoolsController : CrudController<int,
+        School, SchoolListItemViewModel, School, School,
+        GetMappedSchoolsQuery, GetEntityByIdQuery<School, int>, GetEntityByIdForDeleteQuery<School, int>,
+        CreateMappedEntityCommand<School, School>, EditMappedEntityCommand<School, School, int>, DeleteEntityByIdCommand<School>>
     {
         public SchoolsController(IHandlerDispatcher handlerDispatcher, IMapper mapper) : base(handlerDispatcher, mapper)
         {            
         }
-        protected override async Task FillViewDataDetailFormAsync(School item)
+
+        protected override async Task FillViewDataForEditAsync(School viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        protected override async Task FillViewDataForCreateAsync(School viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        private async Task FillViewDataDetailFormAsync(School item)
         {
             var cities = await HandlerDispatcher.ExecuteQueryAsync(new CitiesForSchoolQuery());
             ViewData["CityId"] = new SelectList(cities, "Id", "Name", item?.CityId);

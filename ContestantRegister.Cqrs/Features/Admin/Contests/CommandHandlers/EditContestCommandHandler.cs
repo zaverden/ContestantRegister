@@ -16,13 +16,13 @@ using ContestantRegister.Utils.Exceptions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.CommandHandlers
 {
-    public class EditContestCommandHandler : EditMappedEntityCommandHandler<Contest, ContestDetailsViewModel>
+    public class EditContestCommandHandler : EditMappedEntityCommandHandler<Contest, ContestDetailsViewModel, int>
     {
         public EditContestCommandHandler(IRepository repository, IMapper mapper) : base(repository, mapper)
         {
         }
 
-        public override async Task HandleAsync(EditMappedEntityCommand<Contest, ContestDetailsViewModel> command)
+        public override async Task HandleAsync(EditMappedEntityCommand<Contest, ContestDetailsViewModel, int> command)
         {
             command.Entity.RemoveWindowsLineEnds();
 

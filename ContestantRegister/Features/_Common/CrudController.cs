@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Controllers._Common.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Domain;
 using ContestantRegister.Infrastructure.Cqrs;
 using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Models;
 using ContestantRegister.Utils.Exceptions;
-using ContestantRegister.Utils.Filter;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContestantRegister.Controllers._Common
@@ -16,20 +16,22 @@ namespace ContestantRegister.Controllers._Common
     //мда, этот класс побил мой предыдущий личный рекорд по числу генерик-параметров :) https://youtu.be/HvSaBVSAkz4?t=1705
     //но было интересно, как будет выглядеть cqrs в crud сценарии
     //TODO если будет не лень, сделать вариант реализации просто через генерики, будет на порядок проще 
-    public abstract class CrudController<
-        TEntity, TListItemViewModel, TDetailsViewModel,
+    public abstract class CrudController<TKey,
+        TEntity, TListItemViewModel, TCreateViewModel, TEditViewModel,
         TGetEntitiesQuery, TGetEntityByIdQuery, TGetEntityByIdForDeleteQuery,
         TCreateEntityCommand, TEditEntityCommand, TDeleteEntityByIdCommand> 
             : Controller
-        where TEntity : DomainObject
-        where TDetailsViewModel : class
+        where TKey : IEquatable<TKey>
+        where TEntity : IHasId<TKey>
+        where TCreateViewModel : class
+        where TEditViewModel : class
 
         where TGetEntitiesQuery : GetMappedEntitiesQuery<TEntity, TListItemViewModel>
-        where TGetEntityByIdQuery : GetEntityByIdQuery<TEntity>, new()
-        where TGetEntityByIdForDeleteQuery : GetEntityByIdForDeleteQuery<TEntity>, new()
+        where TGetEntityByIdQuery : GetEntityByIdQuery<TEntity, TKey>, new()
+        where TGetEntityByIdForDeleteQuery : GetEntityByIdForDeleteQuery<TEntity, TKey>, new()
 
-        where TCreateEntityCommand : CreateMappedEntityCommand<TEntity, TDetailsViewModel>, new()
-        where TEditEntityCommand : EditMappedEntityCommand<TEntity, TDetailsViewModel>, new()
+        where TCreateEntityCommand : CreateMappedEntityCommand<TEntity, TCreateViewModel>, new()
+        where TEditEntityCommand : EditMappedEntityCommand<TEntity, TEditViewModel, TKey>, new()
         where TDeleteEntityByIdCommand : DeleteEntityByIdCommand<TEntity>, new()
     {
         protected readonly IHandlerDispatcher HandlerDispatcher;
@@ -54,8 +56,9 @@ namespace ContestantRegister.Controllers._Common
         // GET: Entities/Create
         public async Task<IActionResult> Create()
         {
-            await FillViewDataDetailFormAsync();
+            await FillViewDataForCreateAsync();
 
+            //TODO new TCreateViewModel ?
             return View();
         }
 
@@ -64,7 +67,7 @@ namespace ContestantRegister.Controllers._Common
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TDetailsViewModel viewModel)
+        public async Task<IActionResult> Create(TCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -72,26 +75,26 @@ namespace ContestantRegister.Controllers._Common
                 return RedirectToAction(nameof(Index));
             }
 
-            await FillViewDataDetailFormAsync(viewModel);
+            await FillViewDataForCreateAsync(viewModel);
 
             return View(viewModel);
         }
 
         // GET: Entities/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(TKey id)
         {
             if (id == null) return NotFound();
 
             var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdQuery
             {
-                Id = id.Value,
+                Id = id,
                 IncludeProperties = GetIncludePropertiesForEdit()
             });
             if (entity == null) return NotFound();
             
-            var viewModel = _mapper.Map<TDetailsViewModel>(entity);
+            var viewModel = _mapper.Map<TEditViewModel>(entity);
 
-            await FillViewDataDetailFormAsync(viewModel);
+            await FillViewDataForEditAsync(viewModel);
 
             return View(viewModel);
         }
@@ -106,7 +109,7 @@ namespace ContestantRegister.Controllers._Common
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, TDetailsViewModel viewModel)
+        public async Task<IActionResult> Edit(TKey id, TEditViewModel viewModel)
         {
             //if (id != entity.Id) return NotFound();
 
@@ -128,19 +131,19 @@ namespace ContestantRegister.Controllers._Common
                 return RedirectToAction(nameof(Index));
             }
 
-            await FillViewDataDetailFormAsync(viewModel);
+            await FillViewDataForEditAsync(viewModel);
 
             return View(viewModel);
         }
 
         // GET: Entities/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(TKey id)
         {
             if (id == null) return NotFound();
 
             var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdForDeleteQuery
             {
-                Id = id.Value,
+                Id = id,
                 IncludeProperties = GetIncludePropertiesForDelete()
             });
             if (entity == null) return NotFound();
@@ -180,9 +183,16 @@ namespace ContestantRegister.Controllers._Common
             }
         }
 
-        protected virtual Task FillViewDataDetailFormAsync(TDetailsViewModel viewModel = null)
+        protected virtual Task FillViewDataForEditAsync(TEditViewModel viewModel = null)
         {
             return Task.FromResult(0);
         }
+
+        protected virtual Task FillViewDataForCreateAsync(TCreateViewModel viewModel = null)
+        {
+            return Task.FromResult(0);
+        }
+
+
     }
 }

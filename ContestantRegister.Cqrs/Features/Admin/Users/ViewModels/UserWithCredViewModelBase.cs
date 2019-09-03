@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using ContestantRegister.Properties;
+﻿
+using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
 
 namespace ContestantRegister.ViewModels
 {

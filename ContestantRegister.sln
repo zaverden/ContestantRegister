@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister", "Conte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{E3CCB963-D7E4-46E8-A499-82F31159506F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestantRegister.Domain", "ContestantRegister.Models\ContestantRegister.Domain.csproj", "{CF4AB852-AD5B-442E-AD49-627864DE33B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Domain", "ContestantRegister.Models\ContestantRegister.Domain.csproj", "{CF4AB852-AD5B-442E-AD49-627864DE33B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestantRegister.Services", "ContestantRegister.Services\ContestantRegister.Services.csproj", "{ACEB9B25-D2C3-46B1-B69E-5BEB4AEC6814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Services", "ContestantRegister.Services\ContestantRegister.Services.csproj", "{ACEB9B25-D2C3-46B1-B69E-5BEB4AEC6814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestantRegister.Framework", "ContestantRegister.Infrastructure\ContestantRegister.Framework.csproj", "{5EB4D422-7855-4019-A0B8-323050C451D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Framework", "ContestantRegister.Infrastructure\ContestantRegister.Framework.csproj", "{5EB4D422-7855-4019-A0B8-323050C451D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContestantRegister.Cqrs", "ContestantRegister.Cqrs\ContestantRegister.Cqrs.csproj", "{1F7D9661-886C-45A8-B61E-17457CD9C3C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Cqrs", "ContestantRegister.Cqrs\ContestantRegister.Cqrs.csproj", "{1F7D9661-886C-45A8-B61E-17457CD9C3C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

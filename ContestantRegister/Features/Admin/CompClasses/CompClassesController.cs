@@ -22,15 +22,26 @@ using ContestantRegister.Infrastructure.Cqrs;
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class CompClassesController : CrudController<CompClass, CompClassListItemViewModel, CompClass,
-        GetMappedEntitiesQuery<CompClass, CompClassListItemViewModel>, GetEntityByIdQuery<CompClass>, GetEntityByIdForDeleteQuery<CompClass>,
-        CreateMappedEntityCommand<CompClass, CompClass>, EditMappedEntityCommand<CompClass, CompClass>, DeleteEntityByIdCommand<CompClass>>
+    public class CompClassesController : CrudController<int,
+        CompClass, CompClassListItemViewModel, CompClass, CompClass,
+        GetMappedEntitiesQuery<CompClass, CompClassListItemViewModel>, GetEntityByIdQuery<CompClass, int>, GetEntityByIdForDeleteQuery<CompClass, int>,
+        CreateMappedEntityCommand<CompClass, CompClass>, EditMappedEntityCommand<CompClass, CompClass, int>, DeleteEntityByIdCommand<CompClass>>
     {
         public CompClassesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            
         }
 
-        protected override async Task FillViewDataDetailFormAsync(CompClass item = null)
+        protected override async Task FillViewDataForEditAsync(CompClass viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        protected override async Task FillViewDataForCreateAsync(CompClass viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        private async Task FillViewDataDetailFormAsync(CompClass item = null)
         {
             var areas = await HandlerDispatcher.ExecuteQueryAsync(new GetAreasForCompClassQuery());
             ViewData["Area"] = new SelectList(areas, "Id", "Name", item?.AreaId);

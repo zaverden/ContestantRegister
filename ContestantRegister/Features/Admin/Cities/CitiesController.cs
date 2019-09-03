@@ -20,15 +20,26 @@ using ContestantRegister.Infrastructure.Cqrs;
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class CitiesController : CrudController<City, CityListItemViewModel, City,
-            GetMappedEntitiesQuery<City, CityListItemViewModel>, GetEntityByIdQuery<City>, GetEntityByIdForDeleteQuery<City>,
-            CreateMappedEntityCommand<City, City>, EditMappedEntityCommand<City, City>, DeleteEntityByIdCommand<City>>
+    public class CitiesController : CrudController<int,
+            City, CityListItemViewModel, City, City,
+            GetMappedEntitiesQuery<City, CityListItemViewModel>, GetEntityByIdQuery<City, int>, GetEntityByIdForDeleteQuery<City, int>,
+            CreateMappedEntityCommand<City, City>, EditMappedEntityCommand<City, City, int>, DeleteEntityByIdCommand<City>>
     {
         public CitiesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {
         }
 
-        protected override async Task FillViewDataDetailFormAsync(City item = null)
+        protected override async Task FillViewDataForCreateAsync(City viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        protected override async Task FillViewDataForEditAsync(City viewModel = null)
+        {
+            await FillViewDataDetailFormAsync(viewModel);
+        }
+
+        private async Task FillViewDataDetailFormAsync(City item = null)
         {
             var regions = await HandlerDispatcher.ExecuteQueryAsync(new GetRegionsForCityQuery());
             ViewData["RegionId"] = new SelectList(regions, "Id", "Name", item?.RegionId);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Domain.Properties;
 using ContestantRegister.Models;
-using ContestantRegister.Properties;
 using ContestantRegister.Services;
 
 namespace ContestantRegister.ViewModels

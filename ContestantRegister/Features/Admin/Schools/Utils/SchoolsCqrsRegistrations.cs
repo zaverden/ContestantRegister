@@ -19,11 +19,11 @@ namespace ContestantRegister.Features.Admin.Schools.Utils
         {
             services.AddTransient<IQueryHandler<GetMappedSchoolsQuery, List<SchoolListItemViewModel>>, GetEntitiesQueryHandler<School, SchoolListItemViewModel>>();
             services.AddTransient<IQueryHandler<CitiesForSchoolQuery, List<City>>, GetCitiesForSchoolQueryHandler>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<School>, School>, GetEntityQueryHandler<School>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<School>, School>, GetEntityForDeleteQueryHandler<School>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<School, int>, School>, GetEntityQueryHandler<School, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<School, int>, School>, GetEntityForDeleteQueryHandler<School, int>>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<School, School>>, CreateMappedEntityCommandHandler<School, School>>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<School, School>>, EditMappedEntityCommandHandler<School, School>>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<School, School, int>>, EditMappedEntityCommandHandler<School, School, int>>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<School>>, DeleteEntityCommandHandler<School>>();
         }
     }

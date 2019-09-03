@@ -22,11 +22,11 @@ namespace ContestantRegister.Features.Admin.Cities.Utils
             services.AddTransient<IQueryHandler<GetAreasForContestQuery, List<Area>>, GetAreasForContestQueryHandler>();
 
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<Contest, ContestListItemViewModel>, List<ContestListItemViewModel>>, GetEntitiesQueryHandler<Contest, ContestListItemViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Contest>, Contest>, GetEntityQueryHandler<Contest>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Contest>, Contest>, GetEntityForDeleteQueryHandler<Contest>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Contest, int>, Contest>, GetEntityQueryHandler<Contest, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Contest, int>, Contest>, GetEntityForDeleteQueryHandler<Contest, int>>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Contest, ContestDetailsViewModel>>, CreateContestCommandHandler>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Contest, ContestDetailsViewModel>>, EditContestCommandHandler>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Contest, ContestDetailsViewModel, int>>, EditContestCommandHandler>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Contest>>, DeleteEntityCommandHandler<Contest>>();
 
         }

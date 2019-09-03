@@ -22,11 +22,11 @@ namespace ContestantRegister.Features.Admin.Areas.Utils
         public static void RegisterAreasServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<Area, AreaViewModel>, List<AreaViewModel>>, GetEntitiesQueryHandler<Area, AreaViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Area>, Area>, GetEntityQueryHandler<Area>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Area>, Area>, GetEntityForDeleteQueryHandler<Area>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Area, int>, Area>, GetEntityQueryHandler<Area, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Area, int>, Area>, GetEntityForDeleteQueryHandler<Area, int>>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Area, Area>>, CreateMappedEntityCommandHandler<Area, Area>>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Area, Area>>, EditMappedEntityCommandHandler<Area, Area>>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Area, Area, int>>, EditMappedEntityCommandHandler<Area, Area, int>>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Area>>, DeleteEntityCommandHandler<Area>>();
         }
     }

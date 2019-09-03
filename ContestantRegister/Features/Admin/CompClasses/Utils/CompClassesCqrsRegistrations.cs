@@ -21,13 +21,13 @@ namespace ContestantRegister.Features.Admin.Cities.Utils
         public static void RegisterCompClassesServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<CompClass, CompClassListItemViewModel>, List<CompClassListItemViewModel>>, GetEntitiesQueryHandler<CompClass, CompClassListItemViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<CompClass>, CompClass>, GetEntityQueryHandler<CompClass>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<CompClass>, CompClass>, GetEntityForDeleteQueryHandler<CompClass>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<CompClass, int>, CompClass>, GetEntityQueryHandler<CompClass, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<CompClass, int>, CompClass>, GetEntityForDeleteQueryHandler<CompClass, int>>();
 
             services.AddTransient<IQueryHandler<GetAreasForCompClassQuery, List<Area>>, GetAreasForCompClassQueryHandler>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<CompClass, CompClass>>, CreateMappedEntityCommandHandler<CompClass, CompClass>>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<CompClass, CompClass>>, EditMappedEntityCommandHandler<CompClass, CompClass>>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<CompClass, CompClass, int>>, EditMappedEntityCommandHandler<CompClass, CompClass, int>>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<CompClass>>, DeleteEntityCommandHandler<CompClass>>();
 
         }

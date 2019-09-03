@@ -20,11 +20,11 @@ namespace ContestantRegister.Features.Admin.Institutions.Utils
         public static void RegisterRegionsServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<Region, RegionViewModel>, List<RegionViewModel>>, GetEntitiesQueryHandler<Region, RegionViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Region>, Region>, GetEntityQueryHandler<Region>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Region>, Region>, GetEntityForDeleteQueryHandler<Region>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Region, int>, Region>, GetEntityQueryHandler<Region, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Region, int>, Region>, GetEntityForDeleteQueryHandler<Region, int>>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Region, Region>>, CreateMappedEntityCommandHandler<Region, Region>>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Region, Region>>, EditMappedEntityCommandHandler<Region, Region>>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<Region, Region, int>>, EditMappedEntityCommandHandler<Region, Region, int>>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Region>>, DeleteEntityCommandHandler<Region>>();
 
         }

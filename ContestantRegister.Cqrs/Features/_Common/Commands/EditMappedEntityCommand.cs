@@ -5,8 +5,8 @@ using ContestantRegister.Controllers._Common.Commands;
 
 namespace ContestantRegister.Cqrs.Features._Common.Commands
 {
-    public class EditMappedEntityCommand<TEntity, TViewModel> : EditEntityCommand<TViewModel>
+    public class EditMappedEntityCommand<TEntity, TViewModel, TKey> : EditEntityCommand<TViewModel>
     {
-        public int Id { get; set; }
+        public TKey Id { get; set; }
     }
 }

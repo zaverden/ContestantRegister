@@ -18,10 +18,10 @@ using ContestantRegister.Infrastructure.Cqrs;
 namespace ContestantRegister.Controllers
 {
     [Authorize(Roles = Roles.Admin)]
-    public class AreasController : CrudController<
-        Area, AreaViewModel, Area,
-        GetMappedEntitiesQuery<Area, AreaViewModel>, GetEntityByIdQuery<Area>, GetEntityByIdForDeleteQuery<Area>,
-        CreateMappedEntityCommand<Area, Area>, EditMappedEntityCommand<Area, Area>, DeleteEntityByIdCommand<Area>>
+    public class AreasController : CrudController<int,
+        Area, AreaViewModel, Area, Area,
+        GetMappedEntitiesQuery<Area, AreaViewModel>, GetEntityByIdQuery<Area, int>, GetEntityByIdForDeleteQuery<Area, int>,
+        CreateMappedEntityCommand<Area, Area>, EditMappedEntityCommand<Area, Area, int>, DeleteEntityByIdCommand<Area>>
     {
         public AreasController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            

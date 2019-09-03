@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Domain;
@@ -7,7 +8,9 @@ using ContestantRegister.Utils.Exceptions;
 
 namespace ContestantRegister.Controllers._Common.CommandHandlers
 {
-    public class EditEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<EditEntityCommand<TEntity>> where TEntity : DomainObject
+    public class EditEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<EditEntityCommand<TEntity>> 
+        where TEntity : class, IHasId<TKey>
+        where TKey : IEquatable<TKey>
     {
         protected readonly IMapper Mapper;
 
