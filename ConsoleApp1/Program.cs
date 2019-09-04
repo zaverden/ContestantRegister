@@ -17,6 +17,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            //TODO написать нормальные тесты 
             var context = new ApplicationDbContext();
             int p = 3;
             var user = context.Contests.SingleOrDefaultAsync(x => x.Id.Equals(p)).Result;

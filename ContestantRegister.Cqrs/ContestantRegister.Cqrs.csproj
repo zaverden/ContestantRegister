@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <Folder Include="Features\Admin\Contests\Commands\" />
+    <Folder Include="Features\Frontend\Contest\Individual\" />
+    <Folder Include="Features\Frontend\Contest\Team\" />
   </ItemGroup>
 
 </Project>
