@@ -26,9 +26,9 @@ namespace ContestantRegister.Features.Admin.Cities.Utils
 
             services.AddTransient<IQueryHandler<GetAreasForCompClassQuery, List<Area>>, GetAreasForCompClassQueryHandler>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<CompClass, CompClass>>, CreateMappedEntityCommandHandler<CompClass, CompClass>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<CompClass, CompClass>>, SimpleCreateMappedEntityCommandHandler<CompClass>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<CompClass, CompClass, int>>, EditMappedEntityCommandHandler<CompClass, CompClass, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<CompClass>>, DeleteEntityCommandHandler<CompClass>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<CompClass, int>>, DeleteEntityCommandHandler<CompClass, int>>();
 
         }
     }

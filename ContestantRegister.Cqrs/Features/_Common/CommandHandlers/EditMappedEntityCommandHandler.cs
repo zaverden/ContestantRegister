@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using ContestantRegister.Application.Exceptions;
 using ContestantRegister.Controllers._Common.CommandHandlers;
 using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Domain;
@@ -22,12 +24,21 @@ namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 
         public override async Task HandleAsync(EditMappedEntityCommand<TEntity, TViewModel, TKey> command)
         {
+            var validationResult = await ValidateViewModel(command.Entity);
+            if (validationResult?.Count > 0)
+                throw new ValidationException(validationResult);
+
             var dbEntity = await Repository.FindAsync<TEntity>(command.Id);
             if (dbEntity == null) throw new EntityNotFoundException();
 
             Mapper.Map(command.Entity, dbEntity);
 
             await Repository.SaveChangesAsync();
+        }
+
+        protected virtual Task<List<KeyValuePair<string, string>>> ValidateViewModel(TViewModel viewModel)
+        {
+            return Task.FromResult<List<KeyValuePair<string, string>>>(null);
         }
     }
 }

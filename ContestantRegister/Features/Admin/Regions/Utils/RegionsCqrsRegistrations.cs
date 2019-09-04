@@ -23,9 +23,9 @@ namespace ContestantRegister.Features.Admin.Institutions.Utils
             services.AddTransient<IQueryHandler<GetEntityByIdQuery<Region, int>, Region>, GetEntityQueryHandler<Region, int>>();
             services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Region, int>, Region>, GetEntityForDeleteQueryHandler<Region, int>>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Region, Region>>, CreateMappedEntityCommandHandler<Region, Region>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Region, Region>>, SimpleCreateMappedEntityCommandHandler<Region>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Region, Region, int>>, EditMappedEntityCommandHandler<Region, Region, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Region>>, DeleteEntityCommandHandler<Region>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Region, int>>, DeleteEntityCommandHandler<Region, int>>();
 
         }
     }

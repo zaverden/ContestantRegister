@@ -10,6 +10,6 @@ namespace ContestantRegister.Features.Frontend.Home.Queries
 {
     public class GetCurrentUserQuery : IQuery<ApplicationUser>
     {
-        public ClaimsPrincipal CurrentUser { get; set; }
+        public string CurrentUserEmail { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace ContestantRegister.Controllers
     public class CompClassesController : CrudController<int,
         CompClass, CompClassListItemViewModel, CompClass, CompClass,
         GetMappedEntitiesQuery<CompClass, CompClassListItemViewModel>, GetEntityByIdQuery<CompClass, int>, GetEntityByIdForDeleteQuery<CompClass, int>,
-        CreateMappedEntityCommand<CompClass, CompClass>, EditMappedEntityCommand<CompClass, CompClass, int>, DeleteEntityByIdCommand<CompClass>>
+        CreateMappedEntityCommand<CompClass, CompClass>, EditMappedEntityCommand<CompClass, CompClass, int>, DeleteEntityByIdCommand<CompClass, int>>
     {
         public CompClassesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            

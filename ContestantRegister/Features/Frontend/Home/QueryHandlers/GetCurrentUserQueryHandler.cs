@@ -20,7 +20,7 @@ namespace ContestantRegister.Features.Frontend.Home.QueryHandlers
 
         public async Task<ApplicationUser> HandleAsync(GetCurrentUserQuery query)
         {
-            return await _userManager.GetUserAsync(query.CurrentUser);
+            return await _userManager.FindByEmailAsync(query.CurrentUserEmail);
         }
     }
 }

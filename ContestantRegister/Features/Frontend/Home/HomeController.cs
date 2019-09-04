@@ -117,7 +117,7 @@ namespace ContestantRegister.Controllers
                 await _handlerDispatcher.ExecuteCommandAsync(new RegisterContestParticipantCommand
                 {
                     RegisterContestParticipantViewModel = viewModel,
-                    CurrentUser = User,
+                    CurrentUserEmail = User.Identity.Name,
                     Scheme = Request.Scheme,
                     Controller = "Account",
                     Action = nameof(AccountController.ConfirmEmail)
@@ -149,7 +149,7 @@ namespace ContestantRegister.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                var user = await _handlerDispatcher.ExecuteQueryAsync(new GetCurrentUserQuery {CurrentUser = User});
+                var user = await _handlerDispatcher.ExecuteQueryAsync(new GetCurrentUserQuery {CurrentUserEmail = User.Identity.Name });
                 viewModel.Email = user.Email;
                 viewModel.IsEmailReadonly = true;
             }
@@ -187,7 +187,7 @@ namespace ContestantRegister.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                var user = await _handlerDispatcher.ExecuteQueryAsync(new GetCurrentUserQuery { CurrentUser = User });
+                var user = await _handlerDispatcher.ExecuteQueryAsync(new GetCurrentUserQuery { CurrentUserEmail = User.Identity.Name });
                 viewModel.Email = user.Email;
                 viewModel.IsEmailReadonly = true;
             }

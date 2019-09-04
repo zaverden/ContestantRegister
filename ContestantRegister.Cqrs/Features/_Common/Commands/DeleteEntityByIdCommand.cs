@@ -2,8 +2,8 @@
 
 namespace ContestantRegister.Controllers._Common.Commands
 {
-    public class DeleteEntityByIdCommand<TEntity> : ICommand
+    public class DeleteEntityByIdCommand<TEntity, TKey> : ICommand
     {
-        public int Id { get; set; }
+        public TKey Id { get; set; }
     }
 }

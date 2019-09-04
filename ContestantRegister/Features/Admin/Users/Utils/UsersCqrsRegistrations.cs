@@ -30,9 +30,9 @@ namespace ContestantRegister.Features.Admin.Schools.Utils
             services.AddTransient<IQueryHandler<GetEntityByIdQuery<ApplicationUser, string>, ApplicationUser>, GetEntityQueryHandler<ApplicationUser, string>>();
             services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<ApplicationUser, string>, ApplicationUser>, GetEntityForDeleteQueryHandler<ApplicationUser, string>>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<ApplicationUser, CreateUserViewModel>>, CreateMappedEntityCommandHandler<ApplicationUser, CreateUserViewModel>>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>, EditMappedEntityCommandHandler<ApplicationUser, EditUserViewModel, string>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<ApplicationUser>>, DeleteEntityCommandHandler<ApplicationUser>>();
+            services.AddTransient<ICommandHandler<CreateUserCommand>, CreateUserCommandHandler>();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>, EditUserCommandHandler>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<ApplicationUser, string>>, DeleteEntityCommandHandler<ApplicationUser, string>>();
 
             services.AddTransient<IQueryHandler<GetExportedUsersQuery, ExcelPackage>, GetExportedUsersQueryHandler>();
             services.AddTransient<IQueryHandler<GetDataForUserDetailsQuery, DataForUserDetails>, GetDataForUserDetailsQueryHandler>();

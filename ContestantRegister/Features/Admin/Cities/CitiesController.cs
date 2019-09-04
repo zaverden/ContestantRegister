@@ -23,7 +23,7 @@ namespace ContestantRegister.Controllers
     public class CitiesController : CrudController<int,
             City, CityListItemViewModel, City, City,
             GetMappedEntitiesQuery<City, CityListItemViewModel>, GetEntityByIdQuery<City, int>, GetEntityByIdForDeleteQuery<City, int>,
-            CreateMappedEntityCommand<City, City>, EditMappedEntityCommand<City, City, int>, DeleteEntityByIdCommand<City>>
+            CreateMappedEntityCommand<City, City>, EditMappedEntityCommand<City, City, int>, DeleteEntityByIdCommand<City, int>>
     {
         public CitiesController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {

@@ -37,7 +37,7 @@ namespace ConsoleApp1
                 .ToList()
                 ;
             Console.Out.Flush();
-            int t = 0;  
+            //int t = 0;  
 
             //context.Contests.Where(x => !x.IsArchive).ToList();
             //context.Contests.Where(x => x.IsArchive).ToList();
@@ -93,7 +93,7 @@ namespace ConsoleApp1
                 .ToList();
             Console.Out.Flush();
             
-            int t1 = 0;
+            //int t1 = 0;
 
             //var city1 = new City { Name = "Абакан" };
             //var city2 = new City { Name = "Красноярск" };

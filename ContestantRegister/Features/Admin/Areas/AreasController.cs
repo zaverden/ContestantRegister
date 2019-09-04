@@ -21,7 +21,7 @@ namespace ContestantRegister.Controllers
     public class AreasController : CrudController<int,
         Area, AreaViewModel, Area, Area,
         GetMappedEntitiesQuery<Area, AreaViewModel>, GetEntityByIdQuery<Area, int>, GetEntityByIdForDeleteQuery<Area, int>,
-        CreateMappedEntityCommand<Area, Area>, EditMappedEntityCommand<Area, Area, int>, DeleteEntityByIdCommand<Area>>
+        CreateMappedEntityCommand<Area, Area>, EditMappedEntityCommand<Area, Area, int>, DeleteEntityByIdCommand<Area, int>>
     {
         public AreasController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            

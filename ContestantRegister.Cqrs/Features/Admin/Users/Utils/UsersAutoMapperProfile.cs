@@ -20,7 +20,17 @@ namespace ContestantRegister.Controllers.Account.Utils
                 .ReverseMap();
 
             CreateMap<ApplicationUser, EditUserViewModel>()
-                .ReverseMap();
+                .ForMember(vm => vm.CityId, opt => opt.MapFrom(u => u.StudyPlace.CityId));
+
+            CreateMap<EditUserViewModel, ApplicationUser>();
+
+            CreateMap<StudyPlace, StudyPlaceDropdownItemViewModel>()
+                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
+                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => sp is School ? sp.ShortName : $"{sp.ShortName} ({sp.FullName})"));
+
+            CreateMap<Institution, StudyPlaceDropdownItemViewModel>()
+                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
+                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => $"{sp.ShortName} ({sp.FullName})"));
 
         }
     }

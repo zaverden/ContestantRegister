@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
@@ -79,6 +77,8 @@ namespace ContestantRegister
             services.AddScoped<IHandlerDispatcher, MsDiHandlerDispatcher>();
             services.AddScoped<IReadRepository, EfCoreRepository>();
             services.AddScoped<IRepository, EfCoreRepository>();
+
+            //TODO можно заменить на QuerableExecutor, который инжектируется во все хендлерыю но получаем еще одну зависимость и теряем привычный синтаксис экстеншн-методов
             QueryableExtensions.OrmExtensionsHider = new EfOrmExtensionsHider();
 
             //TODO можно изобрести какие-то модули или просто перейти на Autofac, там они уже есть

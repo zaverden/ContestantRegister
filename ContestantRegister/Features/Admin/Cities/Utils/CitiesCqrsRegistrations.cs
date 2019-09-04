@@ -23,9 +23,9 @@ namespace ContestantRegister.Features.Admin.Cities.Utils
 
             services.AddTransient<IQueryHandler<GetRegionsForCityQuery, List<Region>>, GetRegionsForCityQueryHandler>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<City, City>>, CreateMappedEntityCommandHandler<City, City>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<City, City>>, SimpleCreateMappedEntityCommandHandler<City>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<City, City, int>>, EditMappedEntityCommandHandler<City, City, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<City>>, DeleteEntityCommandHandler<City>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<City, int>>, DeleteEntityCommandHandler<City, int>>();
 
         }
     }

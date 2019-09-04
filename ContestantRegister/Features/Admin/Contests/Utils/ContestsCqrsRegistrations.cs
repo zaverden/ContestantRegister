@@ -27,7 +27,7 @@ namespace ContestantRegister.Features.Admin.Cities.Utils
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Contest, ContestDetailsViewModel>>, CreateContestCommandHandler>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Contest, ContestDetailsViewModel, int>>, EditContestCommandHandler>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Contest>>, DeleteEntityCommandHandler<Contest>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Contest, int>>, DeleteEntityCommandHandler<Contest, int>>();
 
         }
     }

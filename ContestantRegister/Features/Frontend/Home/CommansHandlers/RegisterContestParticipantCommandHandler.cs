@@ -42,7 +42,7 @@ namespace ContestantRegister.Features.Frontend.Home.CommansHandlers
             {
                 UserName = command.RegisterContestParticipantViewModel.Email,
                 RegistrationDateTime = DateTimeExtensions.SfuServerNow,
-                RegistredBy = await _userManager.GetUserAsync(command.CurrentUser)
+                RegistredBy = await _userManager.FindByEmailAsync(command.CurrentUserEmail)
             };
 
             _mapper.Map(command.RegisterContestParticipantViewModel, user);

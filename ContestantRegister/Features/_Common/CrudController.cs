@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using ContestantRegister.Application.Exceptions;
 using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Controllers._Common.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Domain;
 using ContestantRegister.Infrastructure.Cqrs;
 using ContestantRegister.Infrastructure.Filter;
+using ContestantRegister.Utils;
 using ContestantRegister.Utils.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +34,7 @@ namespace ContestantRegister.Controllers._Common
 
         where TCreateEntityCommand : CreateMappedEntityCommand<TEntity, TCreateViewModel>, new()
         where TEditEntityCommand : EditMappedEntityCommand<TEntity, TEditViewModel, TKey>, new()
-        where TDeleteEntityByIdCommand : DeleteEntityByIdCommand<TEntity>, new()
+        where TDeleteEntityByIdCommand : DeleteEntityByIdCommand<TEntity, TKey>, new()
     {
         protected readonly IHandlerDispatcher HandlerDispatcher;
         private readonly IMapper _mapper;
@@ -58,8 +60,14 @@ namespace ContestantRegister.Controllers._Common
         {
             await FillViewDataForCreateAsync();
 
-            //TODO new TCreateViewModel ?
-            return View();
+            var viewModel = BuildCreateViewModel();
+
+            return View(viewModel);
+        }
+
+        protected virtual TCreateViewModel BuildCreateViewModel()
+        {
+            return null;
         }
 
         // POST: Entities/Create
@@ -69,15 +77,40 @@ namespace ContestantRegister.Controllers._Common
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TCreateViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await HandlerDispatcher.ExecuteCommandAsync(new TCreateEntityCommand { Entity = viewModel });
-                return RedirectToAction(nameof(Index));
+                await FillViewDataForCreateAsync(viewModel);
+                return View(viewModel);
             }
 
-            await FillViewDataForCreateAsync(viewModel);
+            try
+            {
+                //TODO можно заменить фабричным методом
+                var command = new TCreateEntityCommand {Entity = viewModel};
+                InitCreateCommand(command);
 
-            return View(viewModel);
+                await HandlerDispatcher.ExecuteCommandAsync(command);
+            }
+            catch (ValidationException e)
+            {
+                e.ValidationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+                await FillViewDataForCreateAsync(viewModel);
+                return View(viewModel);
+            }
+            //TODO можно обобщить исключение
+            catch (UnableToCreateUserException e)
+            {
+                ModelState.AddErrors(e.Errors);
+                await FillViewDataForCreateAsync(viewModel);
+                return View(viewModel);
+            }
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+        protected virtual void InitCreateCommand(TCreateEntityCommand command)
+        {
+
         }
 
         // GET: Entities/Edit/5
@@ -99,6 +132,7 @@ namespace ContestantRegister.Controllers._Common
             return View(viewModel);
         }
 
+        
         protected virtual string[] GetIncludePropertiesForEdit()
         {
             return null;
@@ -122,6 +156,12 @@ namespace ContestantRegister.Controllers._Common
                         Entity = viewModel,
                         Id = id,
                     });
+                }
+                catch (ValidationException e)
+                {
+                    e.ValidationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
+                    await FillViewDataForEditAsync(viewModel);
+                    return View(viewModel);
                 }
                 catch (EntityNotFoundException)
                 {
@@ -159,7 +199,7 @@ namespace ContestantRegister.Controllers._Common
         // POST: Entities/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(TKey id)
         {
             await HandlerDispatcher.ExecuteCommandAsync(new TDeleteEntityByIdCommand { Id = id });
 

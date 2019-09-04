@@ -16,7 +16,7 @@ using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.CommandHandlers
 {
-    public class CreateContestCommandHandler : CreateMappedEntityCommandHandler<Contest, ContestDetailsViewModel>
+    public class CreateContestCommandHandler : CreateMappedEntityCommandHandler<CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, Contest, ContestDetailsViewModel>
     {
         public CreateContestCommandHandler(IRepository repository, IMapper mapper) : base(repository, mapper)
         {

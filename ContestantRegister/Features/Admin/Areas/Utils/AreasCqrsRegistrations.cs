@@ -25,9 +25,9 @@ namespace ContestantRegister.Features.Admin.Areas.Utils
             services.AddTransient<IQueryHandler<GetEntityByIdQuery<Area, int>, Area>, GetEntityQueryHandler<Area, int>>();
             services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Area, int>, Area>, GetEntityForDeleteQueryHandler<Area, int>>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Area, Area>>, CreateMappedEntityCommandHandler<Area, Area>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Area, Area>>, SimpleCreateMappedEntityCommandHandler<Area>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Area, Area, int>>, EditMappedEntityCommandHandler<Area, Area, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Area>>, DeleteEntityCommandHandler<Area>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Area, int>>, DeleteEntityCommandHandler<Area, int>>();
         }
     }
 }

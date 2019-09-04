@@ -16,7 +16,7 @@ namespace ContestantRegister.Controllers
     public class RegionsController : CrudController<int,
         Region, RegionViewModel, Region, Region,
         GetMappedEntitiesQuery<Region, RegionViewModel>, GetEntityByIdQuery<Region, int>, GetEntityByIdForDeleteQuery<Region, int>,
-        CreateMappedEntityCommand<Region, Region>, EditMappedEntityCommand<Region, Region, int>, DeleteEntityByIdCommand<Region>>
+        CreateMappedEntityCommand<Region, Region>, EditMappedEntityCommand<Region, Region, int>, DeleteEntityByIdCommand<Region, int>>
     {
         public RegionsController(IHandlerDispatcher dispatcher, IMapper mapper) : base(dispatcher, mapper)
         {            

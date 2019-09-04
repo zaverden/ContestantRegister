@@ -11,6 +11,6 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Commands
     {
         public IndexViewModel ViewModel { get; set; }
 
-        public ClaimsPrincipal CurrentUser { get; set; }
+        public string CurrentUserEmail { get; set; }
     }
 }

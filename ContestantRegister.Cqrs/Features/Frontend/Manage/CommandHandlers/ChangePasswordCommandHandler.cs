@@ -27,10 +27,10 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Commands
 
         public override async Task HandleAsync(ChangePasswordCommand command)
         {
-            var user = await _userManager.GetUserAsync(command.CurrentUser);
+            var user = await _userManager.FindByEmailAsync(command.CurrentUserEmail);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(command.CurrentUser)}'.");
+                throw new ApplicationException($"Unable to load user with email '{command.CurrentUserEmail}'.");
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, command.OldPassword, command.NewPassword);

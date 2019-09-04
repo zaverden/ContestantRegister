@@ -8,7 +8,7 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
 {
     public class ChangePasswordCommand : ICommand
     {
-        public ClaimsPrincipal CurrentUser { get; set; }
+        public string CurrentUserEmail { get; set; }
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
     }

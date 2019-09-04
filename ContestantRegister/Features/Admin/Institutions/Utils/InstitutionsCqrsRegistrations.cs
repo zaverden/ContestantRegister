@@ -24,9 +24,9 @@ namespace ContestantRegister.Features.Admin.Institutions.Utils
 
             services.AddTransient<IQueryHandler<CitiesForInstitutionQuery, List<City>>, GetCitiesForInstitutionQueryHandler>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Institution, Institution>>, CreateMappedEntityCommandHandler<Institution, Institution>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Institution, Institution>>, SimpleCreateMappedEntityCommandHandler<Institution>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Institution, Institution, int>>, EditMappedEntityCommandHandler<Institution, Institution, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Institution>>, DeleteEntityCommandHandler<Institution>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Institution, int>>, DeleteEntityCommandHandler<Institution, int>>();
         }
     }
 }

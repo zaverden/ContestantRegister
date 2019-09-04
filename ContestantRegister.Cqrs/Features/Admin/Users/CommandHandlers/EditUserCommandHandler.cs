@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using ContestantRegister.Cqrs.Features._Common.CommandHandlers;
+using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Domain;
+using ContestantRegister.Models;
+using ContestantRegister.Services;
+using ContestantRegister.ViewModels.UserViewModels;
+
+namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
+{
+    public class EditUserCommandHandler : EditMappedEntityCommandHandler<ApplicationUser, EditUserViewModel, string>
+    {
+        private readonly IUserService _userService;
+
+        public EditUserCommandHandler(IRepository repository, IMapper mapper, IUserService userService) : base(repository, mapper)
+        {
+            _userService = userService;
+        }
+
+        protected override async Task<List<KeyValuePair<string, string>>> ValidateViewModel(EditUserViewModel viewModel)
+        {
+            return await _userService.ValidateUserAsync(viewModel);
+        }
+    }
+}

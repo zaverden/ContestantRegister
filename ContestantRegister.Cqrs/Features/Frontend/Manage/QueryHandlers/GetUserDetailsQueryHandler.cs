@@ -26,10 +26,10 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers
 
         public override async Task<IndexViewModel> HandleAsync(GetUserDetailsQuery query)
         {
-            var user = await _userManager.GetUserAsync(query.CurrentUser);
+            var user = await _userManager.FindByEmailAsync(query.CurrentUserEmail);
             if (user == null)
             {
-                throw new EntityNotFoundException($"Unable to load user with ID '{_userManager.GetUserId(query.CurrentUser)}'.");
+                throw new EntityNotFoundException($"Unable to load user with ID '{query.CurrentUserEmail}'.");
             }
 
             var studyPlace = await ReadRepository.Set<StudyPlace>().SingleAsync(sp => sp.Id == user.StudyPlaceId);

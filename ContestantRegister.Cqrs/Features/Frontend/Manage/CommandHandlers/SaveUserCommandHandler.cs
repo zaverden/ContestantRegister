@@ -35,10 +35,10 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
                 throw new ValidationException(validationResult);
 
             
-            var user = await _userManager.GetUserAsync(command.CurrentUser);
+            var user = await _userManager.FindByEmailAsync(command.CurrentUserEmail);
             if (user == null)
             {
-                throw new EntityNotFoundException($"Unable to load user with ID '{_userManager.GetUserId(command.CurrentUser)}'.");
+                throw new EntityNotFoundException($"Unable to load user with email '{command.CurrentUserEmail}'.");
             }
 
             _mapper.Map(command.ViewModel, user);

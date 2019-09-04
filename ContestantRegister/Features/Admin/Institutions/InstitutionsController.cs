@@ -18,7 +18,7 @@ namespace ContestantRegister.Controllers
     public class InstitutionsController : CrudController<int,
         Institution, InstitutionListItemViewModel, Institution, Institution,
         GetMappedEntitiesQuery<Institution, InstitutionListItemViewModel>, GetEntityByIdQuery<Institution, int>, GetEntityByIdForDeleteQuery<Institution, int>,
-        CreateMappedEntityCommand<Institution, Institution>, EditMappedEntityCommand<Institution, Institution, int>, DeleteEntityByIdCommand<Institution>>
+        CreateMappedEntityCommand<Institution, Institution>, EditMappedEntityCommand<Institution, Institution, int>, DeleteEntityByIdCommand<Institution, int>>
     {
         public InstitutionsController(IHandlerDispatcher handlerDispatcher, IMapper mapper) : base(handlerDispatcher, mapper)
         {            

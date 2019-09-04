@@ -21,7 +21,7 @@ namespace ContestantRegister.Controllers
     public class SchoolsController : CrudController<int,
         School, SchoolListItemViewModel, School, School,
         GetMappedSchoolsQuery, GetEntityByIdQuery<School, int>, GetEntityByIdForDeleteQuery<School, int>,
-        CreateMappedEntityCommand<School, School>, EditMappedEntityCommand<School, School, int>, DeleteEntityByIdCommand<School>>
+        CreateMappedEntityCommand<School, School>, EditMappedEntityCommand<School, School, int>, DeleteEntityByIdCommand<School, int>>
     {
         public SchoolsController(IHandlerDispatcher handlerDispatcher, IMapper mapper) : base(handlerDispatcher, mapper)
         {            

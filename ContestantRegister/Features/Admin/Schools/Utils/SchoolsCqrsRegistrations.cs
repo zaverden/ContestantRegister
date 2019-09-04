@@ -22,9 +22,9 @@ namespace ContestantRegister.Features.Admin.Schools.Utils
             services.AddTransient<IQueryHandler<GetEntityByIdQuery<School, int>, School>, GetEntityQueryHandler<School, int>>();
             services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<School, int>, School>, GetEntityForDeleteQueryHandler<School, int>>();
 
-            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<School, School>>, CreateMappedEntityCommandHandler<School, School>>();
+            services.AddTransient<ICommandHandler<CreateMappedEntityCommand<School, School>>, SimpleCreateMappedEntityCommandHandler<School>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<School, School, int>>, EditMappedEntityCommandHandler<School, School, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<School>>, DeleteEntityCommandHandler<School>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<School, int>>, DeleteEntityCommandHandler<School, int>>();
         }
     }
 }

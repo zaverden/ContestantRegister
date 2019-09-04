@@ -19,7 +19,7 @@ namespace ContestantRegister
     public class ContestsController : CrudController<int,
         Contest, ContestListItemViewModel, ContestDetailsViewModel, ContestDetailsViewModel,
         GetMappedEntitiesQuery<Contest, ContestListItemViewModel>, GetEntityByIdQuery<Contest, int>, GetEntityByIdForDeleteQuery<Contest, int>,
-        CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, EditMappedEntityCommand<Contest, ContestDetailsViewModel, int>, DeleteEntityByIdCommand<Contest>>
+        CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, EditMappedEntityCommand<Contest, ContestDetailsViewModel, int>, DeleteEntityByIdCommand<Contest, int>>
     {
         public ContestsController(IHandlerDispatcher handlerDispatcher, IMapper mapper) : base(handlerDispatcher, mapper)
         {

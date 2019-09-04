@@ -9,7 +9,6 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Queries
 {
     public class GetUserDetailsQuery : IQuery<IndexViewModel>
     {
-        //TODO заменить на User.Identity.Name, там будет email
-        public ClaimsPrincipal CurrentUser { get; set; }
+        public string CurrentUserEmail { get; set; }
     }
 }
