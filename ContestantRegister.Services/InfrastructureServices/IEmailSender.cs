@@ -1,6 +1,5 @@
 ﻿using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Services.InfrastructureServices
 {
