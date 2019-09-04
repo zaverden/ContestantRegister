@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Domain.Properties;
 
-namespace ContestantRegister.ViewModels.ManageViewModels
+namespace ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels
 {
     public class ChangePasswordViewModel
     {

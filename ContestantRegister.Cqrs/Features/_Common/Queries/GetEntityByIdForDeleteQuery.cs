@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.Controllers._Common.Queries
+﻿namespace ContestantRegister.Cqrs.Features._Common.Queries
 {
     public class GetEntityByIdForDeleteQuery<TEntity, TKey> : EntityIdBaseQuery<TEntity, TKey>
     {

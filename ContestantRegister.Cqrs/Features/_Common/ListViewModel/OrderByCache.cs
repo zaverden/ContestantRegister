@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Models;
+using ContestantRegister.Framework.Filter;
 
-namespace ContestantRegister.Utils.ViewModelsSorting
+namespace ContestantRegister.Cqrs.Features._Common.ListViewModel
 {
     public static class OrderByCache
     {

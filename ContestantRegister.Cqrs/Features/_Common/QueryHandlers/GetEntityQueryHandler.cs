@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.Queries;
+using ContestantRegister.Cqrs.Features._Common.Queries;
 using ContestantRegister.Domain;
-using ContestantRegister.Features;
-using ContestantRegister.Models;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Services.Extensions;
 
-namespace ContestantRegister.Controllers._Common.QueryHandlers
+namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
     
     public class GetEntityQueryHandler<TEntity, TKey> : ReadRepositoryQueryHandler<GetEntityByIdQuery<TEntity, TKey>, TEntity> 

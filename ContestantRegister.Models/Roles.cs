@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ContestantRegister.Domain
+﻿namespace ContestantRegister.Domain
 {
     public class Roles
     {

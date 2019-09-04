@@ -1,5 +1,5 @@
 ﻿using System;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContestantRegister.Infrastructure

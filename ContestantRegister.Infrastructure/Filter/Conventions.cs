@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using ContestantRegister.Infrastructure.Extensions;
-using ContestantRegister.Infrastructure.Filter.Attributes;
+using ContestantRegister.Framework.Extensions;
+using ContestantRegister.Framework.Filter.Attributes;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {
     public static class Conventions<TSubject>
     {

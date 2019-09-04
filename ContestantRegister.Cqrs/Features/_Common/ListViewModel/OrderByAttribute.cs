@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ContestantRegister.Models
+namespace ContestantRegister.Cqrs.Features._Common.ListViewModel
 {
     public class OrderByAttribute : Attribute
     {

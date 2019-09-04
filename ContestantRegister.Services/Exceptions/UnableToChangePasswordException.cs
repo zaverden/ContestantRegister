@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Application.Exceptions;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Services.Exceptions

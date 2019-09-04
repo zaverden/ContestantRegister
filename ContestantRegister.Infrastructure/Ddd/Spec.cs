@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using ContestantRegister.Infrastructure.Extensions;
+using ContestantRegister.Framework.Extensions;
 
-namespace ContestantRegister.Infrastructure.Ddd
+namespace ContestantRegister.Framework.Ddd
 {
     public class Spec<T>
     {

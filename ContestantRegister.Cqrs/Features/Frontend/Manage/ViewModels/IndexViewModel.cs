@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Domain.Properties;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
 
-namespace ContestantRegister.ViewModels.ManageViewModels
+namespace ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels
 {
     public class IndexViewModel : IApplicationUser
     {

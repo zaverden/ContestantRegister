@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using System.Collections.Generic;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.Queries

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
-using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Infrastructure.Filter.Attributes;
-using ContestantRegister.Infrastructure.Filter.Contervers;
+﻿using System.Collections.Generic;
+using ContestantRegister.Framework.Cqrs;
+using ContestantRegister.Framework.Filter;
+using ContestantRegister.Framework.Filter.Attributes;
+using ContestantRegister.Framework.Filter.Contervers;
 using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Emails.Queries

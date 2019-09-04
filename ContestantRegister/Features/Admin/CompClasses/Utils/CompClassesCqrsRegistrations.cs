@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using ContestantRegister.Controllers._Common.CommandHandlers;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Controllers._Common.Queries;
-using ContestantRegister.Controllers._Common.QueryHandlers;
-using ContestantRegister.Controllers.Cities;
-using ContestantRegister.Controllers.Cities.Queries;
-using ContestantRegister.Controllers.CompClasses;
-using ContestantRegister.Controllers.CompClasses.Queries;
-using ContestantRegister.Controllers.CompClasses.QueryHandlers;
 using ContestantRegister.Cqrs.Features._Common.CommandHandlers;
 using ContestantRegister.Cqrs.Features._Common.Commands;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features.Admin.CompClasses.Queries;
+using ContestantRegister.Cqrs.Features.Admin.CompClasses.QueryHandlers;
+using ContestantRegister.Cqrs.Features.Admin.CompClasses.ViewModels;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 using Microsoft.Extensions.DependencyInjection;
 

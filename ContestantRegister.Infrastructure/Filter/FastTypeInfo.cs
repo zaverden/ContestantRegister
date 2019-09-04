@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {
     public static class FastTypeInfo
     {

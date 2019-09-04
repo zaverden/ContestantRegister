@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels.UserViewModels;
 
-namespace ContestantRegister.Controllers.Account.Utils
+namespace ContestantRegister.Cqrs.Features.Admin.Users.Utils
 {
     public class UsersAutoMapperProfile : Profile
     {

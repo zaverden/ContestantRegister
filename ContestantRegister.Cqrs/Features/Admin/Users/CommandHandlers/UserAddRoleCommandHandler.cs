@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Commands;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using System.Threading.Tasks;
+using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.CommandHandlers
+namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
 {
     public class UserAddRoleCommandHandler : ICommandHandler<UserAddRoleCommand>
     {

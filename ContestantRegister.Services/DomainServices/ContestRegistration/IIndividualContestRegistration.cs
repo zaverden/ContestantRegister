@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Models;
+﻿using ContestantRegister.Models;
 
-namespace ContestantRegister.Services.ApplicationServices.Reg
+namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
     public interface ICreateIndividualContestRegistration : IIndividualContestRegistration
     {

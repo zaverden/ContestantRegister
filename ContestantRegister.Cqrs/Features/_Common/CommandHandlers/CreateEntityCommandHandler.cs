@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Domain;
+using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Domain.Repository;
 
-namespace ContestantRegister.Controllers._Common.CommandHandlers
+namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
     public class CreateEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<CreateEntityCommand<TEntity>>
     {

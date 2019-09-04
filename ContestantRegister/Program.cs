@@ -1,8 +1,7 @@
 ﻿using System;
+using ContestantRegister.BackgroundJobs;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Services.BackgroundJobs;
-using ContestantRegister.Utils;
 using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;

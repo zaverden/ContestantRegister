@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Framework.Cqrs;
 
-namespace ContestantRegister.Controllers._Common.QueryHandlers
+namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
     public abstract class ReadRepositoryQueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {

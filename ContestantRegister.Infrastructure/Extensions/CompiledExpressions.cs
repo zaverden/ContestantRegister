@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
-namespace ContestantRegister.Infrastructure.Extensions
+namespace ContestantRegister.Framework.Extensions
 {
     internal class CompiledExpressions<TIn, TOut>
     {

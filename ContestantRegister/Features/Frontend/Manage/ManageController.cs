@@ -1,14 +1,12 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Application.Exceptions;
-using ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Queries;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
+using ContestantRegister.Framework.Cqrs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ContestantRegister.Services.Exceptions;
 using ContestantRegister.Utils;
-using ContestantRegister.ViewModels.ManageViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ContestantRegister.Controllers

@@ -6,7 +6,9 @@ using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Domain;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
+using ContestantRegister.Services.DomainServices.ContestRegistration;
+using ContestantRegister.Services.InfrastructureServices;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.Contest.Registration;
 using Microsoft.AspNetCore.Authorization;
@@ -70,9 +72,8 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> EditRegistration(int id, EditIndividualContestRegistrationViewModel viewModel)
         {
-            var dbRedistration = await _context.IndividualContestRegistrations
-                .SingleOrDefaultAsync(r => r.Id == id);
-            if (dbRedistration == null)
+            var dbRegistration = await _context.IndividualContestRegistrations.SingleOrDefaultAsync(r => r.Id == id);
+            if (dbRegistration == null)
             {
                 return NotFound();
             }
@@ -89,17 +90,17 @@ namespace ContestantRegister.Controllers
                 return View(viewModel);
             }
 
-            _mapper.Map(viewModel, dbRedistration);
+            _mapper.Map(viewModel, dbRegistration);
 
-            if (dbRedistration.Status == ContestRegistrationStatus.Completed && dbRedistration.RegistrationDateTime == null)
+            if (dbRegistration.Status == ContestRegistrationStatus.Completed && dbRegistration.RegistrationDateTime == null)
             {
-                dbRedistration.RegistrationDateTime = DateTimeExtensions.SfuServerNow;
-                dbRedistration.RegistredBy = await _userManager.GetUserAsync(User);
+                dbRegistration.RegistrationDateTime = DateTimeService.SfuServerNow;
+                dbRegistration.RegistredBy = await _userManager.GetUserAsync(User);
             }
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id = dbRedistration.ContestId });
+            return RedirectToAction(nameof(Details), new { id = dbRegistration.ContestId });
         }
 
         [Authorize]

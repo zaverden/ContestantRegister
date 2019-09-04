@@ -1,15 +1,9 @@
 ﻿using System.Collections.Generic;
-using ContestantRegister.Controllers.Account.CommandHandlers;
-using ContestantRegister.Controllers.Account.Commands;
-using ContestantRegister.Controllers.Account.Queries;
-using ContestantRegister.Controllers.Account.QueryHandlers;
-using ContestantRegister.Features.Frontend.Account.CommandHandlers;
-using ContestantRegister.Features.Frontend.Account.Commands;
-using ContestantRegister.Features.Frontend.Home.Commands;
-using ContestantRegister.Features.Frontend.Home.CommansHandlers;
-using ContestantRegister.Features.Frontend.Home.Queries;
-using ContestantRegister.Features.Frontend.Home.QueryHandlers;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Cqrs.Features.Frontend.Home.Commands;
+using ContestantRegister.Cqrs.Features.Frontend.Home.CommansHandlers;
+using ContestantRegister.Cqrs.Features.Frontend.Home.Queries;
+using ContestantRegister.Cqrs.Features.Frontend.Home.QueryHandlers;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 using Microsoft.Extensions.DependencyInjection;
 

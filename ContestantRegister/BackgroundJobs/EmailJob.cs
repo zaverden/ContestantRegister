@@ -3,14 +3,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using ContestantRegister.Data;
+using ContestantRegister.Services.InfrastructureServices;
 using ContestantRegister.Utils;
 using FluentScheduler;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
-using Extensions = ContestantRegister.Utils.Extensions;
 
-namespace ContestantRegister.Services.BackgroundJobs
+namespace ContestantRegister.BackgroundJobs
 {
     public class EmailJob : IJob
     {
@@ -55,7 +55,7 @@ namespace ContestantRegister.Services.BackgroundJobs
 
                             _logger.LogError(ex, $"Unable to send email id {email.Id} to {email.Address}");
                         }
-                        email.ChangeDate = DateTimeExtensions.SfuServerNow;
+                        email.ChangeDate = DateTimeService.SfuServerNow;
                     }
 
                     

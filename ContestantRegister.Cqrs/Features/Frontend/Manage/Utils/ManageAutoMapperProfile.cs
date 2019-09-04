@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels.ManageViewModels;
 
-namespace ContestantRegister.Controllers.Account.Utils
+namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Utils
 {
     public class ManageAutoMapperProfile : Profile
     {

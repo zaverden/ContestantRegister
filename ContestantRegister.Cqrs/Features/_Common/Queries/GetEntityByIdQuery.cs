@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ContestantRegister.Controllers._Common.Queries
+﻿namespace ContestantRegister.Cqrs.Features._Common.Queries
 {
     public class GetEntityByIdQuery<TEntity, TKey> : EntityIdBaseQuery<TEntity, TKey>
     {

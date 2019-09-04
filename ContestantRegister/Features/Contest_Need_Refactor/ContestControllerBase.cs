@@ -8,23 +8,21 @@ using ContestantRegister.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Features.Frontend.Account.ViewModels;
-using ContestantRegister.Infrastructure.Filter;
+using ContestantRegister.Framework.Filter;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
+using ContestantRegister.Services.InfrastructureServices;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
-using ContestantRegister.ViewModels.HomeViewModels;
 using ContestantRegister.ViewModels.ListItem;
-using ContestantRegister.ViewModels.ListItemViewModels;
 using CsvHelper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using ContestantRegister.Utils.Filter;
 
 namespace ContestantRegister.Controllers
 {
@@ -189,7 +187,7 @@ namespace ContestantRegister.Controllers
 
         protected async Task<IActionResult> RegisterInternalAsync(ContestRegistrationViewModel viewModel, ContestRegistration registration, Contest contest)
         {
-            registration.RegistrationDateTime = DateTimeExtensions.SfuServerNow;
+            registration.RegistrationDateTime = DateTimeService.SfuServerNow;
             registration.RegistredBy = await _userManager.GetUserAsync(User);
             registration.Status = ContestRegistrationStatus.Completed;
 

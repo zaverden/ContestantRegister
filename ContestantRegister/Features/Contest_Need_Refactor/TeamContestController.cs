@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +6,9 @@ using AutoMapper;
 using ContestantRegister.Data;
 using ContestantRegister.Domain;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
+using ContestantRegister.Services.DomainServices.ContestRegistration;
+using ContestantRegister.Services.InfrastructureServices;
 using ContestantRegister.Utils;
 using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
@@ -114,9 +115,8 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> EditRegistration(int id, EditTeamContestRegistrationViewModel viewModel)
         {
-            var dbRedistration = await _context.TeamContestRegistrations
-                .SingleOrDefaultAsync(r => r.Id == id);
-            if (dbRedistration == null)
+            var dbRegistration = await _context.TeamContestRegistrations.SingleOrDefaultAsync(r => r.Id == id);
+            if (dbRegistration == null)
             {
                 return NotFound();
             }
@@ -133,17 +133,17 @@ namespace ContestantRegister.Controllers
                 return View(viewModel);
             }
 
-            _mapper.Map(viewModel, dbRedistration);
+            _mapper.Map(viewModel, dbRegistration);
 
-            if (dbRedistration.Status == ContestRegistrationStatus.Completed && dbRedistration.RegistrationDateTime == null)
+            if (dbRegistration.Status == ContestRegistrationStatus.Completed && dbRegistration.RegistrationDateTime == null)
             {
-                dbRedistration.RegistrationDateTime = DateTimeExtensions.SfuServerNow;
-                dbRedistration.RegistredBy = await _userManager.GetUserAsync(User);
+                dbRegistration.RegistrationDateTime = DateTimeService.SfuServerNow;
+                dbRegistration.RegistredBy = await _userManager.GetUserAsync(User);
             }
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Details), new { id = dbRedistration.ContestId });
+            return RedirectToAction(nameof(Details), new { id = dbRegistration.ContestId });
         }
 
         [Authorize(Roles = Roles.Admin)]
@@ -539,8 +539,7 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportBaylorRegistration(int id, ImportParticipantsViewModel viewModel)
         {
-            var contest = await _context.Contests
-                .SingleOrDefaultAsync(c => c.Id == id);
+            var contest = await _context.Contests.SingleOrDefaultAsync(c => c.Id == id);
             if (contest == null)
             {
                 return NotFound();

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using ContestantRegister.Application.Exceptions;
-using ContestantRegister.Controllers._Common.CommandHandlers;
 using ContestantRegister.Cqrs.Features._Common.Commands;
-using ContestantRegister.Domain;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Services.Exceptions;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {

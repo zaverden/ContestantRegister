@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {
     public class FilterPropertyInfo
     {

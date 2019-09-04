@@ -1,14 +1,10 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using ContestantRegister.Cqrs.Features.Frontend.Home.ViewModels;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels.AccountViewModels;
 using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
-using ContestantRegister.ViewModels.ListItemViewModels;
-using ContestantRegister.ViewModels.ManageViewModels;
-using ContestantRegister.ViewModels.UserViewModels;
 using ContestantRegister.ViewModels.ListItem;
-using ContestantRegister.Features.Frontend.Account.ViewModels;
+using StudyPlaceDropdownItemViewModel = ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels.StudyPlaceDropdownItemViewModel;
 
 namespace ContestantRegister.Utils
 {

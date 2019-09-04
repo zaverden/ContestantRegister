@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ContestantRegister.Infrastructure.Filter.Attributes
+namespace ContestantRegister.Framework.Filter.Attributes
 {
     public class RelatedObjectAttribute : Attribute
     {

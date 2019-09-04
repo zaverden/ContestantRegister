@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ContestantRegister.Infrastructure.Cqrs
+namespace ContestantRegister.Framework.Cqrs
 {
     public abstract class HandlerDispatcher : IHandlerDispatcher
     {

@@ -3,14 +3,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Controllers._Common;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Controllers._Common.Queries;
 using Microsoft.AspNetCore.Authorization;
-using ContestantRegister.Controllers.Institutions.ViewModels;
-using ContestantRegister.Controllers.Institutions.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Institutions.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Institutions.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Controllers
 {

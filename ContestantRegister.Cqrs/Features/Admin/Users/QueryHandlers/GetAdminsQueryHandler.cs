@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.QueryHandlers;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Queries;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
-using ContestantRegister.ViewModels.UserViewModels;
+using ContestantRegister.Services.DomainServices;
+using ContestantRegister.Services.Extensions;
 using Microsoft.AspNetCore.Identity;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.QueryHandlers
+namespace ContestantRegister.Cqrs.Features.Admin.Users.QueryHandlers
 {
     public class GetAdminsQueryHandler : ReadRepositoryQueryHandler<GetAdminsQuery, List<UserAdminViewModel>>
     {

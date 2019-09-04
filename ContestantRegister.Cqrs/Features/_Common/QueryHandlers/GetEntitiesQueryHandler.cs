@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
-using ContestantRegister.Controllers._Common.Queries;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Cqrs.Features._Common.ListViewModel;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Framework.Extensions;
-using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Utils.ViewModelsSorting;
+using ContestantRegister.Framework.Filter;
+using ContestantRegister.Services.Extensions;
 
-namespace ContestantRegister.Controllers._Common.QueryHandlers
+namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
     public class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetMappedEntitiesQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
     {

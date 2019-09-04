@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Domain;
+using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Domain.Repository;
 
-namespace ContestantRegister.Controllers._Common.CommandHandlers
+namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
     public class DeleteEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity, TKey>> where TEntity : class
     {

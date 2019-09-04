@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using ContestantRegister.Controllers._Common.CommandHandlers;
-using ContestantRegister.Controllers._Common.Commands;
 using ContestantRegister.Cqrs.Features._Common.CommandHandlers;
 using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Cqrs.Features.Admin.Contests.Utils;
 using ContestantRegister.Cqrs.Features.Admin.Contests.ViewModels;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.Exceptions;
+using ContestantRegister.Services.Exceptions;
+using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.CommandHandlers
 {

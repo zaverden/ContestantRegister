@@ -2,7 +2,7 @@
 using FluentScheduler;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ContestantRegister.Services.BackgroundJobs
+namespace ContestantRegister.BackgroundJobs
 {
     public class JobFactory : IJobFactory
     {

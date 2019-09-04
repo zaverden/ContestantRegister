@@ -2,31 +2,34 @@
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using ContestantRegister.BackgroundJobs;
 using ContestantRegister.Data;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Features.Admin.Areas.Utils;
 using ContestantRegister.Features.Admin.Cities.Utils;
 using ContestantRegister.Features.Admin.Institutions.Utils;
 using ContestantRegister.Features.Admin.Schools.Utils;
 using ContestantRegister.Features.Frontend.Account.Utils;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Infrastructure;
-using ContestantRegister.Infrastructure.Cqrs;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
-using ContestantRegister.Services.BackgroundJobs;
+using ContestantRegister.Services.DomainServices;
+using ContestantRegister.Services.DomainServices.ContestRegistration;
+using ContestantRegister.Services.Extensions;
+using ContestantRegister.Services.InfrastructureServices;
 using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IMyUrlHelper = ContestantRegister.Services.InfrastructureServices.IUrlHelper;
+using IUrlHelper = Microsoft.AspNetCore.Mvc.IUrlHelper;
 
 namespace ContestantRegister
 {
@@ -69,7 +72,6 @@ namespace ContestantRegister
             });
 
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IContestRegistrationService, ContestRegistrationService>();
 
@@ -77,6 +79,8 @@ namespace ContestantRegister
             services.AddScoped<IHandlerDispatcher, MsDiHandlerDispatcher>();
             services.AddScoped<IReadRepository, EfCoreRepository>();
             services.AddScoped<IRepository, EfCoreRepository>();
+            services.AddScoped<IMyUrlHelper, MvcUrlHelper>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             //TODO можно заменить на QuerableExecutor, который инжектируется во все хендлерыю но получаем еще одну зависимость и теряем привычный синтаксис экстеншн-методов
             QueryableExtensions.OrmExtensionsHider = new EfOrmExtensionsHider();

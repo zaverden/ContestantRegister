@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
 
-namespace ContestantRegister.Services
+namespace ContestantRegister.Services.DomainServices
 {
     public interface IUserService
     {

@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Domain.Properties;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
 
-namespace ContestantRegister.ViewModels
+namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
 {
     public abstract class UserViewModelBase : IApplicationUser
     {

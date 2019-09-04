@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Framework.Cqrs;
 
-namespace ContestantRegister.Controllers._Common.CommandHandlers
+namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
     public abstract class RepositoryCommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
     {

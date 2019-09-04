@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using ContestantRegister.Cqrs.Features.Admin.Contests.ViewModels;
-using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.ViewModelsSorting;
-using ContestantRegister.ViewModels.ManageViewModels;
 
-namespace ContestantRegister.Controllers.Account.Utils
+namespace ContestantRegister.Cqrs.Features.Admin.Contests.Utils
 {
     public class ContestsAutoMapperProfile : Profile
     {

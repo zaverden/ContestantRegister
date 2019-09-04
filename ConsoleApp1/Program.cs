@@ -1,16 +1,14 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using ContestantRegister.Controllers;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Queries;
-using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
-using ContestantRegister.Infrastructure.Filter;
+using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
+using ContestantRegister.Framework.Filter;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConsoleApp1

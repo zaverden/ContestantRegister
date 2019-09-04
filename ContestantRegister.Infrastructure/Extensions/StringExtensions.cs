@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ContestantRegister.Framework.Extensions
+﻿namespace ContestantRegister.Framework.Extensions
 {
     public static class StringExtensions
     {

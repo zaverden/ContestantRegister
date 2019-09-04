@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using ContestantRegister.Controllers._Common.Commands;
+using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Domain;
-using ContestantRegister.Models;
-using ContestantRegister.Utils.Exceptions;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Services.Exceptions;
 
-namespace ContestantRegister.Controllers._Common.CommandHandlers
+namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
     public class EditEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<EditEntityCommand<TEntity>> 
         where TEntity : class, IHasId<TKey>

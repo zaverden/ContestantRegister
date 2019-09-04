@@ -7,15 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ContestantRegister.Utils;
-using ContestantRegister.ViewModels.AccountViewModels;
-using ContestantRegister.ViewModels.HomeViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ContestantRegister.Controllers.Account.Commands;
-using ContestantRegister.Utils.Exceptions;
-using ContestantRegister.Controllers.Account.Queries;
-using ContestantRegister.Application.Exceptions;
-using ContestantRegister.Features.Frontend.Account.Commands;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Cqrs.Features.Frontend.Account.Commands;
+using ContestantRegister.Cqrs.Features.Frontend.Account.Queries;
+using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
+using ContestantRegister.Cqrs.Features.Shared.ViewModels;
+using ContestantRegister.Framework.Cqrs;
+using ContestantRegister.Services.Exceptions;
 
 namespace ContestantRegister.Controllers
 {

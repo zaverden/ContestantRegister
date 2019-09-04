@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Framework.Cqrs;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.Commands
+namespace ContestantRegister.Cqrs.Features.Admin.Users.Commands
 {
     public class UserAddRoleCommand : ICommand
     {

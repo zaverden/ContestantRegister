@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
 using ContestantRegister.Cqrs.Features.Admin.Emails.Queries;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
-using ContestantRegister.Infrastructure.Filter;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Framework.Filter;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Emails.QueryHandlers
 {

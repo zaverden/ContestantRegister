@@ -1,6 +1,6 @@
-﻿using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Framework.Cqrs;
 
-namespace ContestantRegister.Controllers._Common.Commands
+namespace ContestantRegister.Cqrs.Features._Common.Commands
 {
     public class DeleteEntityByIdCommand<TEntity, TKey> : ICommand
     {

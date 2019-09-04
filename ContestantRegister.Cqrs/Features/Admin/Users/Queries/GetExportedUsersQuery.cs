@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Framework.Cqrs;
 using OfficeOpenXml;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.Commands
+namespace ContestantRegister.Cqrs.Features.Admin.Users.Queries
 {
     public class GetExportedUsersQuery : IQuery<ExcelPackage>
     {

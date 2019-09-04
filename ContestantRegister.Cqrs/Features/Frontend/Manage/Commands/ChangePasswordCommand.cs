@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Framework.Cqrs;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
+namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Commands
 {
     public class ChangePasswordCommand : ICommand
     {

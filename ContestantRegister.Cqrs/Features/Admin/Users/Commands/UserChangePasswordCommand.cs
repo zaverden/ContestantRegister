@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.Commands
 {

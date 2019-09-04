@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Text;
 using ContestantRegister.Domain.Properties;
 
-namespace ContestantRegister.Services
+namespace ContestantRegister.Services.Extensions
 {
     public static class ValidationExtensions
     {

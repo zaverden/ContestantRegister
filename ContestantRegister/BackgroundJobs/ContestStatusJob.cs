@@ -1,11 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ContestantRegister.Data;
 using ContestantRegister.Models;
-using ContestantRegister.Utils;
+using ContestantRegister.Services.InfrastructureServices;
 using FluentScheduler;
 
-namespace ContestantRegister.Services.BackgroundJobs
+namespace ContestantRegister.BackgroundJobs
 {
     public class ContestStatusJob : IJob
     {
@@ -20,7 +19,7 @@ namespace ContestantRegister.Services.BackgroundJobs
         {
             using (_context)
             {
-                var contests = _context.Contests.Where(c => c.RegistrationEnd < DateTimeExtensions.SfuServerNow &&
+                var contests = _context.Contests.Where(c => c.RegistrationEnd < DateTimeService.SfuServerNow &&
                                                             (c.ContestStatus == ContestStatus.RegistrationOpened ||
                                                              c.ContestStatus == ContestStatus.ConfirmParticipation ||
                                                              c.ContestStatus == ContestStatus.ConfirmParticipationOrRegister));

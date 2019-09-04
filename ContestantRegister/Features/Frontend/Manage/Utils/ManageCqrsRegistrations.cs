@@ -2,8 +2,8 @@
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers;
-using ContestantRegister.Infrastructure.Cqrs;
-using ContestantRegister.ViewModels.ManageViewModels;
+using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
+using ContestantRegister.Framework.Cqrs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContestantRegister.Features.Frontend.Account.Utils

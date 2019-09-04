@@ -1,8 +1,7 @@
-﻿using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Infrastructure.Filter.Attributes;
+﻿using ContestantRegister.Cqrs.Features._Common.ListViewModel;
+using ContestantRegister.Framework.Filter;
+using ContestantRegister.Framework.Filter.Attributes;
 using ContestantRegister.Models;
-using ContestantRegister.Utils;
-using ContestantRegister.Utils.Filter;
 
 namespace ContestantRegister.Controllers
 {

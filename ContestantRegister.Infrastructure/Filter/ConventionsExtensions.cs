@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {    
     public static class ConventionsExtensions
     {

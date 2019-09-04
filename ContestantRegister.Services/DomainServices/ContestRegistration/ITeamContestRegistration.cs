@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ContestantRegister.Services.ApplicationServices.Reg
+﻿namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
     public interface ITeamContestRegistration : IContestRegistration
     {

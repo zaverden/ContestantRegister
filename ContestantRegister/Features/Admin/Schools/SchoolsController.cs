@@ -1,19 +1,15 @@
 ﻿using ContestantRegister.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Controllers._Common;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Controllers._Common.Queries;
-using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Authorization;
-using ContestantRegister.Controllers.Schools;
-using ContestantRegister.Controllers.Schools.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Schools.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Schools.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
-using ContestantRegister.Utils.Exceptions;
+using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Controllers
 {

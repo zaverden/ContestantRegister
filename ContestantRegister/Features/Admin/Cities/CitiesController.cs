@@ -1,21 +1,15 @@
-﻿using System.Linq;
-using AutoMapper;
-using ContestantRegister.Data;
+﻿using AutoMapper;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using ContestantRegister.Controllers._Common;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Controllers._Common.Queries;
-using ContestantRegister.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using ContestantRegister.Controllers.Cities;
-using ContestantRegister.Controllers.Cities.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Cities.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Cities.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Controllers
 {

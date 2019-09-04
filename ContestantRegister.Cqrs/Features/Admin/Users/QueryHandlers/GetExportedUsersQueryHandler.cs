@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Controllers._Common.QueryHandlers;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Commands;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
 using OfficeOpenXml;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users
+namespace ContestantRegister.Cqrs.Features.Admin.Users.QueryHandlers
 {
     public class GetExportedUsersQueryHandler : ReadRepositoryQueryHandler<GetExportedUsersQuery, ExcelPackage>
     {

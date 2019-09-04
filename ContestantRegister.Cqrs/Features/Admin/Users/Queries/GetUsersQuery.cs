@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Controllers._Common.Queries;
-using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
-using ContestantRegister.Infrastructure.Cqrs;
-using ContestantRegister.Infrastructure.Filter;
-using ContestantRegister.Infrastructure.Filter.Attributes;
-using ContestantRegister.Infrastructure.Filter.Contervers;
+﻿using ContestantRegister.Cqrs.Features._Common.ListViewModel;
+using ContestantRegister.Cqrs.Features._Common.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
+using ContestantRegister.Framework.Filter;
+using ContestantRegister.Framework.Filter.Attributes;
+using ContestantRegister.Framework.Filter.Contervers;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.Filter;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.Queries
+namespace ContestantRegister.Cqrs.Features.Admin.Users.Queries
 {
     public class GetUsersQuery : GetMappedEntitiesQuery<ApplicationUser, UserListItemViewModel>
     {

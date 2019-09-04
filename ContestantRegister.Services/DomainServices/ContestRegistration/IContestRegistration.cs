@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 using ContestantRegister.Models;
 
-namespace ContestantRegister.Services.ApplicationServices.Reg
+namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
     public interface IContestRegistration
     {

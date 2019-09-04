@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using ContestantRegister.Application.Exceptions;
-using ContestantRegister.Controllers._Common.CommandHandlers;
-using ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers;
-using ContestantRegister.Domain;
+using ContestantRegister.Cqrs.Features._Common.CommandHandlers;
+using ContestantRegister.Cqrs.Features.Frontend.Manage.Commands;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Commands
+namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
 {
     public class ChangePasswordCommandHandler : RepositoryCommandBaseHandler<ChangePasswordCommand>
     {

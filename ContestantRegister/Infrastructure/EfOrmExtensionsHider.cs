@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ContestantRegister.Features;
+using ContestantRegister.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContestantRegister.Infrastructure
@@ -13,6 +13,11 @@ namespace ContestantRegister.Infrastructure
         public Task<List<T>> ToListAsync<T>(IQueryable<T> source)
         {
             return EntityFrameworkQueryableExtensions.ToListAsync(source);
+        }
+
+        public Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source)
+        {
+            return EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(source);
         }
 
         public Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)

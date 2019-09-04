@@ -1,10 +1,8 @@
-﻿using ContestantRegister.Controllers.Account.CommandHandlers;
-using ContestantRegister.Controllers.Account.Commands;
-using ContestantRegister.Controllers.Account.Queries;
-using ContestantRegister.Controllers.Account.QueryHandlers;
-using ContestantRegister.Features.Frontend.Account.CommandHandlers;
-using ContestantRegister.Features.Frontend.Account.Commands;
-using ContestantRegister.Infrastructure.Cqrs;
+﻿using ContestantRegister.Cqrs.Features.Frontend.Account.CommandHandlers;
+using ContestantRegister.Cqrs.Features.Frontend.Account.Commands;
+using ContestantRegister.Cqrs.Features.Frontend.Account.Queries;
+using ContestantRegister.Cqrs.Features.Frontend.Account.QueryHandlers;
+using ContestantRegister.Framework.Cqrs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ContestantRegister.Features.Frontend.Account.Utils

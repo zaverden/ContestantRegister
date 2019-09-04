@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
 using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 using ContestantRegister.Models;
-using ContestantRegister.Properties;
-using ContestantRegister.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
@@ -15,16 +9,7 @@ using Newtonsoft.Json;
 namespace ContestantRegister.Utils
 {
     public static class Extensions
-    {
-
-        
-        public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
-        {
-            return emailSender.SendEmailAsync(email, "Подтвердите email на сайте олимпиад ИКИТ СФУ",
-                $"Подтвердите ваш email на сайте олимпиад ИКИТ СФУ olimp.ikit.sfu-kras.ru, кликнув по ссылке: <a href='{HtmlEncoder.Default.Encode(link)}'>ссылка</a>");
-        }
-
-        
+    {   
         /// <summary>
         /// Синхронный метод нужен для использования во вьюхах
         /// </summary>

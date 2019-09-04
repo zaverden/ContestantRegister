@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ContestantRegister.Infrastructure.Cqrs
+namespace ContestantRegister.Framework.Cqrs
 {
     // при сильном желании можно сделать по отдельному диспетчеру для команд и запросов
     // но пока нет физического разделения чтения и записи (разные базы) в этом нет смысла. будут разные базы - можно будет поднять отдельную инфраструктуру только для query для чтения из нее

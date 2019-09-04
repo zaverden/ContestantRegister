@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using ContestantRegister.Data;
 using ContestantRegister.Domain;
 using ContestantRegister.Models;
-using ContestantRegister.Services;
+using ContestantRegister.Services.DomainServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContestantRegister.Utils
+namespace ContestantRegister.Data
 {
     public class RoleInitializer
     {

@@ -3,22 +3,18 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels;
-using ContestantRegister.ViewModels.UserViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
 using ContestantRegister.Controllers._Common;
-using ContestantRegister.Controllers._Common.Commands;
-using ContestantRegister.Controllers._Common.Queries;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Cqrs.Features._Common.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Commands;
-using ContestantRegister.Cqrs.Features.Frontend.Users.Queries;
-using ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels;
+using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
 using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
-using ContestantRegister.Utils.Exceptions;
-using PasswordViewModel = ContestantRegister.ViewModels.PasswordViewModel;
+using ContestantRegister.Framework.Cqrs;
+using ContestantRegister.Services.Exceptions;
+using PasswordViewModel = ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels.PasswordViewModel;
 
 namespace ContestantRegister.Controllers
 {   

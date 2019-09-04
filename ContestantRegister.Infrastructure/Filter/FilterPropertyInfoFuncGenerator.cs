@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {
     public static class FilterPropertyInfoFuncGenerator
     {

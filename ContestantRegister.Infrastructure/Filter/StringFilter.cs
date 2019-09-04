@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.Infrastructure.Filter
+﻿namespace ContestantRegister.Framework.Filter
 {
     public enum StringFilter
     {

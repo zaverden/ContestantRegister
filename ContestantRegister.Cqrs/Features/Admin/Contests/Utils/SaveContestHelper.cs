@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ContestantRegister.Cqrs.Features.Admin.Contests.ViewModels;
-using ContestantRegister.Features;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.Utils
 {

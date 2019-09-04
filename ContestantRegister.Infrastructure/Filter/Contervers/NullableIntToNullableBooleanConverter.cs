@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.Infrastructure.Filter.Contervers
+﻿namespace ContestantRegister.Framework.Filter.Contervers
 {
     public class NullableIntToNullableBooleanConverter : IFilverValueConverter
     {

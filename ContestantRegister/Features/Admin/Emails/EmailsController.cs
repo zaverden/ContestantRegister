@@ -2,7 +2,7 @@
 using ContestantRegister.Cqrs.Features.Admin.Emails.Queries;
 using Microsoft.AspNetCore.Mvc;
 using ContestantRegister.Domain;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ContestantRegister.Controllers

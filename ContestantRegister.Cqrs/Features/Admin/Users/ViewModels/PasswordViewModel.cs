@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Domain.Properties;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels
+namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
 {
     public class PasswordViewModel
     {

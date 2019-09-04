@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ContestantRegister.Models;
 
-namespace ContestantRegister.ViewModels.UserViewModels
+namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
 {
     public class UserAdminViewModel
     {

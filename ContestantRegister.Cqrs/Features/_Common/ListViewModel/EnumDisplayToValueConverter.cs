@@ -1,12 +1,8 @@
-﻿using ContestantRegister.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using ContestantRegister.Framework.Extensions;
-using ContestantRegister.Infrastructure.Filter;
+using ContestantRegister.Framework.Filter;
 
-namespace ContestantRegister.Utils.Filter
+namespace ContestantRegister.Cqrs.Features._Common.ListViewModel
 {
     public class EnumDisplayToValueConverter<TEnum> : IFilverValueConverter
     {

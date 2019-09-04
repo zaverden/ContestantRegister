@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Queries

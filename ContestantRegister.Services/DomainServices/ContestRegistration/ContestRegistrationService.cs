@@ -2,14 +2,13 @@
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ContestantRegister.Models;
-using ContestantRegister.Utils;
-using Microsoft.AspNetCore.Identity;
 using ContestantRegister.Domain;
-using ContestantRegister.Features;
-using ContestantRegister.Services.ApplicationServices.Reg;
+using ContestantRegister.Domain.Repository;
+using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
+using Microsoft.AspNetCore.Identity;
 
-namespace ContestantRegister.Services
+namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
     public interface IContestRegistrationService
     {
@@ -61,13 +60,13 @@ namespace ContestantRegister.Services
 
             if (editRegistration)
             {
-                var dbRegistration = await _readRepository.Set<ContestRegistration>().Include(r => r.Participant1).SingleAsync(r => r.Id == viewModel.RegistrationId);
+                var dbRegistration = await _readRepository.Set<Models.ContestRegistration>().Include(r => r.Participant1).SingleAsync(r => r.Id == viewModel.RegistrationId);
                 if (dbRegistration.Participant1Id != viewModel.Participant1Id)
                     result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Нельзя менять пользователя при изменении регистрации"));
             }
             else
             {
-                var participantRegistred = await _readRepository.Set<ContestRegistration>().AnyAsync(r => r.ContestId == contest.Id && r.Participant1Id == viewModel.Participant1Id);
+                var participantRegistred = await _readRepository.Set<Models.ContestRegistration>().AnyAsync(r => r.ContestId == contest.Id && r.Participant1Id == viewModel.Participant1Id);
                 if (participantRegistred) result.Add(KeyValuePair.Create(nameof(viewModel.Participant1Id), "Указанный участник уже зарегистрирован в контесте"));
             }
 

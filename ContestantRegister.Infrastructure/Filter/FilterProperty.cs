@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using ContestantRegister.Infrastructure.Filter.Attributes;
+using ContestantRegister.Framework.Filter.Attributes;
 
-namespace ContestantRegister.Infrastructure.Filter
+namespace ContestantRegister.Framework.Filter
 {
     public class FilterProperty
     {

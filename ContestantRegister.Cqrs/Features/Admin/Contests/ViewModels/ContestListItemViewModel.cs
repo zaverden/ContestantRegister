@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Cqrs.Features._Common.ListViewModel;
 using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.ViewModels

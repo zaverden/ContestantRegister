@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ContestantRegister.Cqrs.Features._Common.Commands;
+﻿using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
 using ContestantRegister.Models;
-using ContestantRegister.ViewModels.UserViewModels;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.Commands
 {

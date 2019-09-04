@@ -1,6 +1,6 @@
 ﻿using FluentScheduler;
 
-namespace ContestantRegister.Services.BackgroundJobs
+namespace ContestantRegister.BackgroundJobs
 {
     public class FluentSchedulerRegistry : Registry
     {

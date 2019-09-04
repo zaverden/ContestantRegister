@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using ContestantRegister.Controllers._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Queries;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.Exceptions;
-using ContestantRegister.ViewModels.ManageViewModels;
+using ContestantRegister.Services.Exceptions;
+using ContestantRegister.Services.Extensions;
 using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
-using ContestantRegister.Infrastructure.Cqrs;
+using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
-using ContestantRegister.Utils.Exceptions;
+using ContestantRegister.Services.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers

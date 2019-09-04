@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using ContestantRegister.Cqrs.Features._Common.Commands;
-using ContestantRegister.Domain;
+using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {

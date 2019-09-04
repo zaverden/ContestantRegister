@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels
+﻿namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
 {
     public class StudyPlaceDropdownItemViewModel
     {

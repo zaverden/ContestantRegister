@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using ContestantRegister.Framework.Extensions;
 using Microsoft.AspNetCore.Html;

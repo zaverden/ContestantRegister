@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ContestantRegister.Cqrs.Features._Common.ListViewModel;
 using ContestantRegister.Models;
 
-namespace ContestantRegister.Cqrs.Features.Frontend.Users.ViewModels
+namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
 {
     public class UserListItemViewModel
     {

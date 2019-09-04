@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
-using ContestantRegister.Controllers._Common.QueryHandlers;
+using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels;
-using ContestantRegister.Domain;
-using ContestantRegister.Features;
+using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
+using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers
 {
