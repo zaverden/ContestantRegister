@@ -102,7 +102,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContestantRegister.Cqrs\ContestantRegister.Cqrs.csproj" />
-    <ProjectReference Include="..\ContestantRegister.Infrastructure\ContestantRegister.Framework.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Framework\ContestantRegister.Framework.csproj" />
     <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Domain.csproj" />
     <ProjectReference Include="..\ContestantRegister.Services\ContestantRegister.Services.csproj" />
   </ItemGroup>
