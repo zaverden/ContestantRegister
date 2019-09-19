@@ -23,8 +23,8 @@ namespace ContestantRegister.Features.Admin.Schools.Utils
             services.AddTransient<IQueryHandler<GetEntityByIdQuery<ApplicationUser, string>, ApplicationUser>, GetEntityQueryHandler<ApplicationUser, string>>();
             services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<ApplicationUser, string>, ApplicationUser>, GetEntityForDeleteQueryHandler<ApplicationUser, string>>();
 
-            services.AddTransient<ICommandHandler<CreateUserCommand>, CreateUserCommandHandler>();
-            services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>, EditUserCommandHandler>();
+            //services.AddTransient<ICommandHandler<CreateUserCommand>, CreateUserCommandHandler>();
+            //services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>, EditUserCommandHandler>();
             services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<ApplicationUser, string>>, DeleteEntityCommandHandler<ApplicationUser, string>>();
 
             services.AddTransient<IQueryHandler<GetExportedUsersQuery, ExcelPackage>, GetExportedUsersQueryHandler>();
@@ -34,6 +34,19 @@ namespace ContestantRegister.Features.Admin.Schools.Utils
             services.AddTransient<ICommandHandler<UserAddRoleCommand>, UserAddRoleCommandHandler>();
             services.AddTransient<ICommandHandler<UserRemoveRoleCommand>, UserRemoveRoleCommandHandler>();
             services.AddTransient<ICommandHandler<UserChangePasswordCommand>, UserChangePasswordCommandHandler>();
+
+            var createFactory = new CommandHandlersPipelineBuilder<CreateUserCommand>()
+                .AddBusinesOperation<CreateUserCommandHandler>()
+                .AddDecorator<ValidateUserCommandHandlerDecorator<CreateUserCommand, CreateUserViewModel>>()
+                .BuildFunc();
+            services.AddTransient<ICommandHandler<CreateUserCommand>>(createFactory);
+
+            var editFactory = new CommandHandlersPipelineBuilder<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>()
+                .AddBusinesOperation<EditUserCommandHandler>()
+                .AddDecorator<ValidateUserCommandHandlerDecorator<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>, EditUserViewModel>>()
+                .BuildFunc();
+            services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>>(editFactory);
+
         }
     }
 }

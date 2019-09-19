@@ -16,20 +16,14 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
     public class CreateUserCommandHandler : CreateMappedEntityCommandHandler<CreateUserCommand, ApplicationUser, CreateUserViewModel>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserService _userService;
 
-        public CreateUserCommandHandler(IRepository repository, IMapper mapper, UserManager<ApplicationUser> userManager, IUserService userService) : base(repository, mapper)
+        public CreateUserCommandHandler(IRepository repository, IMapper mapper, UserManager<ApplicationUser> userManager) : base(repository, mapper)
         {
             _userManager = userManager;
-            _userService = userService;
         }
 
         public override async Task HandleAsync(CreateUserCommand command)
         {
-            var validationResult = await ValidateViewModel(command.Entity);
-            if (validationResult?.Count > 0)
-                throw new ValidationException(validationResult);
-
             var newUser = new ApplicationUser();
             await InitNewEntity(newUser, command);
 
@@ -45,11 +39,6 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
             entity.UserName = command.Entity.Email;
             entity.RegistrationDateTime = DateTimeService.SfuServerNow;
             entity.RegistredBy = await _userManager.FindByEmailAsync(command.CurrentUserEmail);
-        }
-
-        protected override async Task<List<KeyValuePair<string, string>>> ValidateViewModel(CreateUserViewModel viewModel)
-        {
-            return await _userService.ValidateUserAsync(viewModel);
         }
     }
 }

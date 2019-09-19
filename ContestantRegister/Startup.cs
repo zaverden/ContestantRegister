@@ -1,8 +1,12 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.BackgroundJobs;
+using ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers;
+using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
 using ContestantRegister.Data;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Features.Admin.Areas.Utils;
@@ -33,6 +37,38 @@ using IUrlHelper = Microsoft.AspNetCore.Mvc.IUrlHelper;
 
 namespace ContestantRegister
 {
+    public class TestCommandMiddleware : CommandHandlerMiddleware
+    {
+        public TestCommandMiddleware(object next) : base(next)
+        {
+        }
+
+        public override Task HandleAsync(ICommand command)
+        {
+            var handlemethod = Next.GetType().GetMethods().Single(x => x.Name == "HandleAsync");
+            var res = handlemethod.Invoke(Next, new[] {command});
+            return (Task) res;
+        }
+    }
+
+    public class TestQueryMiddleware : QueryHandlerMiddleware
+    {
+        public TestQueryMiddleware(object next) : base(next)
+        {
+        }
+
+        public override async Task<object> HandleAsync(IQuery<object> query)
+        {
+            var handlemethod = Next.GetType().GetMethods().Single(x => x.Name == "HandleAsync");
+            var task = (Task) handlemethod.Invoke(Next, new[] { query });
+            await task;
+            var prop = task.GetType().GetProperty("Result");
+            var res = prop.GetValue(task);
+
+            return res;
+        }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -75,9 +111,15 @@ namespace ContestantRegister
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IContestRegistrationService, ContestRegistrationService>();
 
+            //CQRS
+            var metadata = new MiddlewareMetadata();
+            //metadata.AddCommandMiddleware<TestCommandMiddleware>();
+            //metadata.AddQueryMiddleware<TestQueryMiddleware>();
+            services.AddScoped(provider => metadata);
+            services.AddScoped<IHandlerDispatcher, HandlerDispatcher>();
+
             //Infrastructure
-            services.AddScoped<IHandlerDispatcher, MsDiHandlerDispatcher>();
-            services.AddScoped<IReadRepository, EfCoreRepository>();
+            services.AddScoped<IReadRepository, EfCoreReadRepository>();
             services.AddScoped<IRepository, EfCoreRepository>();
             services.AddScoped<IMyUrlHelper, MvcUrlHelper>();
             services.AddTransient<IEmailSender, EmailSender>();

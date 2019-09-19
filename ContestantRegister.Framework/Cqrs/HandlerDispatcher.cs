@@ -1,29 +1,64 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ContestantRegister.Framework.Cqrs
 {
-    public abstract class HandlerDispatcher : IHandlerDispatcher
+    public class HandlerDispatcher : IHandlerDispatcher
     {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly MiddlewareMetadata _middlewareMetadata;
+
+        public HandlerDispatcher(IServiceProvider serviceProvider, MiddlewareMetadata middlewareMetadata)
+        {
+            _serviceProvider = serviceProvider;
+            _middlewareMetadata = middlewareMetadata;
+        }
+
         public Task ExecuteCommandAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
-            return GetService<ICommandHandler<TCommand>>().HandleAsync(command);
+            object cur = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
+            for (int i = _middlewareMetadata.CommandMiddlewares.Count - 1; i >=0; i--)
+            {
+                var middlewareType = _middlewareMetadata.CommandMiddlewares[i];
+                //Todo рефакторинг? добавить вытягивание параметров из сервис-провайдера
+                var ctor = middlewareType.GetConstructors().Single();
+                cur = ctor.Invoke(new object[] {cur});
+            }
+
+            dynamic d = cur;
+            object res = d.HandleAsync(command);
+            return (Task) res;
         }
 
-        public Task<TResult> ExecuteQueryAsync<TResult>(IQuery<TResult> query)
+        public async Task<TResult> ExecuteQueryAsync<TResult>(IQuery<TResult> query)
         {
-            return HandleAsync<TResult>(typeof(IQueryHandler<,>), query);
-        }
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+            object cur = _serviceProvider.GetRequiredService(handlerType);
+            if (!_middlewareMetadata.QueryMiddlewares.Any())
+            {
+                var method = cur.GetType().GetMethod("HandleAsync");
+                var typedTask = (Task<TResult>)method.Invoke(cur, new[] { query });
+                return await typedTask;
+            }
 
-        private Task<TResult> HandleAsync<TResult>(Type handlerGenericType, object context)
-        {
-            var handlerType = handlerGenericType.MakeGenericType(context.GetType(), typeof(TResult));
-            var handler = GetService(handlerType);
-            var method = handler.GetType().GetMethod("HandleAsync");
-            return (Task<TResult>) method.Invoke(handler, new[] {context});
-        }
+            for (int i = _middlewareMetadata.QueryMiddlewares.Count - 1; i >= 0; i--)
+            {
+                var middlewareType = _middlewareMetadata.QueryMiddlewares[i];
+                //Todo рефакторинг? добавить вытягивание параметров из сервис-провайдера
+                var ctor = middlewareType.GetConstructors().Single();
+                cur = ctor.Invoke(new object[] { cur });
+            }
 
-        protected abstract T GetService<T>();
-        protected abstract object GetService(Type serviceType);
+            dynamic d = cur;
+            var task = (Task)d.HandleAsync(query);
+            await task;
+            var prop = task.GetType().GetProperty("Result");
+            var res = prop.GetValue(task);
+            return (TResult) res;
+
+            
+        }
     }
 }

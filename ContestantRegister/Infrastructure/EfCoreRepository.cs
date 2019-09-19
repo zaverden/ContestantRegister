@@ -5,49 +5,36 @@ using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Infrastructure
 {
-    public class EfCoreRepository : IRepository
+    public class EfCoreRepository : EfCoreReadRepository, IRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public EfCoreRepository(ApplicationDbContext context)
+        public EfCoreRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public void Add<TEntity>(TEntity entity) //where TEntity : class
+        public void Add<TEntity>(TEntity entity) 
         {
-            _context.Add(entity);
+            Context.Add(entity);
         }
-
-        public Task<TEntity> FindAsync<TEntity>(object key) where TEntity : class
-        {
-            return _context.FindAsync<TEntity>(key);
-        }
-
 
         public void Remove<TEntity>(TEntity entity)
         {
-            _context.Remove(entity);
+            Context.Remove(entity);
         }
 
         public void Update<TEntity>(TEntity entity)
         {
-            _context.Update(entity);
+            Context.Update(entity);
         }
 
-        public IQueryable<TEntity> Set<TEntity>() where TEntity : class
+        public override IQueryable<TEntity> Set<TEntity>() 
         {
-            return _context.Set<TEntity>();
-        }
-
-        public void Dispose()
-        {
-            _context.Dispose();
+            //включаем changetracking при выборке 
+            return Context.Set<TEntity>();
         }
 
         public Task SaveChangesAsync()
         {
-            return _context.SaveChangesAsync();
+            return Context.SaveChangesAsync();
         }
     }
 }

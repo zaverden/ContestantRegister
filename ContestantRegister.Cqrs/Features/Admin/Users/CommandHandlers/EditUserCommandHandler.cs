@@ -11,16 +11,16 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
 {
     public class EditUserCommandHandler : EditMappedEntityCommandHandler<ApplicationUser, EditUserViewModel, string>
     {
-        private readonly IUserService _userService;
+        //private readonly IUserService _userService;
 
-        public EditUserCommandHandler(IRepository repository, IMapper mapper, IUserService userService) : base(repository, mapper)
+        public EditUserCommandHandler(IRepository repository, IMapper mapper/*, IUserService userService*/) : base(repository, mapper)
         {
-            _userService = userService;
+            //_userService = userService;
         }
 
-        protected override async Task<List<KeyValuePair<string, string>>> ValidateViewModel(EditUserViewModel viewModel)
-        {
-            return await _userService.ValidateUserAsync(viewModel);
-        }
+        //protected override async Task<List<KeyValuePair<string, string>>> ValidateViewModel(EditUserViewModel viewModel)
+        //{
+        //    return await _userService.ValidateUserAsync(viewModel);
+        //}
     }
 }

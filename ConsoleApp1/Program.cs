@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
+using ContestantRegister.Framework.Ddd;
 using ContestantRegister.Framework.Filter;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +20,19 @@ namespace ConsoleApp1
         {
             //TODO написать нормальные тесты 
             var context = new ApplicationDbContext();
-            int p = 3;
-            var user = context.Contests.SingleOrDefaultAsync(x => x.Id.Equals(p)).Result;
+            var s1 = new Spec<Area>(x => x.Id < 5);
+            var s2 = new Spec<Area>(x => x.Id < 5);
+            Expression<Func<Area, bool>> e1 = (x) => x.Id < 5;
+            Expression<Func<Area, bool>> e2 = (x) => x.Id < 5;
+            var b = s1 == s2;
+            var b1 = e1 == e2;
+
+            var s3 = s1 && s2;
+            var r1 = context.Areas.Where(s1).ToList();
+            var r2 = context.Areas.Where(s2).ToList();
+            var r3 = context.Areas.Where(s3).ToList();
+
+            
 
             var u = context
                 //.Cities
