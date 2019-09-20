@@ -17,19 +17,16 @@ namespace ContestantRegister.BackgroundJobs
 
         public void Execute()
         {
-            using (_context)
+            var contests = _context.Contests.Where(c => c.RegistrationEnd < DateTimeService.SfuServerNow &&
+                                                        (c.ContestStatus == ContestStatus.RegistrationOpened ||
+                                                         c.ContestStatus == ContestStatus.ConfirmParticipation ||
+                                                         c.ContestStatus == ContestStatus.ConfirmParticipationOrRegister));
+            foreach (var contest in contests)
             {
-                var contests = _context.Contests.Where(c => c.RegistrationEnd < DateTimeService.SfuServerNow &&
-                                                            (c.ContestStatus == ContestStatus.RegistrationOpened ||
-                                                             c.ContestStatus == ContestStatus.ConfirmParticipation ||
-                                                             c.ContestStatus == ContestStatus.ConfirmParticipationOrRegister));
-                foreach (var contest in contests)
-                {
-                    contest.ContestStatus = ContestStatus.RegistrationClosed;
-                }
-
-                _context.SaveChanges();
+                contest.ContestStatus = ContestStatus.RegistrationClosed;
             }
+
+            _context.SaveChanges();
         }
     }
 }

@@ -43,6 +43,8 @@ namespace ContestantRegister.Framework.Cqrs
             var types = _decoratorTypes.ToList();//создается отдельный список, чтобы не менять поле, добавляя бизнес-операцию
             types.Insert(0, _businessOperationCommandHandlerType);
 
+            //нельзя менять на foreach, ибо он не гарантирует порядок перебора, а порядок добавления декораторов важен
+            // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < types.Count; i++)
             {
                 var ctor = types[i].GetConstructors().Single();

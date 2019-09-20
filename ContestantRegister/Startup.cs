@@ -34,11 +34,11 @@ using IUrlHelper = Microsoft.AspNetCore.Mvc.IUrlHelper;
 
 namespace ContestantRegister
 {
-    public class TestCommandMiddleware : CommandHandlerMiddleware
+    public class FirstTestCommandMiddleware : CommandHandlerMiddleware
     {
         private readonly IEmailSender _emailSender;
 
-        public TestCommandMiddleware(object next, IEmailSender emailSender) : base(next)
+        public FirstTestCommandMiddleware(object next, IEmailSender emailSender) : base(next)
         {
             _emailSender = emailSender;
         }
@@ -49,11 +49,26 @@ namespace ContestantRegister
         }
     }
 
-    public class TestQueryMiddleware : QueryHandlerMiddleware
+    public class SecondTestCommandMiddleware : CommandHandlerMiddleware
     {
         private readonly IEmailSender _emailSender;
 
-        public TestQueryMiddleware(IEmailSender emailSender, object next) : base(next)
+        public SecondTestCommandMiddleware(object next, IEmailSender emailSender) : base(next)
+        {
+            _emailSender = emailSender;
+        }
+
+        public override async Task HandleAsync(ICommand command)
+        {
+            await HandleNextAsync(command);
+        }
+    }
+
+    public class FirstTestQueryMiddleware : QueryHandlerMiddleware
+    {
+        private readonly IEmailSender _emailSender;
+
+        public FirstTestQueryMiddleware(IEmailSender emailSender, object next) : base(next)
         {
             _emailSender = emailSender;
         }
@@ -61,6 +76,21 @@ namespace ContestantRegister
         public override async Task<object> HandleAsync(IQuery<object> query)
         {
             return await HandleNextAsync(query);
+        }
+    }
+
+    public class SecondTestQueryMiddleware : QueryHandlerMiddleware
+    {
+        private readonly IEmailSender _emailSender;
+
+        public SecondTestQueryMiddleware(IEmailSender emailSender, object next) : base(next)
+        {
+            _emailSender = emailSender;
+        }
+
+        public override Task<object> HandleAsync(IQuery<object> query)
+        {
+            return HandleNextAsync(query);
         }
     }
 
@@ -108,8 +138,10 @@ namespace ContestantRegister
 
             //CQRS
             var metadata = new MiddlewareMetadata();
-            metadata.AddCommandMiddleware<TestCommandMiddleware>();
-            metadata.AddQueryMiddleware<TestQueryMiddleware>();
+            //metadata.AddCommandMiddleware<FirstTestCommandMiddleware>();
+            //metadata.AddCommandMiddleware<SecondTestCommandMiddleware>();
+            //metadata.AddQueryMiddleware<FirstTestQueryMiddleware>();
+            //metadata.AddQueryMiddleware<SecondTestQueryMiddleware>();
             services.AddScoped(provider => metadata);
             services.AddScoped<IHandlerDispatcher, HandlerDispatcher>();
 
@@ -211,6 +243,5 @@ namespace ContestantRegister
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-        
     }
 }

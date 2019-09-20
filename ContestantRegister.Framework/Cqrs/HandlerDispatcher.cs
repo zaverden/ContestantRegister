@@ -53,12 +53,14 @@ namespace ContestantRegister.Framework.Cqrs
         private object AddMiddlevares(object handler, IList<Type> middlewares)
         {
             var cur = handler;
-            for (int i = middlewares.Count - 1; i >= 0; i--)
+            //порядок добавления middleware обратный, так как первый добавленный middleware должен декорировать все последующие
+            //нельзя менять на foreach, ибо он не гарантирует порядок перебора, а порядок добавления middlewares важен
+            for (var i = middlewares.Count - 1; i >= 0; i--)
             {
                 var ctor = middlewares[i].GetConstructors().Single();
                 var parameters = ctor.GetParameters();
                 var paramValues = new object[parameters.Length];
-                for (int j = 0; j < parameters.Length; j++)
+                for (var j = 0; j < parameters.Length; j++)
                 {
                     var parameter = parameters[j];
                     if (parameter.ParameterType == typeof(object))
