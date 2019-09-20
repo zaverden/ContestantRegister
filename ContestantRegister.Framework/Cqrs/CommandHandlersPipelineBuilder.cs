@@ -12,6 +12,8 @@ namespace ContestantRegister.Framework.Cqrs
         public CommandHandlersPipelineBuilder<TCommand> AddBusinesOperation<TCommandHandler>()
             where TCommandHandler : ICommandHandler<TCommand>
         {
+            if (_businessOperationCommandHandlerType != null) throw new InvalidOperationException("BusinesOperation already added");
+
             _businessOperationCommandHandlerType = typeof(TCommandHandler);
 
             return this;
@@ -20,6 +22,8 @@ namespace ContestantRegister.Framework.Cqrs
         public CommandHandlersPipelineBuilder<TCommand> AddDecorator<TCommandDecorator>()
             where TCommandDecorator : CommandHandlerDecorator<TCommand>
         {
+            if (_businessOperationCommandHandlerType == null) throw new InvalidOperationException("Add BusinesOperation before decorators");
+
             _decoratorTypes.Add(typeof(TCommandDecorator));
 
             return this;

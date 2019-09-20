@@ -20,6 +20,17 @@ namespace ConsoleApp1
         {
             //TODO написать нормальные тесты 
             var context = new ApplicationDbContext();
+            var area = new Area { Name = "Test Delete" };
+            context.Add(area);
+            context.SaveChanges();
+
+            var c1 = new ApplicationDbContext();
+            var ar = new Area {Id = area.Id};
+            c1.Remove(ar);
+            c1.SaveChanges();
+
+            var deq = context.Areas.Find(10);
+
             var s1 = new Spec<Area>(x => x.Id < 5);
             var s2 = new Spec<Area>(x => x.Id < 5);
             Expression<Func<Area, bool>> e1 = (x) => x.Id < 5;

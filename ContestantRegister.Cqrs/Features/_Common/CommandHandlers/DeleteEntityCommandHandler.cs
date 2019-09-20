@@ -1,10 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using ContestantRegister.Cqrs.Features._Common.Commands;
+using ContestantRegister.Domain;
 using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public class DeleteEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity, TKey>> where TEntity : class
+    public class DeleteEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity, TKey>> 
+        where TEntity : class, IHasId<TKey>, new()
+        where TKey : IEquatable<TKey>
     {
         public DeleteEntityCommandHandler(IRepository repository) : base(repository)
         {
@@ -12,8 +16,7 @@ namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 
         public override async Task HandleAsync(DeleteEntityByIdCommand<TEntity, TKey> command)
         {
-            var entity = await Repository.FindAsync<TEntity>(command.Id);
-            Repository.Remove(entity);
+            Repository.RemoveById<TEntity, TKey>(command.Id);
             await Repository.SaveChangesAsync();
         }
     }

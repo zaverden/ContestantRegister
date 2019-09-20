@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ContestantRegister.Data;
+using ContestantRegister.Domain;
 using ContestantRegister.Domain.Repository;
+using ContestantRegister.Models;
 
 namespace ContestantRegister.Infrastructure
 {
@@ -19,6 +22,14 @@ namespace ContestantRegister.Infrastructure
         public void Remove<TEntity>(TEntity entity)
         {
             Context.Remove(entity);
+        }
+
+        public void RemoveById<TEntity, TKey>(TKey id) 
+            where TEntity : class, IHasId<TKey>, new()
+            where TKey : IEquatable<TKey>
+        {
+            var entity = new TEntity {Id = id};
+            Context.Remove<TEntity>(entity);
         }
 
         public void Update<TEntity>(TEntity entity)

@@ -27,8 +27,10 @@ namespace ContestantRegister.Framework.Cqrs
                 cur = ctor.Invoke(new object[] {cur});
             }
 
-            dynamic d = cur;
-            object res = d.HandleAsync(command);
+            object res = cur.GetType().GetMethod("HandleAsync").Invoke(cur, new object[]{command});
+            /*dynamic d = cur;
+            object res = d.HandleAsync(command);*/
+
             return (Task) res;
         }
 

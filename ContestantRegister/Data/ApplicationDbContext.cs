@@ -8,14 +8,16 @@ namespace ContestantRegister.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-
-        public static readonly ILoggerFactory loggerFactory = new LoggerFactory(new[] {
-              new ConsoleLoggerProvider((_, __) => true, true)
-        });
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
+#if DEBUG
+        public static readonly ILoggerFactory loggerFactory = new LoggerFactory(new[] {
+              new ConsoleLoggerProvider((_, __) => true, true)
+        });
+        
 
         public ApplicationDbContext()
         {
@@ -27,7 +29,7 @@ namespace ContestantRegister.Data
             .UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
             .EnableSensitiveDataLogging()
             .UseNpgsql("Host=localhost;Database=Prod-08-11-2018;Username=postgres;Password=postgres");
-
+#endif
         public DbSet<Area> Areas { get; set; }
 
         public DbSet<City> Cities { get; set; }

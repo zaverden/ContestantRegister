@@ -113,8 +113,8 @@ namespace ContestantRegister
 
             //CQRS
             var metadata = new MiddlewareMetadata();
-            //metadata.AddCommandMiddleware<TestCommandMiddleware>();
-            //metadata.AddQueryMiddleware<TestQueryMiddleware>();
+            metadata.AddCommandMiddleware<TestCommandMiddleware>();
+            metadata.AddQueryMiddleware<TestQueryMiddleware>();
             services.AddScoped(provider => metadata);
             services.AddScoped<IHandlerDispatcher, HandlerDispatcher>();
 
