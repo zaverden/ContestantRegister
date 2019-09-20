@@ -1,12 +1,9 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.BackgroundJobs;
-using ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers;
-using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
 using ContestantRegister.Data;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Features.Admin.Areas.Utils;
@@ -39,33 +36,31 @@ namespace ContestantRegister
 {
     public class TestCommandMiddleware : CommandHandlerMiddleware
     {
-        public TestCommandMiddleware(object next) : base(next)
+        private readonly IEmailSender _emailSender;
+
+        public TestCommandMiddleware(object next, IEmailSender emailSender) : base(next)
         {
+            _emailSender = emailSender;
         }
 
         public override Task HandleAsync(ICommand command)
         {
-            var handlemethod = Next.GetType().GetMethods().Single(x => x.Name == "HandleAsync");
-            var res = handlemethod.Invoke(Next, new[] {command});
-            return (Task) res;
+            return HandleNextAsync(command);
         }
     }
 
     public class TestQueryMiddleware : QueryHandlerMiddleware
     {
-        public TestQueryMiddleware(object next) : base(next)
+        private readonly IEmailSender _emailSender;
+
+        public TestQueryMiddleware(IEmailSender emailSender, object next) : base(next)
         {
+            _emailSender = emailSender;
         }
 
         public override async Task<object> HandleAsync(IQuery<object> query)
         {
-            var handlemethod = Next.GetType().GetMethods().Single(x => x.Name == "HandleAsync");
-            var task = (Task) handlemethod.Invoke(Next, new[] { query });
-            await task;
-            var prop = task.GetType().GetProperty("Result");
-            var res = prop.GetValue(task);
-
-            return res;
+            return await HandleNextAsync(query);
         }
     }
 

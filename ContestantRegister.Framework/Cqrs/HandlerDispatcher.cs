@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,18 +20,12 @@ namespace ContestantRegister.Framework.Cqrs
         public Task ExecuteCommandAsync<TCommand>(TCommand command) where TCommand : ICommand
         {
             object cur = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
-            for (int i = _middlewareMetadata.CommandMiddlewares.Count - 1; i >=0; i--)
-            {
-                var middlewareType = _middlewareMetadata.CommandMiddlewares[i];
-                //Todo рефакторинг? добавить вытягивание параметров из сервис-провайдера
-                var ctor = middlewareType.GetConstructors().Single();
-                cur = ctor.Invoke(new object[] {cur});
-            }
 
+            cur = AddMiddlevares(cur, _middlewareMetadata.CommandMiddlewares);
+
+            //больше люблю reflection, чем dynamic
             object res = cur.GetType().GetMethod("HandleAsync").Invoke(cur, new object[]{command});
-            /*dynamic d = cur;
-            object res = d.HandleAsync(command);*/
-
+            
             return (Task) res;
         }
 
@@ -45,22 +40,36 @@ namespace ContestantRegister.Framework.Cqrs
                 return await typedTask;
             }
 
-            for (int i = _middlewareMetadata.QueryMiddlewares.Count - 1; i >= 0; i--)
-            {
-                var middlewareType = _middlewareMetadata.QueryMiddlewares[i];
-                //Todo рефакторинг? добавить вытягивание параметров из сервис-провайдера
-                var ctor = middlewareType.GetConstructors().Single();
-                cur = ctor.Invoke(new object[] { cur });
-            }
+            cur = AddMiddlevares(cur, _middlewareMetadata.QueryMiddlewares);
 
-            dynamic d = cur;
+            //ради сравнения тут dynamic, а не reflection
+            dynamic d = cur; // обойтись без reflection не удастся, так как тип query не известен
             var task = (Task)d.HandleAsync(query);
             await task;
-            var prop = task.GetType().GetProperty("Result");
-            var res = prop.GetValue(task);
+            var res = ((dynamic) task).Result;
             return (TResult) res;
+        }
 
-            
+        private object AddMiddlevares(object handler, IList<Type> middlewares)
+        {
+            var cur = handler;
+            for (int i = middlewares.Count - 1; i >= 0; i--)
+            {
+                var ctor = middlewares[i].GetConstructors().Single();
+                var parameters = ctor.GetParameters();
+                var paramValues = new object[parameters.Length];
+                for (int j = 0; j < parameters.Length; j++)
+                {
+                    var parameter = parameters[j];
+                    if (parameter.ParameterType == typeof(object))
+                        paramValues[j] = cur;
+                    else
+                        paramValues[j] = _serviceProvider.GetService(parameter.ParameterType);
+                }
+                cur = ctor.Invoke(paramValues);
+            }
+
+            return cur;
         }
     }
 }
