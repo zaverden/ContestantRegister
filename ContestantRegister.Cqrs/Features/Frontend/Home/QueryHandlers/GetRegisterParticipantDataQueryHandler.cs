@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Queries;
-using ContestantRegister.Cqrs.Features.Frontend.Home.ViewModels;
+using ContestantRegister.Cqrs.Features.Shared.ViewModels;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Extensions;

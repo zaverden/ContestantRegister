@@ -4,7 +4,6 @@ using ContestantRegister.Models;
 using ContestantRegister.ViewModels.Contest;
 using ContestantRegister.ViewModels.Contest.Registration;
 using ContestantRegister.ViewModels.ListItem;
-using StudyPlaceDropdownItemViewModel = ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels.StudyPlaceDropdownItemViewModel;
 
 namespace ContestantRegister.Utils
 {
@@ -29,14 +28,6 @@ namespace ContestantRegister.Utils
             CreateMap<ContestArea, ContestAreaListItemViewModel>()
                 .ForMember(vm => vm.Text, opt => opt.MapFrom(ca => ca.Area.Name))
                 .ForMember(vm => vm.Value, opt => opt.MapFrom(ca => ca.Id));
-
-            CreateMap<StudyPlace, StudyPlaceDropdownItemViewModel>()
-                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
-                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => sp is School ? sp.ShortName : $"{sp.ShortName} ({sp.FullName})"));
-
-            CreateMap<Institution, StudyPlaceDropdownItemViewModel>()
-                .ForMember(splivm => splivm.Type, opt => opt.MapFrom(sp => sp.GetType().Name))
-                .ForMember(splivm => splivm.ShortName, opt => opt.MapFrom(sp => $"{sp.ShortName} ({sp.FullName})"));
 
             CreateMap<ApplicationUser, ViewModels.ListItemViewModels.UserListItemViewModel>()
                 .ForMember(ulivm => ulivm.DisplayName, opt => opt.MapFrom(au => $"{au.Name} {au.Surname} ({au.Email})"));

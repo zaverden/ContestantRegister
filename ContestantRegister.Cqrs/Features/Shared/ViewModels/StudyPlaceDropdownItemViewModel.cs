@@ -1,4 +1,4 @@
-﻿namespace ContestantRegister.Cqrs.Features.Frontend.Manage.ViewModels
+﻿namespace ContestantRegister.Cqrs.Features.Shared.ViewModels
 {
     public class StudyPlaceDropdownItemViewModel
     {

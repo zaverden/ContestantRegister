@@ -8,7 +8,7 @@ using ContestantRegister.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
+using ContestantRegister.Cqrs.Features.Shared.ViewModels;
 using ContestantRegister.Domain;
 using ContestantRegister.Framework.Filter;
 using ContestantRegister.Models;
