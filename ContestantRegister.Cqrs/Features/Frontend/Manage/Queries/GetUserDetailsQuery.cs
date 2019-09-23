@@ -5,6 +5,6 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.Queries
 {
     public class GetUserDetailsQuery : IQuery<IndexViewModel>
     {
-        public string CurrentUserEmail { get; set; }
+        
     }
 }

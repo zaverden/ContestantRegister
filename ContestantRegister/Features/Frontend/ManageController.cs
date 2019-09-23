@@ -28,7 +28,7 @@ namespace ContestantRegister.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var viewModel = await _handlerDispatcher.ExecuteQueryAsync(new GetUserDetailsQuery {CurrentUserEmail = User.Identity.Name });
+            var viewModel = await _handlerDispatcher.ExecuteQueryAsync(new GetUserDetailsQuery ());
             viewModel.StatusMessage = StatusMessage;
                 
             await FillViewDataAsync(viewModel);
@@ -50,7 +50,7 @@ namespace ContestantRegister.Controllers
         {
             try
             {
-                await _handlerDispatcher.ExecuteCommandAsync(new SaveUserCommand { ViewModel = viewModel, CurrentUserEmail = User.Identity.Name });
+                await _handlerDispatcher.ExecuteCommandAsync(new SaveUserCommand { ViewModel = viewModel });
             }
             catch (ValidationException e)
             {
@@ -90,7 +90,6 @@ namespace ContestantRegister.Controllers
             {
                 await _handlerDispatcher.ExecuteCommandAsync(new ChangePasswordCommand
                 {
-                    CurrentUserEmail = User.Identity.Name,
                     OldPassword = viewModel.OldPassword,
                     NewPassword = viewModel.NewPassword,
                 });

@@ -16,10 +16,12 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
     public class CreateUserCommandHandler : CreateMappedEntityCommandHandler<CreateUserCommand, ApplicationUser, CreateUserViewModel>
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CreateUserCommandHandler(IRepository repository, IMapper mapper, UserManager<ApplicationUser> userManager) : base(repository, mapper)
+        public CreateUserCommandHandler(IRepository repository, IMapper mapper, UserManager<ApplicationUser> userManager, ICurrentUserService currentUserService) : base(repository, mapper)
         {
             _userManager = userManager;
+            _currentUserService = currentUserService;
         }
 
         public override async Task HandleAsync(CreateUserCommand command)
@@ -38,7 +40,7 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
         {
             entity.UserName = command.Entity.Email;
             entity.RegistrationDateTime = DateTimeService.SfuServerNow;
-            entity.RegistredBy = await _userManager.FindByEmailAsync(command.CurrentUserEmail);
+            entity.RegistredBy = await _userManager.FindByEmailAsync(_currentUserService.Email);
         }
     }
 }

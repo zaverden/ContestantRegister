@@ -39,10 +39,6 @@ namespace ContestantRegister.Controllers
         {
             await FillViewDataAsync(viewModel);
         }
-        protected override void InitCreateCommand(CreateUserCommand command)
-        {
-            command.CurrentUserEmail = User.Identity.Name;
-        }
         private async Task FillViewDataAsync(UserViewModelBase viewModel = null)
         {
             var data = await HandlerDispatcher.ExecuteQueryAsync(new GetDataForUserDetailsQuery());

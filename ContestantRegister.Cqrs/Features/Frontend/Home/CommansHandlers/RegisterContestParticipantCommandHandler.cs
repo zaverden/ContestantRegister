@@ -17,13 +17,22 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Home.CommansHandlers
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly IUrlHelper _urlHelper;
-        public RegisterContestParticipantCommandHandler(IUserService userService, IMapper mapper, UserManager<ApplicationUser> userManager, IEmailSender emailSender, IUrlHelper urlHelper)
+        private readonly ICurrentUserService _currentUserService;
+
+        public RegisterContestParticipantCommandHandler(
+            IUserService userService, 
+            IMapper mapper, 
+            UserManager<ApplicationUser> userManager, 
+            IEmailSender emailSender, 
+            IUrlHelper urlHelper,
+            ICurrentUserService currentUserService)
         {
             _userService = userService;
             _mapper = mapper;
             _userManager = userManager;
             _emailSender = emailSender;
             _urlHelper = urlHelper;
+            _currentUserService = currentUserService;
         }
 
         public async Task HandleAsync(RegisterContestParticipantCommand command)
@@ -36,7 +45,7 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Home.CommansHandlers
             {
                 UserName = command.RegisterContestParticipantViewModel.Email,
                 RegistrationDateTime = DateTimeService.SfuServerNow,
-                RegistredBy = await _userManager.FindByEmailAsync(command.CurrentUserEmail)
+                RegistredBy = await _userManager.FindByEmailAsync(_currentUserService.Email)
             };
 
             _mapper.Map(command.RegisterContestParticipantViewModel, user);

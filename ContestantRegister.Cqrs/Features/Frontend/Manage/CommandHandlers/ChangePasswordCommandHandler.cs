@@ -5,6 +5,7 @@ using ContestantRegister.Cqrs.Features.Frontend.Manage.Commands;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Exceptions;
+using ContestantRegister.Services.InfrastructureServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
@@ -15,19 +16,27 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<ChangePasswordCommandHandler> _logger;
-        public ChangePasswordCommandHandler(IRepository repository, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<ChangePasswordCommandHandler> logger) : base(repository)
+        private readonly ICurrentUserService _currentUserService;
+
+        public ChangePasswordCommandHandler(
+            IRepository repository, 
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, 
+            ILogger<ChangePasswordCommandHandler> logger,
+            ICurrentUserService currentUserService) : base(repository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _currentUserService = currentUserService;
         }
 
         public override async Task HandleAsync(ChangePasswordCommand command)
         {
-            var user = await _userManager.FindByEmailAsync(command.CurrentUserEmail);
+            var user = await _userManager.FindByEmailAsync(_currentUserService.Email);
             if (user == null)
             {
-                throw new ApplicationException($"Unable to load user with email '{command.CurrentUserEmail}'.");
+                throw new ApplicationException($"Unable to load user with email '{_currentUserService.Email}'.");
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, command.OldPassword, command.NewPassword);

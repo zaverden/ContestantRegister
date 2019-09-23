@@ -6,6 +6,6 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.Commands
 {
     public class CreateUserCommand : CreateMappedEntityCommand<ApplicationUser, CreateUserViewModel>
     {
-        public string CurrentUserEmail { get; set; }
+        
     }
 }
