@@ -14,9 +14,12 @@ namespace ContestantRegister.Services.Extensions
         Task<List<T>> ToListAsync<T>(IQueryable<T> source);
         Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate);
         Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source);
+        Task<T> SingleAsync<T>(IQueryable<T> source);
         Task<T> SingleAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
         Task<bool> AnyAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
         Task<T> FirstOrDefaultAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
+        Task<T> FirstOrDefaultAsync<T>(IQueryable<T> source);
+        Task<int> CountAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate);
         IQueryable<TEntity> Include<TEntity, TProperty>(IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class;
         IQueryable<TEntity> Include<TEntity>(IQueryable<TEntity> source, string navigationPropertyPath) where TEntity : class;
     }
@@ -45,6 +48,11 @@ namespace ContestantRegister.Services.Extensions
             return OrmExtensionsHider.SingleAsync(source, predicate);
         }
 
+        public static Task<T> SingleAsync<T>(this IQueryable<T> source)
+        {
+            return OrmExtensionsHider.SingleAsync(source);
+        }
+
         public static Task<bool> AnyAsync<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate)
         {
             return OrmExtensionsHider.AnyAsync(source, predicate);
@@ -53,6 +61,16 @@ namespace ContestantRegister.Services.Extensions
         public static Task<T> FirstOrDefaultAsync<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate)
         {
             return OrmExtensionsHider.FirstOrDefaultAsync(source, predicate);
+        }
+
+        public static Task<T> FirstOrDefaultAsync<T>(this IQueryable<T> source)
+        {
+            return OrmExtensionsHider.FirstOrDefaultAsync(source);
+        }
+
+        public static Task<int> CountAsync<T>(this IQueryable<T> source, Expression<Func<T, bool>> predicate)
+        {
+            return OrmExtensionsHider.CountAsync(source, predicate);
         }
 
         public static IQueryable<TEntity> Include<TEntity, TProperty>(this IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class

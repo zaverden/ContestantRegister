@@ -1,5 +1,5 @@
 ﻿@using ContestantRegister.Domain
-@model ContestantRegister.ViewModels.Contest.Registration.IndividualContestRegistrationViewModel
+@model ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.ViewModels.IndividualContestRegistrationViewModel
 
 
 @if (Model.ParticipantType == ParticipantType.Pupil)
@@ -112,6 +112,7 @@
 <input type="hidden" asp-for="IsProgrammingLanguageNeeded" />
 <input type="hidden" asp-for="ProgrammingLanguage" />
 <input type="hidden" asp-for="IsOutOfCompetitionAllowed" />
+<input type="hidden" asp-for="ShowRegistrationInfo" />
 
 <partial-script>
     <script type="text/javascript">

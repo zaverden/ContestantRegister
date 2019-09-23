@@ -4,13 +4,23 @@ using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.BackgroundJobs;
+using ContestantRegister.Cqrs.Features.Admin.Areas.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Cities.Utils;
+using ContestantRegister.Cqrs.Features.Admin.CompClasses.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Contests.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Emails.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Institutions.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Regions.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Schools.Utils;
+using ContestantRegister.Cqrs.Features.Admin.Users.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Account.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Contests.Common.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Home.Utils;
+using ContestantRegister.Cqrs.Features.Frontend.Manage.Utils;
 using ContestantRegister.Data;
 using ContestantRegister.Domain.Repository;
-using ContestantRegister.Features.Admin.Areas.Utils;
-using ContestantRegister.Features.Admin.Cities.Utils;
-using ContestantRegister.Features.Admin.Institutions.Utils;
-using ContestantRegister.Features.Admin.Schools.Utils;
-using ContestantRegister.Features.Frontend.Account.Utils;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Infrastructure;
 using ContestantRegister.Models;
@@ -149,6 +159,7 @@ namespace ContestantRegister
             services.AddScoped<IReadRepository, EfCoreReadRepository>();
             services.AddScoped<IRepository, EfCoreRepository>();
             services.AddScoped<IMyUrlHelper, MvcUrlHelper>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddTransient<IEmailSender, EmailSender>();
 
             //TODO можно заменить на QuerableExecutor, который инжектируется во все хендлерыю но получаем еще одну зависимость и теряем привычный синтаксис экстеншн-методов
@@ -170,6 +181,9 @@ namespace ContestantRegister
             services.RegisterAccountServices();
             services.RegisterHomeServices();
             services.RegisterManageServices();
+            services.RegisterCommonContestServices();
+            services.RegisterTeamContestServices();
+            services.RegisterIndividualContestServices();
 
             services.AddMvc();
 

@@ -20,6 +20,11 @@ namespace ContestantRegister.Infrastructure
             return EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(source);
         }
 
+        public Task<T> SingleAsync<T>(IQueryable<T> source)
+        {
+            return EntityFrameworkQueryableExtensions.SingleAsync(source);
+        }
+
         public Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
             return EntityFrameworkQueryableExtensions.SingleOrDefaultAsync(source, predicate);
@@ -38,6 +43,16 @@ namespace ContestantRegister.Infrastructure
         public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate)
         {
             return EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(source, predicate);
+        }
+
+        public Task<T> FirstOrDefaultAsync<T>(IQueryable<T> source)
+        {
+            return EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(source);
+        }
+
+        public Task<int> CountAsync<T>(IQueryable<T> source, Expression<Func<T, bool>> predicate)
+        {
+            return EntityFrameworkQueryableExtensions.CountAsync(source, predicate);
         }
 
         public IQueryable<TEntity> Include<TEntity, TProperty>(IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class

@@ -44,8 +44,8 @@ namespace ConsoleApp1
             var r3 = context.Areas.Where(s3).ToList();
 
             
-
             var u = context
+                    
                 //.Cities
                 //.SingleOrDefault(x => x.Id == 5);
                 //.Include(x => x.StudyPlace)

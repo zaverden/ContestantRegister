@@ -10,6 +10,14 @@ namespace ContestantRegister.Services.Exceptions
             ValidationResult = validationResult;
         }
 
+        public ValidationException(string key, string message)
+        {
+            ValidationResult = new List<KeyValuePair<string, string>>
+            {
+                KeyValuePair.Create(key, message)
+            };
+        }
+
         public List<KeyValuePair<string, string>> ValidationResult { get; }
     }
 }

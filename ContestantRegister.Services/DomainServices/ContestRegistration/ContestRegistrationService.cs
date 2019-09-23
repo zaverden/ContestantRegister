@@ -1,22 +1,20 @@
 ﻿using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using ContestantRegister.Domain;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Extensions;
-using Microsoft.AspNetCore.Identity;
+using ContestantRegister.Services.InfrastructureServices;
 
 namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
     public interface IContestRegistrationService
     {
-        Task<List<KeyValuePair<string, string>>> ValidateCreateIndividualContestRegistrationAsync(ICreateIndividualContestRegistration viewModel, ClaimsPrincipal user);
-        Task<List<KeyValuePair<string, string>>> ValidateEditIndividualContestRegistrationAsync(IEditIndividualContestRegistration viewModel, ClaimsPrincipal user);
+        Task<List<KeyValuePair<string, string>>> ValidateCreateIndividualContestRegistrationAsync(ICreateIndividualContestRegistration viewModel);
+        Task<List<KeyValuePair<string, string>>> ValidateEditIndividualContestRegistrationAsync(IEditIndividualContestRegistration viewModel);
 
-        Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(ICreateTeamContestRegistration viewModel, ClaimsPrincipal user);
-        Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel, ClaimsPrincipal user);
+        Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(ICreateTeamContestRegistration viewModel);
+        Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel);
     }
 
     //TODO по идее, эти сервисы должны оперировать доменными объектами, а не интерфейсами
@@ -26,15 +24,15 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
     public class ContestRegistrationService : IContestRegistrationService
     {
         private readonly IReadRepository _readRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ICurrentUserService _currentUserService;
 
-        public ContestRegistrationService(IReadRepository readRepository, UserManager<ApplicationUser> userManager)
+        public ContestRegistrationService(IReadRepository readRepository, ICurrentUserService currentUserService)
         {
             _readRepository = readRepository;
-            _userManager = userManager;
+            _currentUserService = currentUserService;
         }
 
-        private async Task<List<KeyValuePair<string, string>>> ValidateIndividualContestRegistrationAsync(IIndividualContestRegistration viewModel, ClaimsPrincipal user, bool editRegistration)
+        private async Task<List<KeyValuePair<string, string>>> ValidateIndividualContestRegistrationAsync(IIndividualContestRegistration viewModel, bool editRegistration)
         {
             var result = new List<KeyValuePair<string, string>>();
 
@@ -73,8 +71,8 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
             if (viewModel.Participant1Id == viewModel.TrainerId) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Участник не может быть своим тренером"));
             if (viewModel.Participant1Id == viewModel.ManagerId) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть своим руководителем"));
 
-            var currentUser = await _userManager.GetUserAsync(user);
-            if (!user.IsInRole(Roles.Admin) && viewModel.Participant1Id != currentUser.Id && viewModel.TrainerId != currentUser.Id && viewModel.ManagerId != currentUser.Id)
+            var currentUserId = _currentUserService.Id;
+            if (!_currentUserService.IsAdmin && viewModel.Participant1Id != currentUserId && viewModel.TrainerId != currentUserId && viewModel.ManagerId != currentUserId)
                 result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
 
             var participant = await _readRepository.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Id == viewModel.Participant1Id);
@@ -109,27 +107,27 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
             return result;
         }
 
-        public Task<List<KeyValuePair<string, string>>> ValidateCreateIndividualContestRegistrationAsync(ICreateIndividualContestRegistration viewModel, ClaimsPrincipal user)
+        public Task<List<KeyValuePair<string, string>>> ValidateCreateIndividualContestRegistrationAsync(ICreateIndividualContestRegistration viewModel)
         {
-            return ValidateIndividualContestRegistrationAsync(viewModel, user, false);
+            return ValidateIndividualContestRegistrationAsync(viewModel, false);
         }
 
-        public Task<List<KeyValuePair<string, string>>> ValidateEditIndividualContestRegistrationAsync(IEditIndividualContestRegistration viewModel, ClaimsPrincipal user)
+        public Task<List<KeyValuePair<string, string>>> ValidateEditIndividualContestRegistrationAsync(IEditIndividualContestRegistration viewModel)
         {
-            return ValidateIndividualContestRegistrationAsync(viewModel, user, true);
+            return ValidateIndividualContestRegistrationAsync(viewModel, true);
         }
 
-        public Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(ICreateTeamContestRegistration viewModel, ClaimsPrincipal user)
+        public Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(ICreateTeamContestRegistration viewModel)
         {
-            return ValidateTeamContestRegistrationAsync(viewModel, user, false);
+            return ValidateTeamContestRegistrationAsync(viewModel, false);
         }
 
-        public Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel, ClaimsPrincipal user)
+        public Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel)
         {
-            return ValidateTeamContestRegistrationAsync(viewModel, user, true);
+            return ValidateTeamContestRegistrationAsync(viewModel, true);
         }
 
-        private async Task<List<KeyValuePair<string, string>>> ValidateTeamContestRegistrationAsync(ITeamContestRegistration viewModel, ClaimsPrincipal user, bool editRegistration)
+        private async Task<List<KeyValuePair<string, string>>> ValidateTeamContestRegistrationAsync(ITeamContestRegistration viewModel, bool editRegistration)
         {
             var result = new List<KeyValuePair<string, string>>();
 
@@ -266,14 +264,14 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
                 result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть руководителем"));
             }
 
-            var currentUser = await _userManager.GetUserAsync(user);
-            if (!user.IsInRole(Roles.Admin) && 
-                viewModel.Participant1Id != currentUser.Id &&
-                viewModel.Participant2Id != currentUser.Id &&
-                viewModel.Participant3Id != currentUser.Id &&
-                viewModel.ReserveParticipantId != currentUser.Id &&
-                viewModel.TrainerId != currentUser.Id && 
-                viewModel.ManagerId != currentUser.Id)
+            var currentUserId = _currentUserService.Id;
+            if (!_currentUserService.IsAdmin && 
+                viewModel.Participant1Id != currentUserId &&
+                viewModel.Participant2Id != currentUserId &&
+                viewModel.Participant3Id != currentUserId &&
+                viewModel.ReserveParticipantId != currentUserId &&
+                viewModel.TrainerId != currentUserId && 
+                viewModel.ManagerId != currentUserId)
             {
                 result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
             }

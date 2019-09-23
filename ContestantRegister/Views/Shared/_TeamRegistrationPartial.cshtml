@@ -1,5 +1,5 @@
 ﻿@using ContestantRegister.Domain
-@model ContestantRegister.ViewModels.Contest.Registration.TeamContestRegistrationViewModel
+@model ContestantRegister.Cqrs.Features.Frontend.Contests.Team.ViewModels.TeamContestRegistrationViewModel
 
 @if (Model.IsOutOfCompetitionAllowed)
 {
@@ -112,6 +112,7 @@
 <input type="hidden" asp-for="ProgrammingLanguage" />
 <input type="hidden" asp-for="IsOutOfCompetitionAllowed" />
 <input type="hidden" asp-for="IsEnglishLanguage" />
+<input type="hidden" asp-for="ShowRegistrationInfo" />
 
 <partial-script>
     <script type="text/javascript">

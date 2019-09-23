@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="CsvHelper" Version="7.1.0" />
     <PackageReference Include="EPPlus" Version="4.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.2" />
   </ItemGroup>
@@ -18,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Features\Admin\Contests\Commands\" />
-    <Folder Include="Features\Frontend\Contest\Individual\" />
-    <Folder Include="Features\Frontend\Contest\Team\" />
   </ItemGroup>
 
 </Project>
