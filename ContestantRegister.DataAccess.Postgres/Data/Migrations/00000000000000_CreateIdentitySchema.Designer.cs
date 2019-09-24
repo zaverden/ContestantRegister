@@ -17,7 +17,7 @@ namespace ContestantRegister.Data.Migrations
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rc3")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("SqlServer:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
