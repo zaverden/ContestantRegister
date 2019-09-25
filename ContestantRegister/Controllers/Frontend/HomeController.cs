@@ -58,12 +58,19 @@ namespace ContestantRegister.Controllers
             // Get the details of the exception that occurred
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
+            var viewModel = new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier};
+
             if (exceptionFeature != null)
             {
+                if (exceptionFeature.Error is EntityNotFoundException)
+                {
+                    viewModel.Message = "Не удалось найти запрашиваемый объект";
+                }
+
                 _logger.LogError(exceptionFeature.Error, $"Unhandled exception at {exceptionFeature.Path}");
             }
 
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(viewModel);
         }
 
         #region RegisterParticipant
@@ -218,12 +225,12 @@ namespace ContestantRegister.Controllers
         [Authorize]
         public async Task<IActionResult> UserDetails(string id)
         {
-            if (id == null) return NotFound();
+            if (id == null) throw new EntityNotFoundException();
 
             var contestantUser = await _handlerDispatcher.ExecuteQueryAsync(new GetUserForDetailsQuery {Id = id});
 
-            if (contestantUser == null) return NotFound();
-            
+            if (contestantUser == null) throw new EntityNotFoundException();
+
             return View(contestantUser);
         }
 

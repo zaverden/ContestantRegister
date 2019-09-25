@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -114,15 +114,15 @@ namespace ContestantRegister.Controllers._Common
         // GET: Entities/Edit/5
         public async Task<IActionResult> Edit(TKey id)
         {
-            if (id == null) return NotFound();
+            if (id == null) throw new EntityNotFoundException();
 
             var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdQuery
             {
                 Id = id,
                 IncludeProperties = GetIncludePropertiesForEdit()
             });
-            if (entity == null) return NotFound();
-            
+            if (entity == null) throw new EntityNotFoundException();
+
             var viewModel = _mapper.Map<TEditViewModel>(entity);
 
             await FillViewDataForEditAsync(viewModel);
@@ -161,10 +161,6 @@ namespace ContestantRegister.Controllers._Common
                     await FillViewDataForEditAsync(viewModel);
                     return View(viewModel);
                 }
-                catch (EntityNotFoundException)
-                {
-                    return NotFound();
-                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -177,14 +173,14 @@ namespace ContestantRegister.Controllers._Common
         // GET: Entities/Delete/5
         public async Task<IActionResult> Delete(TKey id)
         {
-            if (id == null) return NotFound();
+            if (id == null) throw new EntityNotFoundException();
 
             var entity = await HandlerDispatcher.ExecuteQueryAsync(new TGetEntityByIdForDeleteQuery
             {
                 Id = id,
                 IncludeProperties = GetIncludePropertiesForDelete()
             });
-            if (entity == null) return NotFound();
+            if (entity == null) throw new EntityNotFoundException();
 
             return View(entity);
         }

@@ -244,6 +244,9 @@ namespace ContestantRegister
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            //перехват исключений и генерация соответствующих статусов для API
+            //app.UseCustomExceptionHandlerMiddleware();
+
             context.Database.Migrate();
 
             app.UseStaticFiles();

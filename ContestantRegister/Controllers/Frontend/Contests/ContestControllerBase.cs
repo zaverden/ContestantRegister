@@ -53,45 +53,24 @@ namespace ContestantRegister.Controllers
             ViewData["StudyPlace"] = filter.StudyPlace;
             ViewData["Status"] = filter.Status;
 
-            try
-            {
-                var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestDetailsQuery{ContestId = id, Filter = filter});
-                return View(viewModel);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestDetailsQuery{ContestId = id, Filter = filter});
+            return View(viewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> Register(int id) //TODO как переименовать парамерт в contestId? Какой-то маппинг надо подставить
         {
-            try
-            {
-                var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestRegistrationForCreateQuery{ ContestId = id });
-                await FillViewDataForContestRegistrationAsync(viewModel);
-                return View(viewModel);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestRegistrationForCreateQuery{ ContestId = id });
+            await FillViewDataForContestRegistrationAsync(viewModel);
+            return View(viewModel);
         }
 
         [Authorize]
         public async Task<IActionResult> EditRegistration(int id)
         {
-            try
-            {
-                var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestRegistrationForEditQuery{RegistrationId = id});
-                await FillViewDataForContestRegistrationAsync(viewModel);
-                return View(viewModel);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var viewModel = await HandlerDispatcher.ExecuteQueryAsync(new GetContestRegistrationForEditQuery{RegistrationId = id});
+            await FillViewDataForContestRegistrationAsync(viewModel);
+            return View(viewModel);
         }
         
         protected async Task FillViewDataForContestRegistrationAsync(ContestRegistrationViewModel viewModel)
@@ -139,16 +118,9 @@ namespace ContestantRegister.Controllers
         {
             //TODO На UI переспросить "Вы точно уверены, что хотите удалить регистрацию?"
 
-            try
-            {
-                var command = new DeleteRegistrationCommand{RegistrationId = id};
-                await HandlerDispatcher.ExecuteCommandAsync(command);
-                return RedirectToAction(nameof(Details), new { id = command.ContestId });
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var command = new DeleteRegistrationCommand{RegistrationId = id};
+            await HandlerDispatcher.ExecuteCommandAsync(command);
+            return RedirectToAction(nameof(Details), new { id = command.ContestId });
         }
 
         [HttpPost]
@@ -158,10 +130,6 @@ namespace ContestantRegister.Controllers
             try
             {
                 await HandlerDispatcher.ExecuteCommandAsync(new SortingCommand {ContestId = id, ViewModel = viewModel});
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
             }
             catch (ValidationException e)
             {
@@ -182,18 +150,11 @@ namespace ContestantRegister.Controllers
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Sorting(int id)
         {
-            try
-            {
-                var res = await HandlerDispatcher.ExecuteQueryAsync(new SortingQuery {ContestId = id});
-                var data = await HandlerDispatcher.ExecuteQueryAsync(new GetDataForSortingQuery { ContestId = id, SelectedCompClassIds = res.CompClassIds });
-                FillSortingViewData(data.ContestAreas, data.CompClasses);
+            var res = await HandlerDispatcher.ExecuteQueryAsync(new SortingQuery {ContestId = id});
+            var data = await HandlerDispatcher.ExecuteQueryAsync(new GetDataForSortingQuery { ContestId = id, SelectedCompClassIds = res.CompClassIds });
+            FillSortingViewData(data.ContestAreas, data.CompClasses);
 
-                return View(res.ViewModel);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            return View(res.ViewModel);
         }
 
         public async Task<IActionResult> ImportFromContest(int id)
@@ -202,10 +163,6 @@ namespace ContestantRegister.Controllers
             {
                 var contests = await HandlerDispatcher.ExecuteQueryAsync(new ImportFromContestQuery {ContestId = id});
                 ViewData["FromContestId"] = new SelectList(contests, "Id", "Name");
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
             }
             catch (InvalidOperationException)
             {
@@ -231,10 +188,6 @@ namespace ContestantRegister.Controllers
             {
                 await HandlerDispatcher.ExecuteCommandAsync(new ImportFromContestCommand { ContestId = id, ViewModel = viewModel } );
             }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
             catch (InvalidOperationException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
@@ -251,16 +204,9 @@ namespace ContestantRegister.Controllers
         //TODO стоит ли делать POST вместо GET?
         public async Task<IActionResult> CancelRegistration(int id)
         {
-            try
-            {
-                var command = new CancelRegistrationCommand {RegistrationId = id};
-                await HandlerDispatcher.ExecuteCommandAsync(command);
-                return RedirectToAction(nameof(Details), new { id = command.ContestId });
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var command = new CancelRegistrationCommand {RegistrationId = id};
+            await HandlerDispatcher.ExecuteCommandAsync(command);
+            return RedirectToAction(nameof(Details), new { id = command.ContestId });
         }
 
         [Authorize]
@@ -280,7 +226,7 @@ namespace ContestantRegister.Controllers
         public async Task<IActionResult> Registration()
         {
             var registration = await HandlerDispatcher.ExecuteQueryAsync(new GetLastRegistrationForCurrentUserQuery());
-            if (registration == null) return NotFound();
+            if (registration == null) throw new EntityNotFoundException();
 
             return View(registration);
         }
@@ -288,30 +234,16 @@ namespace ContestantRegister.Controllers
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ImportParticipants(int id)
         {
-            try
-            {
-                var vm = await HandlerDispatcher.ExecuteQueryAsync(new ImportParticipantsQuery { ContestId = id });
-                return View(vm);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var vm = await HandlerDispatcher.ExecuteQueryAsync(new ImportParticipantsQuery { ContestId = id });
+            return View(vm);
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> ImportParticipants(int id, ImportParticipantsViewModel viewModel)
         {
-            try
-            {
-                await HandlerDispatcher.ExecuteCommandAsync(new ImportParticipantsCommand { ContestId = id, ViewModel = viewModel});
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
-
+            await HandlerDispatcher.ExecuteCommandAsync(new ImportParticipantsCommand { ContestId = id, ViewModel = viewModel});
+            
             return RedirectToAction(nameof(Details), new { id });
         }
 

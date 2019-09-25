@@ -12,7 +12,6 @@ using ContestantRegister.Cqrs.Features._Common.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
 using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
-using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
 using ContestantRegister.Domain;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Services.Exceptions;
@@ -73,11 +72,8 @@ namespace ContestantRegister.Controllers
         #region Change Password
         public IActionResult ChangePassword(string id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) throw new EntityNotFoundException();
+            
             //TODO нафиг проверку
             //var user = await _userManager.FindByIdAsync(id);
             //if (user == null)
@@ -91,23 +87,13 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangePassword(string id, PasswordViewModel viewModel)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) throw new EntityNotFoundException();
 
-            try
+            await HandlerDispatcher.ExecuteCommandAsync(new UserChangePasswordCommand
             {
-                await HandlerDispatcher.ExecuteCommandAsync(new UserChangePasswordCommand
-                {
-                    Id = id,
-                    Password = viewModel.Password
-                });
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+                Id = id,
+                Password = viewModel.Password
+            });
 
             return RedirectToAction(nameof(Index));
         }

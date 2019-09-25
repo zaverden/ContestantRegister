@@ -46,10 +46,6 @@ namespace ContestantRegister.Controllers
                     RegistrationId = id
                 });
             }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
             catch (ValidationException e)
             {
                 e.ValidationResult.ForEach(res => ModelState.AddModelError(res.Key, res.Value));
@@ -70,10 +66,6 @@ namespace ContestantRegister.Controllers
             {
                 var command = new CreateIndividualContestRegistrationCommand { ViewModel = viewModel };
                 await HandlerDispatcher.ExecuteCommandAsync(command);
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
             }
             catch (ValidationException e)
             {
@@ -96,19 +88,12 @@ namespace ContestantRegister.Controllers
         [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> ExportParticipants(int id)
         {
-            try
-            {
-                var res = await HandlerDispatcher.ExecuteQueryAsync(new GetExportedIndividualContestParticipantsQuery { ContestId = id });
+            var res = await HandlerDispatcher.ExecuteQueryAsync(new GetExportedIndividualContestParticipantsQuery { ContestId = id });
 
-                var ms = new MemoryStream();
-                res.ExcelPackage.SaveAs(ms);
-                ms.Position = 0;
-                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{res.ContestName}.xlsx");
-            }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            var ms = new MemoryStream();
+            res.ExcelPackage.SaveAs(ms);
+            ms.Position = 0;
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{res.ContestName}.xlsx");
         }
     }
 }
