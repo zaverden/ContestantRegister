@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Home.ViewModels;
-using ContestantRegister.Cqrs.Features.Shared.ViewModels;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 using ContestantRegister.Services.Exceptions;

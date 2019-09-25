@@ -17,7 +17,6 @@ using ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.ViewModels;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.QueryHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.ViewModels;
-using ContestantRegister.Cqrs.Features.Shared.ViewModels;
 using ContestantRegister.Domain;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Framework.Filter;

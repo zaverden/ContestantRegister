@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using ContestantRegister.Domain.Properties;
 using ContestantRegister.Models;
 using ContestantRegister.Services.DomainServices;

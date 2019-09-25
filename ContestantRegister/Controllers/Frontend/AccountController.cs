@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Cqrs.Features.Frontend.Account.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Account.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
-using ContestantRegister.Cqrs.Features.Shared.ViewModels;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Services.Exceptions;
 

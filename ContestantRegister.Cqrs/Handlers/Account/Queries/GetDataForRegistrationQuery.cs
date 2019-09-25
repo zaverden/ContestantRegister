@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ContestantRegister.Cqrs.Features.Shared.ViewModels;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Models;
 

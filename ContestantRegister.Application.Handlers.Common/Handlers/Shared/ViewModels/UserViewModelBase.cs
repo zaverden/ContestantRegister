@@ -4,7 +4,7 @@ using ContestantRegister.Domain.Properties;
 using ContestantRegister.Models;
 using ContestantRegister.Services.DomainServices;
 
-namespace ContestantRegister.Cqrs.Features.Admin.Users.ViewModels
+namespace ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels
 {
     public abstract class UserViewModelBase : IApplicationUser
     {

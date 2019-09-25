@@ -1,4 +1,4 @@
-namespace ContestantRegister.Cqrs.Features.Shared.ViewModels
+namespace ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels
 {
     public class ErrorViewModel
     {

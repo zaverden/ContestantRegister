@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ContestantRegister.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using ContestantRegister.Controllers._Common;
 using ContestantRegister.Cqrs.Features._Common.Commands;
 using ContestantRegister.Cqrs.Features._Common.Queries;

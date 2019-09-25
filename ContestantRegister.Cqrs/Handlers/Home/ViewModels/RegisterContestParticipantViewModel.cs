@@ -1,4 +1,4 @@
-﻿using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
+﻿using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Home.ViewModels
 {

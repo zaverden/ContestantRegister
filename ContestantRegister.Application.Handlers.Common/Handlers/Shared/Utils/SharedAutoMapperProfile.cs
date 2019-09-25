@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ContestantRegister.Cqrs.Features.Shared.ViewModels;
+using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
 using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Shared.Utils
