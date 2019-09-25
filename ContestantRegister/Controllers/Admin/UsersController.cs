@@ -11,10 +11,10 @@ using ContestantRegister.Cqrs.Features._Common.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.Commands;
 using ContestantRegister.Cqrs.Features.Admin.Users.Queries;
 using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
+using ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels;
 using ContestantRegister.Domain;
 using ContestantRegister.Framework.Cqrs;
 using ContestantRegister.Services.Exceptions;
-using PasswordViewModel = ContestantRegister.Cqrs.Features.Frontend.Account.ViewModels.PasswordViewModel;
 
 namespace ContestantRegister.Controllers
 {   

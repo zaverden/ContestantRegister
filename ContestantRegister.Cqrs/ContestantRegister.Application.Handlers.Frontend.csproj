@@ -12,14 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ContestantRegister.Application.Handlers.Common\ContestantRegister.Application.Handlers.Common.csproj" />
     <ProjectReference Include="..\ContestantRegister.Application.Services.Implementation\ContestantRegister.Application.Services.Implementation.csproj" />
     <ProjectReference Include="..\ContestantRegister.Framework\ContestantRegister.Framework.csproj" />
     <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Domain.csproj" />
     <ProjectReference Include="..\ContestantRegister.Services\ContestantRegister.Application.Services.Interfaces.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Handlers\Admin\Contests\Commands\" />
   </ItemGroup>
 
 </Project>

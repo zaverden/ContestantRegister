@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using ContestantRegister.Cqrs.Features._Common.QueryHandlers;
-using ContestantRegister.Cqrs.Features.Admin.Users.ViewModels;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Common.ViewModels;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Queries;
 using ContestantRegister.Cqrs.Features.Shared.ViewModels;
