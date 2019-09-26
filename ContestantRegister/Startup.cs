@@ -152,7 +152,7 @@ namespace ContestantRegister
             //metadata.AddCommandMiddleware<SecondTestCommandMiddleware>();
             //metadata.AddQueryMiddleware<FirstTestQueryMiddleware>();
             //metadata.AddQueryMiddleware<SecondTestQueryMiddleware>();
-            services.AddScoped(provider => metadata);
+            services.AddSingleton(metadata);
             services.AddScoped<IHandlerDispatcher, HandlerDispatcher>();
 
             //Infrastructure
