@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ContestantRegister.Application.Handlers.Common.Handlers.Shared.ViewModels;
+using ContestantRegister.Application.Handlers.Frontend.Handlers.Home.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Queries;
 using ContestantRegister.Cqrs.Features.Frontend.Home.ViewModels;
@@ -13,24 +14,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace ContestantRegister.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly SuggestStudyPlaceOptions _options;
         private readonly IHandlerDispatcher _handlerDispatcher;
         
-        public HomeController(
-            ILogger<HomeController> logger,
-            IOptions<SuggestStudyPlaceOptions> options,
-            IHandlerDispatcher handlerDispatcher)
+        public HomeController(IHandlerDispatcher handlerDispatcher)
         {
-            _logger = logger;
-            _options = options.Value;
             _handlerDispatcher = handlerDispatcher;
         }
 
@@ -66,8 +58,6 @@ namespace ContestantRegister.Controllers
                 {
                     viewModel.Message = "Не удалось найти запрашиваемый объект";
                 }
-
-                _logger.LogError(exceptionFeature.Error, $"Unhandled exception at {exceptionFeature.Path}");
             }
 
             return View(viewModel);
@@ -166,18 +156,7 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> SuggestSchool(SuggectSchoolViewModel viewModel)
         {
-            await _handlerDispatcher.ExecuteCommandAsync(new SendEmailCommand
-            {
-                Email = _options.Email,
-                Subject = "Новая школа",
-                Body = $"Предложил {viewModel.Email}<br>" +
-                       $"Краткое название {viewModel.ShortName}<br>" +
-                       $"Полное название {viewModel.FullName}<br>" +
-                       $"Регион {viewModel.Region}<br>" +
-                       $"Город {viewModel.City}<br>" +
-                       $"Официальный email {viewModel.SchoolEmail}<br>" +
-                       $"Сайт {viewModel.Site}<br>"
-            });
+            await _handlerDispatcher.ExecuteCommandAsync(new SuggestSchoolCommand { ViewModel = viewModel });
             
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }
@@ -204,19 +183,7 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         public async Task<IActionResult> SuggestInstitution(SuggectInstitutionViewModel viewModel)
         {
-            await _handlerDispatcher.ExecuteCommandAsync(new SendEmailCommand
-            {
-                Email = _options.Email,
-                Subject = "Новый вуз",
-                Body = $"Предложил {viewModel.Email}<br>" +
-                       $"Краткое название {viewModel.ShortName}<br>" +
-                       $"Полное название {viewModel.FullName}<br>" +
-                       $"Регион {viewModel.Region}<br>" +
-                       $"Город {viewModel.City}<br>" +
-                       $"Краткое название англ {viewModel.ShortNameEn}<br>" +
-                       $"Полное название англ {viewModel.FullNameEn}<br>" +
-                       $"Сайт {viewModel.Site}<br>"
-            });
+            await _handlerDispatcher.ExecuteCommandAsync(new SuggestInstitutionCommand { ViewModel = viewModel });
 
             return RedirectToAction(nameof(StudyPlaceSuggested));
         }

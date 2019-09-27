@@ -235,17 +235,17 @@ namespace ContestantRegister
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
-                app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseExceptionHandler("/Home/Error");
+                //app.UseBrowserLink();
+                //app.UseDeveloperExceptionPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            //перехват исключений и генерация соответствующих статусов для API
-            //app.UseCustomExceptionHandlerMiddleware();
+            app.UseCustomExceptionHandlerMiddleware();
 
             context.Database.Migrate();
 

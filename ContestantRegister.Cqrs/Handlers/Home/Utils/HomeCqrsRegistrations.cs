@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using ContestantRegister.Application.Handlers.Frontend.Handlers.Home.Commands;
+using ContestantRegister.Application.Handlers.Frontend.Handlers.Home.CommansHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Commands;
 using ContestantRegister.Cqrs.Features.Frontend.Home.CommansHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Home.Queries;
@@ -20,8 +22,8 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Home.Utils
             services.AddTransient<IQueryHandler<GetUserForDetailsQuery, ApplicationUser>, GetUserForDetailsQueryHandler>();
             
             services.AddTransient<ICommandHandler<RegisterContestParticipantCommand>, RegisterContestParticipantCommandHandler>();
-            services.AddTransient<ICommandHandler<SendEmailCommand>, SendEmailCommandHandler>();
-
+            services.AddTransient<ICommandHandler<SuggestInstitutionCommand>, SuggestInstitutionCommandHandler>();
+            services.AddTransient<ICommandHandler<SuggestSchoolCommand>, SuggestSchoolCommandHandler>();
         }
     }
 }

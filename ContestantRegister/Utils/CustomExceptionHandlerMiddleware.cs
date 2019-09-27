@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ContestantRegister.Services.Exceptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace ContestantRegister
 {
@@ -13,10 +14,12 @@ namespace ContestantRegister
     public class CustomExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<CustomExceptionHandlerMiddleware> _logger;
 
-        public CustomExceptionHandlerMiddleware(RequestDelegate next)
+        public CustomExceptionHandlerMiddleware(RequestDelegate next, ILogger<CustomExceptionHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext httpContext)
@@ -25,15 +28,10 @@ namespace ContestantRegister
             {
                 await _next(httpContext);
             }
-            catch (EntityNotFoundException e)
+            catch (Exception e)
             {
-                httpContext.Response.ContentType = "application/json";
-                httpContext.Response.StatusCode = (int) HttpStatusCode.NotFound;
-            }
-            catch
-            {
-                httpContext.Response.ContentType = "application/json";
-                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                _logger.LogError(e, $"Unhandled exception at {httpContext.Request.Path}");
+                throw;
             }
         }
     }
