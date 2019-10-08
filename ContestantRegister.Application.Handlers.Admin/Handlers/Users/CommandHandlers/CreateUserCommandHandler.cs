@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
 {
-    public class CreateUserCommandHandler : CreateMappedEntityCommandHandler<CreateUserCommand, ApplicationUser, CreateUserViewModel>
+    internal class CreateUserCommandHandler : CreateMappedEntityCommandHandler<CreateUserCommand, ApplicationUser, CreateUserViewModel>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserService _currentUserService;

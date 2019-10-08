@@ -14,7 +14,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class GetDataForSortingQueryHandler : ReadRepositoryQueryHandler<GetDataForSortingQuery, DataForSorting>
+    internal class GetDataForSortingQueryHandler : ReadRepositoryQueryHandler<GetDataForSortingQuery, DataForSorting>
     {
         public GetDataForSortingQueryHandler(IReadRepository repository) : base(repository)
         {

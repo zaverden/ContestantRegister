@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.CommandHandlers
 {
-    public class ImportBaylorRegistrationsCommandHandler : RepositoryCommandBaseHandler<ImportBaylorRegistrationsCommand>
+    internal class ImportBaylorRegistrationsCommandHandler : RepositoryCommandBaseHandler<ImportBaylorRegistrationsCommand>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         public ImportBaylorRegistrationsCommandHandler(IRepository repository, UserManager<ApplicationUser> userManager) : base(repository)

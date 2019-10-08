@@ -9,8 +9,8 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Schools.QueryHandlers
 {
-    
-    public class GetCitiesForSchoolQueryHandler : ReadRepositoryQueryHandler<CitiesForSchoolQuery, List<City>>
+
+    internal class GetCitiesForSchoolQueryHandler : ReadRepositoryQueryHandler<CitiesForSchoolQuery, List<City>>
     {
         public GetCitiesForSchoolQueryHandler(IReadRepository repository) : base(repository)
         {        

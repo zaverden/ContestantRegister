@@ -14,7 +14,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class SortingQueryHandler : ReadRepositoryQueryHandler<SortingQuery, SortingQueryResult>
+    internal class SortingQueryHandler : ReadRepositoryQueryHandler<SortingQuery, SortingQueryResult>
     {
         private readonly IMapper _mapper;
 

@@ -11,7 +11,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.CommandHandlers
 {
-    public class EditContestCommandHandler : EditMappedEntityCommandHandler<Contest, ContestDetailsViewModel, int>
+    internal class EditContestCommandHandler : EditMappedEntityCommandHandler<Contest, ContestDetailsViewModel, int>
     {
         public EditContestCommandHandler(IRepository repository, IMapper mapper) : base(repository, mapper)
         {

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers
 {
-    public class GetUserDetailsQueryHandler : ReadRepositoryQueryHandler<GetUserDetailsQuery, IndexViewModel>
+    internal class GetUserDetailsQueryHandler : ReadRepositoryQueryHandler<GetUserDetailsQuery, IndexViewModel>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;

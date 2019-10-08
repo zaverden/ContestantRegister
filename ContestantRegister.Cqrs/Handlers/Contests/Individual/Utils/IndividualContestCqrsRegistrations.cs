@@ -13,8 +13,11 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.Utils
         {
             services.AddTransient<IQueryHandler<GetExportedIndividualContestParticipantsQuery, ExportIndividualContestParticipantsResult>, GetExportedIndividualContestParticipantsQueryHandler>();
             
-            services.AddTransient<ICommandHandler<CreateIndividualContestRegistrationCommand>, CreateIndividualContestRegistrationCommandHandler>();
-            services.AddTransient<ICommandHandler<EditIndividualContestRegistrationCommand>, EditIndividualContestRegistrationCommandHandler>();
+            services.AddTransient<ICommandHandler<CreateUserIndividualContestRegistrationCommand>, CreateUserIndividualContestRegistrationCommandHandler>();
+            services.AddTransient<ICommandHandler<EditUserIndividualContestRegistrationCommand>, EditUserIndividualContestRegistrationCommandHandler>();
+
+            services.AddTransient<ICommandHandler<CreateAdminIndividualContestRegistrationCommand>, CreateAdminIndividualContestRegistrationCommandHandler>();
+            services.AddTransient<ICommandHandler<EditAdminIndividualContestRegistrationCommand>, EditAdminIndividualContestRegistrationCommandHandler>();
         }
     }
 }

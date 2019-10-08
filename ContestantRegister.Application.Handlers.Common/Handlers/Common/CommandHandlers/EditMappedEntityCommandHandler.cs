@@ -9,7 +9,7 @@ using ContestantRegister.Services.Exceptions;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public class EditMappedEntityCommandHandler<TEntity, TViewModel, TKey> : RepositoryCommandBaseHandler<EditMappedEntityCommand<TEntity, TViewModel, TKey>> 
+    internal class EditMappedEntityCommandHandler<TEntity, TViewModel, TKey> : RepositoryCommandBaseHandler<EditMappedEntityCommand<TEntity, TViewModel, TKey>> 
         where TEntity : class, IHasId<TKey>
         where TKey : IEquatable<TKey>
     {

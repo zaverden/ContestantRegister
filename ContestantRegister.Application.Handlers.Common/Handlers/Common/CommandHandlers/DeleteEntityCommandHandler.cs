@@ -6,7 +6,7 @@ using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public class DeleteEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity, TKey>> 
+    internal class DeleteEntityCommandHandler<TEntity, TKey> : RepositoryCommandBaseHandler<DeleteEntityByIdCommand<TEntity, TKey>> 
         where TEntity : class, IHasId<TKey>, new()
         where TKey : IEquatable<TKey>
     {

@@ -11,7 +11,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.QueryHandlers
 {
-    public class GetDataForProfileQueryHandler : ReadRepositoryQueryHandler<GetDataForProfileQuery, DataForProfile>
+    internal class GetDataForProfileQueryHandler : ReadRepositoryQueryHandler<GetDataForProfileQuery, DataForProfile>
     {
         public GetDataForProfileQueryHandler(IReadRepository repository) : base(repository)
         {

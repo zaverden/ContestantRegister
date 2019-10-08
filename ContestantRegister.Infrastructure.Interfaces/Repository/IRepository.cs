@@ -4,7 +4,7 @@ using ContestantRegister.Models;
 
 namespace ContestantRegister.Domain.Repository
 {
-    public interface IRepository : IReadRepository
+    internal interface IRepository : IReadRepository
     {
         void Add<TEntity>( /*[NotNull]*/ TEntity entity);// where TEntity : class;
 

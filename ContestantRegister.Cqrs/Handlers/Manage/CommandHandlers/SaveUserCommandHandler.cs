@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
 {
-    public class SaveUserCommandHandler : RepositoryCommandBaseHandler<SaveUserCommand>
+    internal class SaveUserCommandHandler : RepositoryCommandBaseHandler<SaveUserCommand>
     {
         private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;

@@ -7,8 +7,8 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Services.DomainServices
 {
-    
-    public class UserService : IUserService
+
+    internal class UserService : IUserService
     {
         public const string DefaultAdminEmail = "acm@sfu-kras.ru";
 

@@ -10,7 +10,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class ImportParticipantsQueryHandler : ReadRepositoryQueryHandler<ImportParticipantsQuery, ImportParticipantsViewModel>
+    internal class ImportParticipantsQueryHandler : ReadRepositoryQueryHandler<ImportParticipantsQuery, ImportParticipantsViewModel>
 
     {
         public ImportParticipantsQueryHandler(IReadRepository repository) : base(repository)

@@ -11,7 +11,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public class DeleteRegistrationCommandHandler : RepositoryCommandBaseHandler<DeleteRegistrationCommand>
+    internal class DeleteRegistrationCommandHandler : RepositoryCommandBaseHandler<DeleteRegistrationCommand>
     {
         public DeleteRegistrationCommandHandler(IRepository repository) : base(repository)
         {

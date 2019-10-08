@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ContestantRegister.Domain.Repository
 {
-    public interface IReadRepository : IDisposable
+    internal interface IReadRepository : IDisposable
     {
         Task<TEntity> FindAsync<TEntity>(object key) where TEntity : class;
 

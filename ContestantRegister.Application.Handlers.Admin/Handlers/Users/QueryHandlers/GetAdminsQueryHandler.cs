@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.QueryHandlers
 {
-    public class GetAdminsQueryHandler : ReadRepositoryQueryHandler<GetAdminsQuery, List<UserAdminViewModel>>
+    internal class GetAdminsQueryHandler : ReadRepositoryQueryHandler<GetAdminsQuery, List<UserAdminViewModel>>
     {
         private readonly IUserService _userService;
         private readonly UserManager<ApplicationUser> _userManager;

@@ -3,10 +3,8 @@ using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Commands
 {
-
-    public class CreateTeamContestRegistrationCommand : ICommand
+    public class EditUserTeamContestRegistrationCommand : EditTeamContestRegistrationCommand
     {
-        public CreateTeamContestRegistrationViewModel ViewModel { get; set; }
         
     }
 }

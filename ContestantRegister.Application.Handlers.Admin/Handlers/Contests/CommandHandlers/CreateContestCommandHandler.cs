@@ -9,7 +9,7 @@ using ContestantRegister.Models;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.CommandHandlers
 {
-    public class CreateContestCommandHandler : CreateMappedEntityCommandHandler<CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, Contest, ContestDetailsViewModel>
+    internal class CreateContestCommandHandler : CreateMappedEntityCommandHandler<CreateMappedEntityCommand<Contest, ContestDetailsViewModel>, Contest, ContestDetailsViewModel>
     {
         public CreateContestCommandHandler(IRepository repository, IMapper mapper) : base(repository, mapper)
         {

@@ -17,7 +17,7 @@ using CsvHelper;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public class ImportParticipantsCommandHandler : RepositoryCommandBaseHandler<ImportParticipantsCommand>
+    internal class ImportParticipantsCommandHandler : RepositoryCommandBaseHandler<ImportParticipantsCommand>
     {
         private readonly IMapper _mapper;
 

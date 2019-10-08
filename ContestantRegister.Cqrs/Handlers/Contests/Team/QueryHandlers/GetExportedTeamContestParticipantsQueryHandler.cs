@@ -10,7 +10,7 @@ using OfficeOpenXml;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.QueryHandlers
 {
-    public class GetExportedTeamContestParticipantsQueryHandler : ReadRepositoryQueryHandler<GetExportedTeamContestParticipantsQuery, ExcelPackage>
+    internal class GetExportedTeamContestParticipantsQueryHandler : ReadRepositoryQueryHandler<GetExportedTeamContestParticipantsQuery, ExcelPackage>
     {
         public GetExportedTeamContestParticipantsQueryHandler(IReadRepository repository) : base(repository)
         {

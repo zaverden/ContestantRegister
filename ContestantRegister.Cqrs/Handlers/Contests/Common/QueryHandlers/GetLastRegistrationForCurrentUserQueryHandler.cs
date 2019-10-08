@@ -12,7 +12,7 @@ using ContestantRegister.Services.InfrastructureServices;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class GetLastRegistrationForCurrentUserQueryHandler : ReadRepositoryQueryHandler<GetLastRegistrationForCurrentUserQuery, ContestRegistration>
+    internal class GetLastRegistrationForCurrentUserQueryHandler : ReadRepositoryQueryHandler<GetLastRegistrationForCurrentUserQuery, ContestRegistration>
     {
         private readonly ICurrentUserService _currentUserService;
 

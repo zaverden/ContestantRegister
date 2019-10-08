@@ -10,7 +10,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Emails.QueryHandlers
 {
-    public class GetEmailsQueryHandler : ReadRepositoryQueryHandler<GetEmailsQuery, List<Email>>
+    internal class GetEmailsQueryHandler : ReadRepositoryQueryHandler<GetEmailsQuery, List<Email>>
     {
         public GetEmailsQueryHandler(IReadRepository repository) : base(repository)
         {

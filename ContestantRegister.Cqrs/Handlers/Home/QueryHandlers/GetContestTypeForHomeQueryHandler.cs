@@ -8,7 +8,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Home.QueryHandlers
 {
-    public class GetContestTypeForHomeQueryHandler : ReadRepositoryQueryHandler<GetContestTypeForHomeQuery, ContestType>
+    internal class GetContestTypeForHomeQueryHandler : ReadRepositoryQueryHandler<GetContestTypeForHomeQuery, ContestType>
     {
         public GetContestTypeForHomeQueryHandler(IReadRepository repository) : base(repository)
         {

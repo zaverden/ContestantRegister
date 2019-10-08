@@ -9,7 +9,7 @@ using ContestantRegister.Services.DomainServices;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.CommandHandlers
 {
-    public class EditUserCommandHandler : EditMappedEntityCommandHandler<ApplicationUser, EditUserViewModel, string>
+    internal class EditUserCommandHandler : EditMappedEntityCommandHandler<ApplicationUser, EditUserViewModel, string>
     {
         //private readonly IUserService _userService;
 

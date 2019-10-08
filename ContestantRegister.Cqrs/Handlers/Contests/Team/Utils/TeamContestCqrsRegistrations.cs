@@ -19,8 +19,12 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Utils
             services.AddTransient<IQueryHandler<GetDataForContestRegistrationQuery, DataForContestRegistration>, GetDataForContestRegistrationQueryHandler>();
 
             services.AddTransient<ICommandHandler<ImportBaylorRegistrationsCommand>, ImportBaylorRegistrationsCommandHandler>();
-            services.AddTransient<ICommandHandler<CreateTeamContestRegistrationCommand>, CreateTeamContestRegistrationCommandHandler>();
-            services.AddTransient<ICommandHandler<EditTeamContestRegistrationCommand>, EditTeamContestRegistrationCommandHandler>();
+            
+            services.AddTransient<ICommandHandler<CreateUserTeamContestRegistrationCommand>, CreateUserTeamContestRegistrationCommandHandler>();
+            services.AddTransient<ICommandHandler<EditUserTeamContestRegistrationCommand>, EditUserTeamContestRegistrationCommandHandler>();
+
+            services.AddTransient<ICommandHandler<CreateAdminTeamContestRegistrationCommand>, CreateAdminTeamContestRegistrationCommandHandler>();
+            services.AddTransient<ICommandHandler<EditAdminTeamContestRegistrationCommand>, EditAdminTeamContestRegistrationCommandHandler>();
         }
     }
 }

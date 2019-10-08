@@ -7,8 +7,8 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
-    
-    public class GetEntityQueryHandler<TEntity, TKey> : ReadRepositoryQueryHandler<GetEntityByIdQuery<TEntity, TKey>, TEntity> 
+
+    internal class GetEntityQueryHandler<TEntity, TKey> : ReadRepositoryQueryHandler<GetEntityByIdQuery<TEntity, TKey>, TEntity> 
         where TEntity : class, IHasId<TKey>
         where TKey : IEquatable<TKey>
     {

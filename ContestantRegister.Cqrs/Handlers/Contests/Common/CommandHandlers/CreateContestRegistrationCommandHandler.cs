@@ -11,12 +11,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public abstract class CreateContestRegistrationCommandHandler<TCommand> : ICommandHandler<TCommand>
+    internal abstract class CreateContestRegistrationCommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
         protected readonly IRepository Repository;
         private readonly IEmailSender _emailSender;
-        private readonly ICurrentUserService _currentUserService;
+        protected readonly ICurrentUserService _currentUserService;
         private readonly UserManager<ApplicationUser> _userManager;
 
         protected CreateContestRegistrationCommandHandler(

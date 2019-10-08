@@ -8,7 +8,7 @@ using OfficeOpenXml;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Users.QueryHandlers
 {
-    public class GetExportedUsersQueryHandler : ReadRepositoryQueryHandler<GetExportedUsersQuery, ExcelPackage>
+    internal class GetExportedUsersQueryHandler : ReadRepositoryQueryHandler<GetExportedUsersQuery, ExcelPackage>
     {
         public GetExportedUsersQueryHandler(IRepository repository) : base(repository)
         {

@@ -10,7 +10,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
-    public class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetMappedEntitiesQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
+    internal class GetEntitiesQueryHandler<TEntity, TViewModel> : ReadRepositoryQueryHandler<GetMappedEntitiesQuery<TEntity, TViewModel>, List<TViewModel>> where TEntity : class
     {
         public GetEntitiesQueryHandler(IReadRepository repository) : base(repository)
         {

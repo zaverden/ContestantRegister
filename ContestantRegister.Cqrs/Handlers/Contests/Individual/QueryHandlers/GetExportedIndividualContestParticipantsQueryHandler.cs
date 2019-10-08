@@ -13,7 +13,7 @@ using OfficeOpenXml;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.QueryHandlers
 {
-    public class GetExportedIndividualContestParticipantsQueryHandler : ReadRepositoryQueryHandler<GetExportedIndividualContestParticipantsQuery, ExportIndividualContestParticipantsResult>
+    internal class GetExportedIndividualContestParticipantsQueryHandler : ReadRepositoryQueryHandler<GetExportedIndividualContestParticipantsQuery, ExportIndividualContestParticipantsResult>
     {
         public GetExportedIndividualContestParticipantsQueryHandler(IReadRepository repository) : base(repository)
         {

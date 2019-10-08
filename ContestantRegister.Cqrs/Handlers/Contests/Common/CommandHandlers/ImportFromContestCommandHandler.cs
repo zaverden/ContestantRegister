@@ -11,7 +11,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public class ImportFromContestCommandHandler : RepositoryCommandBaseHandler<ImportFromContestCommand>
+    internal class ImportFromContestCommandHandler : RepositoryCommandBaseHandler<ImportFromContestCommand>
     {
         public ImportFromContestCommandHandler(IRepository repository) : base(repository)
         {

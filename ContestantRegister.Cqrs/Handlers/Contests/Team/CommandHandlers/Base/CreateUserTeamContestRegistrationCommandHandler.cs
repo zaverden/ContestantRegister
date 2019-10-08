@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers;
 using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.Commands;
+using ContestantRegister.Cqrs.Features.Frontend.Contests.Team.ViewModels;
 using ContestantRegister.Domain.Repository;
 using ContestantRegister.Models;
 using ContestantRegister.Services.DomainServices.ContestRegistration;
@@ -13,12 +15,13 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.CommandHandlers
 {
-    public class CreateTeamContestRegistrationCommandHandler : CreateContestRegistrationCommandHandler<CreateTeamContestRegistrationCommand>
+    internal abstract class CreateTeamContestRegistrationCommandHandler<TCommand> : CreateContestRegistrationCommandHandler<TCommand>
+        where TCommand : CreateTeamContestRegistrationCommand
     {
         private readonly IMapper _mapper;
-        private readonly IContestRegistrationService _contestRegistrationService;
+        protected readonly IContestRegistrationService _contestRegistrationService;
 
-        public CreateTeamContestRegistrationCommandHandler(
+        protected CreateTeamContestRegistrationCommandHandler(
             IRepository repository, 
             IMapper mapper, 
             IContestRegistrationService contestRegistrationService,
@@ -32,7 +35,7 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.CommandHandler
             _contestRegistrationService = contestRegistrationService;
         }
 
-        public override async Task HandleAsync(CreateTeamContestRegistrationCommand command)
+        public override async Task HandleAsync(TCommand command)
         {
             var contest = await Repository.Set<Contest>()
                 .SingleOrDefaultAsync(x => x.Id == command.ViewModel.ContestId);
@@ -41,7 +44,7 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.CommandHandler
                 throw new EntityNotFoundException();
             }
 
-            var validationResult = await _contestRegistrationService.ValidateCreateTeamContestRegistrationAsync(command.ViewModel);
+            var validationResult = await ValidateCreateTeamContestRegistrationAsync(command.ViewModel);
             if (validationResult.Any())
             {
                 throw new ValidationException(validationResult);
@@ -70,6 +73,12 @@ namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.CommandHandler
             registration.OfficialTeamName = $"{studyPlaceName} {sharp}{registredForStudyPlaceCount + 1}";
 
             await FinishRegistrationAsync(command.ViewModel, registration, contest);
+        }
+
+        protected virtual Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(
+            CreateTeamContestRegistrationViewModel viewModel)
+        {
+            return _contestRegistrationService.ValidateCreateTeamContestRegistrationAsync(viewModel);
         }
     }
 }

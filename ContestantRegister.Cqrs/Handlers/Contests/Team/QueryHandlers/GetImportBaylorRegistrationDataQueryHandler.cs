@@ -13,7 +13,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.QueryHandlers
 {
-    public class GetImportBaylorRegistrationDataQueryHandler : ReadRepositoryQueryHandler<GetImportBaylorRegistrationDataQuery, ImportParticipantsViewModel>
+    internal class GetImportBaylorRegistrationDataQueryHandler : ReadRepositoryQueryHandler<GetImportBaylorRegistrationDataQuery, ImportParticipantsViewModel>
     {
         public GetImportBaylorRegistrationDataQueryHandler(IReadRepository repository) : base(repository)
         {

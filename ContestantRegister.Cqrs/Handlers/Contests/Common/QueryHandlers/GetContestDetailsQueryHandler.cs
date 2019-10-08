@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class GetContestDetailsQueryHandler : ReadRepositoryQueryHandler<GetContestDetailsQuery, ContestInfoViewModelBase>
+    internal class GetContestDetailsQueryHandler : ReadRepositoryQueryHandler<GetContestDetailsQuery, ContestInfoViewModelBase>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly UserManager<ApplicationUser> _userManager;

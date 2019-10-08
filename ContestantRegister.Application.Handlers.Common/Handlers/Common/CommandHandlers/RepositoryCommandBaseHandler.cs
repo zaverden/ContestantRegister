@@ -4,7 +4,7 @@ using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public abstract class RepositoryCommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
+    internal abstract class RepositoryCommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand : ICommand
     {
         protected readonly IRepository Repository;
 

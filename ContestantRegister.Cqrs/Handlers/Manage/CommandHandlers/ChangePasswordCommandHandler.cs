@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Manage.CommandHandlers
 {
-    public class ChangePasswordCommandHandler : RepositoryCommandBaseHandler<ChangePasswordCommand>
+    internal class ChangePasswordCommandHandler : RepositoryCommandBaseHandler<ChangePasswordCommand>
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;

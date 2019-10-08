@@ -8,7 +8,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public class CancelRegistrationCommandHandler : RepositoryCommandBaseHandler<CancelRegistrationCommand>
+    internal class CancelRegistrationCommandHandler : RepositoryCommandBaseHandler<CancelRegistrationCommand>
     {
         public CancelRegistrationCommandHandler(IRepository repository) : base(repository)
         {

@@ -16,7 +16,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.QueryHandlers
 {
-    public class GetContestRegistrationForEditQueryHandler : ReadRepositoryQueryHandler<GetContestRegistrationForEditQuery, ContestRegistrationViewModel>
+    internal class GetContestRegistrationForEditQueryHandler : ReadRepositoryQueryHandler<GetContestRegistrationForEditQuery, ContestRegistrationViewModel>
     {
         private readonly IMapper _mapper;
 

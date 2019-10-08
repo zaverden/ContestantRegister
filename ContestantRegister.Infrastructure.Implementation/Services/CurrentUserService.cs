@@ -20,20 +20,6 @@ namespace ContestantRegister.Infrastructure
             _httpContextAccessor = httpContextAccessor;
         }
 
-        private bool? _isAdmin;
-        public bool IsAdmin
-        {
-            get
-            {
-                if (!_isAdmin.HasValue)
-                {
-                    _isAdmin = _httpContextAccessor.HttpContext.User.IsInRole(Roles.Admin);
-                }
-
-                return _isAdmin.Value;
-            }
-        }
-
         private string _email;
 
         public string Email

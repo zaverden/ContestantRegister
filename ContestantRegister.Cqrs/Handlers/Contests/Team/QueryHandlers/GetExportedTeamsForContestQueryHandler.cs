@@ -11,7 +11,7 @@ using OfficeOpenXml;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Team.QueryHandlers
 {
-    public class GetExportedTeamsForContestQueryHandler : ReadRepositoryQueryHandler<GetExportedTeamsForContestQuery, ExportTeamsResult>
+    internal class GetExportedTeamsForContestQueryHandler : ReadRepositoryQueryHandler<GetExportedTeamsForContestQuery, ExportTeamsResult>
     {
         public GetExportedTeamsForContestQueryHandler(IReadRepository repository) : base(repository)
         {

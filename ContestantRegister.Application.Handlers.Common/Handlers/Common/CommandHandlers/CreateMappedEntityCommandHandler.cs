@@ -7,7 +7,7 @@ using ContestantRegister.Services.Exceptions;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public class CreateMappedEntityCommandHandler<TCommand, TEntity, TViewModel> : RepositoryCommandBaseHandler<TCommand> 
+    internal class CreateMappedEntityCommandHandler<TCommand, TEntity, TViewModel> : RepositoryCommandBaseHandler<TCommand> 
         where TEntity : new()
         where TCommand : CreateMappedEntityCommand<TEntity, TViewModel>
     {

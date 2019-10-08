@@ -12,7 +12,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Common.CommandHandlers
 {
-    public class SortingCommandHandler : RepositoryCommandBaseHandler<SortingCommand>
+    internal class SortingCommandHandler : RepositoryCommandBaseHandler<SortingCommand>
     {
         public SortingCommandHandler(IRepository repository) : base(repository)
         {

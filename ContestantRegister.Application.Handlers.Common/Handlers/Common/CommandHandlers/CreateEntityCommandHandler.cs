@@ -4,7 +4,7 @@ using ContestantRegister.Domain.Repository;
 
 namespace ContestantRegister.Cqrs.Features._Common.CommandHandlers
 {
-    public class CreateEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<CreateEntityCommand<TEntity>>
+    internal class CreateEntityCommandHandler<TEntity> : RepositoryCommandBaseHandler<CreateEntityCommand<TEntity>>
     {
         public CreateEntityCommandHandler(IRepository repository) : base(repository)
         {

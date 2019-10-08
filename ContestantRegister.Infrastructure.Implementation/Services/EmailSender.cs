@@ -4,7 +4,7 @@ using ContestantRegister.Services.InfrastructureServices;
 
 namespace ContestantRegister.Infrastructure
 {
-    public class EmailSender : IEmailSender
+    internal class EmailSender : IEmailSender
     {
         private readonly IRepository _repository;
 

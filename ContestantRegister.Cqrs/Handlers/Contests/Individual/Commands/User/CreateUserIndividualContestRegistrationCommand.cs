@@ -7,8 +7,8 @@ using ContestantRegister.Framework.Cqrs;
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.Commands
 {
     
-    public class CreateIndividualContestRegistrationCommand : ICommand
+    public class CreateUserIndividualContestRegistrationCommand : CreateIndividualContestRegistrationCommand
     {
-        public CreateIndividualContestRegistrationViewModel ViewModel { get; set; }
+        
     }
 }

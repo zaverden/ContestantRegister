@@ -25,7 +25,11 @@ namespace ContestantRegister.Controllers
         {
             try
             {
-                var command = new CreateTeamContestRegistrationCommand { ViewModel = viewModel };
+                ICommand command;
+                if (User.IsInRole(Roles.Admin))
+                    command = new CreateAdminTeamContestRegistrationCommand { ViewModel = viewModel };
+                else 
+                    command = new CreateUserTeamContestRegistrationCommand { ViewModel = viewModel };
                 await HandlerDispatcher.ExecuteCommandAsync(command);
             }
             catch (ValidationException e)
@@ -52,11 +56,14 @@ namespace ContestantRegister.Controllers
         {
             try
             {
-                await HandlerDispatcher.ExecuteCommandAsync(new EditTeamContestRegistrationCommand
-                {
-                    RegistrationId = id,
-                    ViewModel = viewModel
-                });
+                EditTeamContestRegistrationCommand command;
+                if (User.IsInRole(Roles.Admin))
+                    command = new EditAdminTeamContestRegistrationCommand();
+                else
+                    command = new EditUserTeamContestRegistrationCommand();
+                command.RegistrationId = id;
+                command.ViewModel = viewModel;
+                await HandlerDispatcher.ExecuteCommandAsync(command);
             }
             catch (ValidationException e)
             {

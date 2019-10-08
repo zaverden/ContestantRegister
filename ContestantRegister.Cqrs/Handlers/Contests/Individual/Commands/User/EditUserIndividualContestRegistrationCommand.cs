@@ -6,9 +6,8 @@ using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Contests.Individual.Commands
 {
-    public class EditIndividualContestRegistrationCommand : ICommand
+    public class EditUserIndividualContestRegistrationCommand : EditIndividualContestRegistrationCommand
     {
-        public int RegistrationId { get; set; }
-        public EditIndividualContestRegistrationViewModel ViewModel { get; set; }
+        
     }
 }

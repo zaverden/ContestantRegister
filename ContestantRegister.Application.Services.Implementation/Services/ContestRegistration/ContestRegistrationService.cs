@@ -8,12 +8,12 @@ using ContestantRegister.Services.InfrastructureServices;
 
 namespace ContestantRegister.Services.DomainServices.ContestRegistration
 {
-    
+
     //TODO по идее, эти сервисы должны оперировать доменными объектами, а не интерфейсами
     //но каждый раз перез валидацией делать маппинг - это геммор, проще передавать в сервис сразу вьюможель
     //сюда могут попадать разные вьюмодели, ради чистоты архитектуры фич я убрал наследование вьюмоделей
     //поэтому и нужны сервисы, которые реализуются несколькими вьюмоделями
-    public class ContestRegistrationService : IContestRegistrationService
+    internal class ContestRegistrationService : IContestRegistrationService
     {
         private readonly IReadRepository _readRepository;
         private readonly ICurrentUserService _currentUserService;
@@ -63,9 +63,9 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
             if (viewModel.Participant1Id == viewModel.TrainerId) result.Add(KeyValuePair.Create(nameof(viewModel.TrainerId), "Участник не может быть своим тренером"));
             if (viewModel.Participant1Id == viewModel.ManagerId) result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть своим руководителем"));
 
-            var currentUserId = _currentUserService.Id;
-            if (!_currentUserService.IsAdmin && viewModel.Participant1Id != currentUserId && viewModel.TrainerId != currentUserId && viewModel.ManagerId != currentUserId)
-                result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
+            //var currentUserId = _currentUserService.Id;
+            //if (!_currentUserService.IsAdmin && viewModel.Participant1Id != currentUserId && viewModel.TrainerId != currentUserId && viewModel.ManagerId != currentUserId)
+            //    result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
 
             var participant = await _readRepository.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Id == viewModel.Participant1Id);
             var trainer = await _readRepository.Set<ApplicationUser>().SingleAsync(u => u.Id == viewModel.TrainerId);
@@ -109,6 +109,17 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
             return ValidateIndividualContestRegistrationAsync(viewModel, true);
         }
 
+        public List<KeyValuePair<string, string>> ValidateIndividualContestMember(IIndividualContestRegistration viewModel)
+        {
+            var result = new List<KeyValuePair<string, string>>();
+
+            var currentUserId = _currentUserService.Id;
+            if (viewModel.Participant1Id != currentUserId && viewModel.TrainerId != currentUserId && viewModel.ManagerId != currentUserId)
+                result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
+
+            return result;
+        }
+
         public Task<List<KeyValuePair<string, string>>> ValidateCreateTeamContestRegistrationAsync(ICreateTeamContestRegistration viewModel)
         {
             return ValidateTeamContestRegistrationAsync(viewModel, false);
@@ -117,6 +128,24 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
         public Task<List<KeyValuePair<string, string>>> ValidateEditTeamContestRegistrationAsync(IEditTeamContestRegistration viewModel)
         {
             return ValidateTeamContestRegistrationAsync(viewModel, true);
+        }
+
+        public List<KeyValuePair<string, string>> ValidateTeamContestRegistrationMember(ITeamContestRegistration viewModel)
+        {
+            var result = new List<KeyValuePair<string, string>>();
+
+            var currentUserId = _currentUserService.Id;
+            if (viewModel.Participant1Id != currentUserId &&
+                viewModel.Participant2Id != currentUserId &&
+                viewModel.Participant3Id != currentUserId &&
+                viewModel.ReserveParticipantId != currentUserId &&
+                viewModel.TrainerId != currentUserId &&
+                viewModel.ManagerId != currentUserId)
+            {
+                result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
+            }
+
+            return result;
         }
 
         private async Task<List<KeyValuePair<string, string>>> ValidateTeamContestRegistrationAsync(ITeamContestRegistration viewModel, bool editRegistration)
@@ -254,18 +283,6 @@ namespace ContestantRegister.Services.DomainServices.ContestRegistration
                 )
             {
                 result.Add(KeyValuePair.Create(nameof(viewModel.ManagerId), "Участник не может быть руководителем"));
-            }
-
-            var currentUserId = _currentUserService.Id;
-            if (!_currentUserService.IsAdmin && 
-                viewModel.Participant1Id != currentUserId &&
-                viewModel.Participant2Id != currentUserId &&
-                viewModel.Participant3Id != currentUserId &&
-                viewModel.ReserveParticipantId != currentUserId &&
-                viewModel.TrainerId != currentUserId && 
-                viewModel.ManagerId != currentUserId)
-            {
-                result.Add(KeyValuePair.Create(string.Empty, "Вы должны быть участником, тренером или руководителем, чтобы завершить регистрацию"));
             }
 
             var participant1 = await _readRepository.Set<ApplicationUser>().SingleOrDefaultAsync(u => u.Id == viewModel.Participant1Id);

@@ -7,7 +7,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
-    public class GetEntityForDeleteQueryHandler<TEntity, TKey> : ReadRepositoryQueryHandler<GetEntityByIdForDeleteQuery<TEntity, TKey>, TEntity> 
+    internal class GetEntityForDeleteQueryHandler<TEntity, TKey> : ReadRepositoryQueryHandler<GetEntityByIdForDeleteQuery<TEntity, TKey>, TEntity> 
         where TEntity : class, IHasId<TKey>
         where TKey : IEquatable<TKey>
     {

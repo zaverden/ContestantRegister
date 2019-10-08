@@ -8,7 +8,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Admin.Contests.QueryHandlers
 {
-    public class GetAreasForContestQueryHandler : ReadRepositoryQueryHandler<GetAreasForContestQuery, List<Area>>
+    internal class GetAreasForContestQueryHandler : ReadRepositoryQueryHandler<GetAreasForContestQuery, List<Area>>
 
     {
         public GetAreasForContestQueryHandler(IReadRepository repository) : base(repository)

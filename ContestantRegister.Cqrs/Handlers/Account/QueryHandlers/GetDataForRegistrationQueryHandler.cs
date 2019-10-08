@@ -10,7 +10,7 @@ using ContestantRegister.Services.Extensions;
 
 namespace ContestantRegister.Cqrs.Features.Frontend.Account.QueryHandlers
 {
-    public class GetDataForRegistrationQueryHandler : ReadRepositoryQueryHandler<GetDataForRegistrationQuery, DataForRegistration>
+    internal class GetDataForRegistrationQueryHandler : ReadRepositoryQueryHandler<GetDataForRegistrationQuery, DataForRegistration>
     {
         public GetDataForRegistrationQueryHandler(IReadRepository repository) : base(repository)
         {

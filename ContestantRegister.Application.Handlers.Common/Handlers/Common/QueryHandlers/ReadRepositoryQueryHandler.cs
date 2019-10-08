@@ -4,7 +4,7 @@ using ContestantRegister.Framework.Cqrs;
 
 namespace ContestantRegister.Cqrs.Features._Common.QueryHandlers
 {
-    public abstract class ReadRepositoryQueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
+    internal abstract class ReadRepositoryQueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult> where TQuery : IQuery<TResult>
     {
         protected readonly IReadRepository ReadRepository;
 
