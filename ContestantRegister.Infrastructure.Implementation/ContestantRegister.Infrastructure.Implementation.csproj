@@ -13,7 +13,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContestantRegister.DataAccess.Postgres\ContestantRegister.DataAccess.Postgres.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Framework\ContestantRegister.Framework.csproj" />
     <ProjectReference Include="..\ContestantRegister.Infrastructure.Interfaces\ContestantRegister.Infrastructure.Interfaces.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Entities.csproj" />
   </ItemGroup>
 
 </Project>

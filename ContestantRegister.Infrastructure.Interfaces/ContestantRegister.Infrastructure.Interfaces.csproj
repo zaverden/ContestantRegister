@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Domain.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Entities.csproj" />
   </ItemGroup>
 
 </Project>

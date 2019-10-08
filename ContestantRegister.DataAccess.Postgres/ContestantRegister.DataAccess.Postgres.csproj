@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContestantRegister.Application.Services.Implementation\ContestantRegister.Application.Services.Implementation.csproj" />
-    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Domain.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Application.Services.Implementation\ContestantRegister.DomainServices.Implementation.csproj" />
+    <ProjectReference Include="..\ContestantRegister.Models\ContestantRegister.Entities.csproj" />
   </ItemGroup>
 
 </Project>
