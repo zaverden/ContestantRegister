@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("ContestantRegister")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Common")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Admin")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Frontend")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Common")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Admin")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Frontend")]
 [assembly: InternalsVisibleTo("ContestantRegister.DataAccess.Postgres")]

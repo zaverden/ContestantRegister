@@ -1,4 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Admin")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Frontend")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Admin")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Frontend")]

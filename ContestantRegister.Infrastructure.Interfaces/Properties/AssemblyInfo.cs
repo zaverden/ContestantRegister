@@ -2,7 +2,7 @@
 
 [assembly: InternalsVisibleTo("ContestantRegister.Infrastructure.Implementation")]
 [assembly: InternalsVisibleTo("ContestantRegister.DomainServices.Implementation")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Common")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Admin")]
-[assembly: InternalsVisibleTo("ContestantRegister.Handlers.Frontend")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Common")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Admin")]
+[assembly: InternalsVisibleTo("ContestantRegister.UseCases.Frontend")]
 [assembly: InternalsVisibleTo("ContestantRegister")]

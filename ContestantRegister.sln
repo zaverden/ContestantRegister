@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Entities
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.DomainServices.Interfaces", "ContestantRegister.Services\ContestantRegister.DomainServices.Interfaces.csproj", "{ACEB9B25-D2C3-46B1-B69E-5BEB4AEC6814}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Handlers.Frontend", "ContestantRegister.Cqrs\ContestantRegister.Handlers.Frontend.csproj", "{1F7D9661-886C-45A8-B61E-17457CD9C3C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.UseCases.Frontend", "ContestantRegister.Cqrs\ContestantRegister.UseCases.Frontend.csproj", "{1F7D9661-886C-45A8-B61E-17457CD9C3C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Framework", "ContestantRegister.Framework\ContestantRegister.Framework.csproj", "{72B47097-F783-4017-A2A7-0D040521DA9B}"
 EndProject
@@ -33,9 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebUI", "WebUI", "{EAE42EF1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.DomainServices.Implementation", "ContestantRegister.Application.Services.Implementation\ContestantRegister.DomainServices.Implementation.csproj", "{C3BD27F4-3A9C-41C6-9CD0-328FA2716441}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Handlers.Admin", "ContestantRegister.Application.Handlers.Admin\ContestantRegister.Handlers.Admin.csproj", "{FFE3AABD-F8FE-4EAC-AE18-B90FDB5F0B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.UseCases.Admin", "ContestantRegister.Application.Handlers.Admin\ContestantRegister.UseCases.Admin.csproj", "{FFE3AABD-F8FE-4EAC-AE18-B90FDB5F0B44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.Handlers.Common", "ContestantRegister.Application.Handlers.Common\ContestantRegister.Handlers.Common.csproj", "{49C67419-474C-4D34-9D65-9B924739B2BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContestantRegister.UseCases.Common", "ContestantRegister.Application.Handlers.Common\ContestantRegister.UseCases.Common.csproj", "{49C67419-474C-4D34-9D65-9B924739B2BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{9F558C32-B91D-47FD-957F-C8C252904BF8}"
 EndProject
