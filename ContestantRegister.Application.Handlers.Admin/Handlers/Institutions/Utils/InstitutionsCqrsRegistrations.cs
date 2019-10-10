@@ -17,14 +17,14 @@ namespace ContestantRegister.Cqrs.Features.Admin.Institutions.Utils
         public static void RegisterInstitutionsServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<Institution, InstitutionListItemViewModel>, List<InstitutionListItemViewModel>>, GetEntitiesQueryHandler<Institution, InstitutionListItemViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Institution, int>, Institution>, GetEntityQueryHandler<Institution, int>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Institution, int>, Institution>, GetEntityForDeleteQueryHandler<Institution, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Institution, int>, Institution>, GetEntityByIdQueryHandler<Institution, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Institution, int>, Institution>, GetEntityByIdForDeleteQueryHandler<Institution, int>>();
 
-            services.AddTransient<IQueryHandler<CitiesForInstitutionQuery, List<City>>, GetCitiesForInstitutionQueryHandler>();
+            services.AddTransient<IQueryHandler<GetCitiesForInstitutionQuery, List<City>>, GetCitiesForInstitutionQueryHandler>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Institution, Institution>>, SimpleCreateMappedEntityCommandHandler<Institution>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Institution, Institution, int>>, EditMappedEntityCommandHandler<Institution, Institution, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Institution, int>>, DeleteEntityCommandHandler<Institution, int>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Institution, int>>, DeleteEntityByIdCommandHandler<Institution, int>>();
         }
     }
 }

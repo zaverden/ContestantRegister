@@ -44,28 +44,23 @@ namespace ContestantRegister.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel viewModel, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid)
             {
                 // If we got this far, something failed, redisplay form
-                return View(model);
+                return View(viewModel);
             }
 
             try
             {
-                await _handlerDispatcher.ExecuteCommandAsync(new LoginCommand
-                {
-                    Email = model.Email,
-                    Password = model.Password,
-                    RememberMe = model.RememberMe
-                });
+                await _handlerDispatcher.ExecuteCommandAsync(new LoginCommand { ViewModel = viewModel });
             }
             catch (Exception ex) when (ex is EntityNotFoundException || ex is EmailNotConfirmedException)
             {
                 ModelState.AddModelError(string.Empty, "Пользователь не найден или email не подтвержден.");
-                return View(model);
+                return View(viewModel);
             }
             catch (UserLockedOutException)
             {                
@@ -74,7 +69,7 @@ namespace ContestantRegister.Controllers
             catch (InvalidLoginAttemptException)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
+                return View(viewModel);
             }
             
             return RedirectToLocal(returnUrl);

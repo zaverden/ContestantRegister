@@ -20,12 +20,12 @@ namespace ContestantRegister.Cqrs.Features.Admin.Users.Utils
         public static void RegisterUsersServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetUsersQuery, List<UserListItemViewModel>>, GetEntitiesQueryHandler<ApplicationUser, UserListItemViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<ApplicationUser, string>, ApplicationUser>, GetEntityQueryHandler<ApplicationUser, string>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<ApplicationUser, string>, ApplicationUser>, GetEntityForDeleteQueryHandler<ApplicationUser, string>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<ApplicationUser, string>, ApplicationUser>, GetEntityByIdQueryHandler<ApplicationUser, string>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<ApplicationUser, string>, ApplicationUser>, GetEntityByIdForDeleteQueryHandler<ApplicationUser, string>>();
 
             //services.AddTransient<ICommandHandler<CreateUserCommand>, CreateUserCommandHandler>();
             //services.AddTransient<ICommandHandler<EditMappedEntityCommand<ApplicationUser, EditUserViewModel, string>>, EditUserCommandHandler>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<ApplicationUser, string>>, DeleteEntityCommandHandler<ApplicationUser, string>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<ApplicationUser, string>>, DeleteEntityByIdCommandHandler<ApplicationUser, string>>();
 
             services.AddTransient<IQueryHandler<GetExportedUsersQuery, ExcelPackage>, GetExportedUsersQueryHandler>();
             services.AddTransient<IQueryHandler<GetDataForUserDetailsQuery, DataForUserDetails>, GetDataForUserDetailsQueryHandler>();

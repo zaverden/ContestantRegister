@@ -35,7 +35,7 @@ namespace ContestantRegister.Controllers
 
         private async Task FillViewDataDetailFormAsync(School item)
         {
-            var cities = await HandlerDispatcher.ExecuteQueryAsync(new CitiesForSchoolQuery());
+            var cities = await HandlerDispatcher.ExecuteQueryAsync(new GetCitiesForSchoolQuery());
             ViewData["CityId"] = new SelectList(cities, "Id", "Name", item?.CityId);
         }
 

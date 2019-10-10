@@ -15,12 +15,12 @@ namespace ContestantRegister.Cqrs.Features.Admin.Regions.Utils
         public static void RegisterRegionsServices(this IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetMappedEntitiesQuery<Region, RegionViewModel>, List<RegionViewModel>>, GetEntitiesQueryHandler<Region, RegionViewModel>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Region, int>, Region>, GetEntityQueryHandler<Region, int>>();
-            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Region, int>, Region>, GetEntityForDeleteQueryHandler<Region, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdQuery<Region, int>, Region>, GetEntityByIdQueryHandler<Region, int>>();
+            services.AddTransient<IQueryHandler<GetEntityByIdForDeleteQuery<Region, int>, Region>, GetEntityByIdForDeleteQueryHandler<Region, int>>();
 
             services.AddTransient<ICommandHandler<CreateMappedEntityCommand<Region, Region>>, SimpleCreateMappedEntityCommandHandler<Region>>();
             services.AddTransient<ICommandHandler<EditMappedEntityCommand<Region, Region, int>>, EditMappedEntityCommandHandler<Region, Region, int>>();
-            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Region, int>>, DeleteEntityCommandHandler<Region, int>>();
+            services.AddTransient<ICommandHandler<DeleteEntityByIdCommand<Region, int>>, DeleteEntityByIdCommandHandler<Region, int>>();
 
         }
     }
