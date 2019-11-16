@@ -21,7 +21,13 @@ namespace ContestantRegister.Utils
             CreateMap<Contest, Contest>()
                 .ForMember(x => x.ContestAreas, opt => opt.Ignore());
 
-            CreateMap<RegisterViewModel, ApplicationUser>();
+            CreateMap<RegisterViewModel, ApplicationUser>()
+                .ForMember(x => x.Surname, opt => opt.MapFrom(y => y.Surname.Trim()))
+                .ForMember(x => x.Name, opt => opt.MapFrom(y => y.Name.Trim()))
+                .ForMember(x => x.Patronymic, opt => opt.MapFrom(y => y.Patronymic.Trim()))
+                .ForMember(x => x.LastName, opt => opt.MapFrom(y => y.LastName.Trim()))
+                .ForMember(x => x.FirstName, opt => opt.MapFrom(y => y.FirstName.Trim()))
+                ;
 
             CreateMap<ContestRegistrationViewModel, IndividualContestRegistration>();
             CreateMap<IndividualContestRegistration, ContestRegistrationViewModel>();
@@ -36,7 +42,13 @@ namespace ContestantRegister.Utils
             CreateMap<ApplicationUser, EditUserViewModel>();
             CreateMap<EditUserViewModel, ApplicationUser>();
             
-            CreateMap<RegisterContestParticipantViewModel, ApplicationUser>();
+            CreateMap<RegisterContestParticipantViewModel, ApplicationUser>()
+                .ForMember(x => x.Surname, opt => opt.MapFrom(y => y.Surname.Trim()))
+                .ForMember(x => x.Name, opt => opt.MapFrom(y => y.Name.Trim()))
+                .ForMember(x => x.Patronymic, opt => opt.MapFrom(y => y.Patronymic.Trim()))
+                .ForMember(x => x.LastName, opt => opt.MapFrom(y => y.LastName.Trim()))
+                .ForMember(x => x.FirstName, opt => opt.MapFrom(y => y.FirstName.Trim()))
+                ;
             
             CreateMap<IndexViewModel, ApplicationUser>();
             CreateMap<ApplicationUser, IndexViewModel>();
