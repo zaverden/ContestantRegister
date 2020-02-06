@@ -44,6 +44,7 @@ using IUrlHelper = Microsoft.AspNetCore.Mvc.IUrlHelper;
 
 namespace ContestantRegister
 {
+    //test
     public class FirstTestCommandMiddleware : CommandHandlerMiddleware
     {
         private readonly IEmailSender _emailSender;
