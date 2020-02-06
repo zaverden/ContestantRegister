@@ -15,6 +15,8 @@ namespace ContestantRegister
     public class Program
     {
         //First row
+
+        // second row
         public static void Main(string[] args) 
         {
             var host = BuildWebHost(args);
